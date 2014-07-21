@@ -6,29 +6,54 @@ package gw.internal.gosu.parser;
 
 import gw.config.BaseService;
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.fs.IFile;
 import gw.fs.IResource;
+import gw.internal.gosu.annotations.AnnotationMap;
 import gw.internal.gosu.compiler.SingleServingGosuClassLoader;
+import gw.internal.gosu.ir.transform.AbstractElementTransformer;
 import gw.internal.gosu.module.Module;
+import gw.internal.gosu.runtime.GosuRuntimeMethods;
+import gw.internal.gosu.template.TemplateRenderer;
+import gw.lang.Autoinsert;
 import gw.lang.GosuShop;
-import gw.lang.gosuc.Gosuc;
-import gw.lang.gosuc.ICustomParser;
-import gw.lang.gosuc.IGosuc;
+import gw.lang.IAnnotation;
+import gw.lang.IDimension;
+import gw.lang.InternalAPI;
+import gw.lang.Param;
+import gw.lang.ShortCircuitingProperty;
+import gw.lang.annotation.AnnotationUsage;
+import gw.lang.annotation.AnnotationUsages;
+import gw.lang.annotation.IInherited;
+import gw.lang.function.IBlock;
+import gw.lang.parser.HashedObjectLiteral;
+import gw.lang.parser.ICoercer;
+import gw.lang.parser.IParsedElement;
 import gw.lang.parser.ISymbolTable;
 import gw.lang.parser.ITypeUsesMap;
+import gw.lang.parser.IUsageSiteValidator;
+import gw.lang.parser.IUsageSiteValidatorReference;
 import gw.lang.parser.TypeVarToTypeMap;
+import gw.lang.parser.coercers.BaseCoercer;
+import gw.lang.parser.coercers.MetaTypeToClassCoercer;
+import gw.lang.parser.exceptions.IEvaluationException;
 import gw.lang.parser.exceptions.ParseResultsException;
+import gw.lang.parser.expressions.IBlockExpression;
 import gw.lang.parser.expressions.ITypeLiteralExpression;
 import gw.lang.reflect.FunctionType;
 import gw.lang.reflect.IDefaultTypeLoader;
+import gw.lang.reflect.IEnumConstant;
 import gw.lang.reflect.IErrorType;
+import gw.lang.reflect.IFeatureInfo;
 import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IMetaType;
 import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.INamespaceType;
 import gw.lang.reflect.INonLoadableType;
 import gw.lang.reflect.IPlaceholder;
+import gw.lang.reflect.IQueryResultSet;
 import gw.lang.reflect.IType;
+import gw.lang.reflect.ITypeInfo;
 import gw.lang.reflect.ITypeLoader;
 import gw.lang.reflect.ITypeLoaderListener;
 import gw.lang.reflect.ITypeRef;
@@ -40,11 +65,26 @@ import gw.lang.reflect.RefreshKind;
 import gw.lang.reflect.RefreshRequest;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.TypeSystemShutdownListener;
+import gw.lang.reflect.gs.FragmentInstance;
+import gw.lang.reflect.gs.GosuClassPathThing;
 import gw.lang.reflect.gs.GosuClassTypeLoader;
+import gw.lang.reflect.gs.IExternalSymbolMap;
 import gw.lang.reflect.gs.IGenericTypeVariable;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.IGosuClassLoader;
+import gw.lang.reflect.gs.IGosuClassObject;
 import gw.lang.reflect.gs.IGosuEnhancement;
+import gw.lang.reflect.gs.IGosuObject;
+import gw.lang.reflect.gs.IProgramInstance;
+import gw.lang.reflect.interval.BigDecimalInterval;
+import gw.lang.reflect.interval.BigIntegerInterval;
+import gw.lang.reflect.interval.ComparableInterval;
+import gw.lang.reflect.interval.DateInterval;
+import gw.lang.reflect.interval.IInterval;
+import gw.lang.reflect.interval.IntegerInterval;
+import gw.lang.reflect.interval.LongInterval;
+import gw.lang.reflect.interval.NumberInterval;
+import gw.lang.reflect.interval.SequenceableInterval;
 import gw.lang.reflect.java.IJavaClassInfo;
 import gw.lang.reflect.java.IJavaType;
 import gw.lang.reflect.java.JavaTypes;
@@ -57,7 +97,6 @@ import gw.util.GosuExceptionUtil;
 import gw.util.IdentitySet;
 import gw.util.concurrent.LockingLazyVar;
 
-import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -124,7 +163,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   public Module getCurrentModule()
   {
-    if( TypeSystem.isSingleModuleMode() )
+    if( !ExecutionMode.isIDE() )
     {
       return (Module)TypeSystem.getGlobalModule();
     }
@@ -176,16 +215,6 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
         GosuShop.clearThreadLocal(g_moduleStack);
       }
     });
-  }
-
-  @Override
-  public IGosuc makeGosucCompiler( String gosucProjectFile, ICustomParser custParser ) {
-    try {
-      return new Gosuc( gosucProjectFile, custParser );
-    }
-    catch( FileNotFoundException e ) {
-      throw new RuntimeException( e );
-    }
   }
 
   public IType getDefaultType(String name) {
@@ -619,7 +648,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   private ModuleTypeLoader getGlobalModuleTypeLoader() {
     IModule rootModule = getExecutionEnv().getGlobalModule();
-    return rootModule != null ? ((ModuleTypeLoader) rootModule.getModuleTypeLoader()) : null;
+    return rootModule != null ? (ModuleTypeLoader) rootModule.getModuleTypeLoader() : null;
   }
 
   private void addGosuProxyClass( IdentitySet<ITypeRef> allTypes, IType type ) {
@@ -760,7 +789,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     _shutdownListeners.add(listener);
   }
 
-  static interface TypeGetter {
+  interface TypeGetter {
     IType get();
   }
 
@@ -856,7 +885,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     // a JavaType for it. This won't happen in the editor (Eclipse), because a proxy class only exists at runtime;
     // therefore, using the DefaultTypeLoader here should be fine.
     if (Proxy.isProxyClass(javaClass)) {
-      return JavaType.get(javaClass, DefaultTypeLoader.instance());
+      return JavaType.get(javaClass, (DefaultTypeLoader) TypeSystem.getJreModule().getModuleTypeLoader().getDefaultTypeLoader());
     }
 
     return type;
@@ -920,7 +949,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
   }
 
   public IType getByRelativeName(String relativeName) throws ClassNotFoundException {
-    return getByRelativeName(relativeName, CommonServices.getEntityAccess().getDefaultTypeUses());
+    return getByRelativeName(relativeName, TypeSystem.getDefaultTypeUsesMap());
   }
 
   /**
@@ -991,14 +1020,13 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     return null;
   }
 
-  private final boolean isValidTypeName(String fqn) {
+  private boolean isValidTypeName(String fqn) {
     // empty names are invalid
     if( fqn == null || fqn.length() == 0 ) {
       return false;
     }
 
-    if( fqn.indexOf("block(") != -1 ||
-        fqn.indexOf("block (") != -1 )
+    if(fqn.contains("block(") || fqn.contains("block ("))
     {
       return false;
     }
@@ -1400,13 +1428,32 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
   }
 
   @Override
-  public IMetaType getDefaultType() {
-    return (IMetaType) MetaType.DEFAULT_TYPE_TYPE.get();
+  public IJavaClassInfo getJavaClassInfo(Class jClass, IModule module) {
+    if (jClass == null) {
+      return null;
+    }
+    String fqn = jClass.getName().replace('$', '.');
+    if (IType.class.isAssignableFrom(jClass) && fqn.endsWith(ITypeRefFactory.SYSTEM_PROXY_SUFFIX)) {
+      IJavaType type = (IJavaType) get(jClass);
+      IJavaClassInfo javaClassInfo = type.getBackingClassInfo();
+      return javaClassInfo;
+    } else if (jClass.isArray()) {
+      Class componentType = jClass.getComponentType();
+      IJavaClassInfo javaClassInfo = getJavaClassInfo(componentType, module);
+      javaClassInfo = javaClassInfo.getArrayType();
+      return javaClassInfo;
+    } else if(Proxy.class.isAssignableFrom(jClass)) {
+      IDefaultTypeLoader defaultTypeLoader = module.getModuleTypeLoader().getDefaultTypeLoader();
+      IJavaClassInfo javaClassInfo = defaultTypeLoader.getJavaClassInfoForClassDirectly(jClass, module);
+      return javaClassInfo;
+    } else {
+      return TypeSystem.getJavaClassInfo(fqn, module);
+    }
   }
 
   @Override
-  public boolean isSingleModuleMode() {
-    return ExecutionEnvironment.isDefaultSingleModuleMode();
+  public IMetaType getDefaultType() {
+    return (IMetaType) MetaType.DEFAULT_TYPE_TYPE.get();
   }
 
 }

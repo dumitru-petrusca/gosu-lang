@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class PrimitiveCoercer extends BaseCoercer
 {
@@ -20,7 +20,7 @@ public class PrimitiveCoercer extends BaseCoercer
   {
     if( value == null )
     {
-      return CommonServices.getCoercionManager().convertNullAsPrimitive( typeToCoerceTo, false );
+      return CoercionUtil.convertNullAsPrimitive(typeToCoerceTo, false);
     }
     else
     {

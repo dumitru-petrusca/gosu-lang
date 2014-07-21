@@ -20,7 +20,6 @@ import gw.lang.reflect.module.IProject;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -134,12 +133,15 @@ public class GosucProject implements IProject {
 
   private GosucModule makeModule( IModule module ) {
     final IDirectory outputPath = module.getOutputPath();
-    return new GosucModule( module.getName(),
-                            GosucUtil.makeStringPaths( module.getSourcePath() ),
-                            GosucUtil.makeStringPaths( module.getJavaClassPath() ),
-                            outputPath != null ? outputPath.getPath().getPathString() : null,
-                            makeDependencies( module.getDependencies() ),
-                            GosucUtil.makeStringPaths( module.getExcludedPaths() ));
+    String contentRoot = module.getRoots().isEmpty() ? null : module.getRoots().get(0).getPath().getPathString();
+    return new GosucModule(
+        module.getName(),
+        Collections.singletonList(contentRoot),
+        GosucUtil.toPaths(module.getSourcePath()),
+        GosucUtil.toPaths(module.getJavaClassPath()),
+        outputPath != null ? outputPath.getPath().getPathString() : null,
+        makeDependencies(module.getDependencies()),
+        GosucUtil.makeStringPaths(module.getExcludedPaths()));
   }
 
   private List<GosucDependency> makeDependencies( List<Dependency> dependencies ) {
@@ -153,7 +155,7 @@ public class GosucProject implements IProject {
   }
 
   private void assignSdk( IExecutionEnvironment execEnv ) {
-    List<String> classpath = GosucUtil.makeStringPaths( execEnv.getJreModule().getJavaClassPath() );
+    List<String> classpath = GosucUtil.toPaths(execEnv.getJreModule().getJavaClassPath());
     _sdk = new GosucSdk( classpath );
   }
 

@@ -6,12 +6,12 @@ package gw.internal.gosu.parser.expressions;
 
 import gw.internal.gosu.parser.Expression;
 import gw.lang.IDimension;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.expressions.IUnaryExpression;
 import gw.lang.reflect.IPlaceholder;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.java.JavaTypes;
-import gw.config.CommonServices;
 
 /**
  * Represents a unary expression as defined in the Gosu grammar.
@@ -75,19 +75,19 @@ public final class UnaryExpression extends Expression implements IUnaryExpressio
 
       if( type == JavaTypes.BIG_DECIMAL() )
       {
-        value = CommonServices.getCoercionManager().makeBigDecimalFrom( value ).negate();
+        value = CoercionUtil.makeBigDecimalFrom(value).negate();
       }
       else if( type == JavaTypes.BIG_INTEGER() )
       {
-        value = CommonServices.getCoercionManager().makeBigIntegerFrom( value ).negate();
+        value = CoercionUtil.makeBigIntegerFrom(value).negate();
       }
       else if( type == JavaTypes.INTEGER() || type == JavaTypes.pINT() )
       {
-        value = makeInteger( -CommonServices.getCoercionManager().makeIntegerFrom( value ) );
+        value = makeInteger( -CoercionUtil.makeIntegerFrom(value) );
       }
       else if( type == JavaTypes.LONG() || type == JavaTypes.pLONG() )
       {
-        value = makeLong( -CommonServices.getCoercionManager().makeLongFrom( value ) );
+        value = makeLong( -CoercionUtil.makeLongFrom(value) );
       }
       else if( type == JavaTypes.DOUBLE() || type == JavaTypes.pDOUBLE() )
       {
@@ -99,11 +99,11 @@ public final class UnaryExpression extends Expression implements IUnaryExpressio
       }
       else if( type == JavaTypes.SHORT() || type == JavaTypes.pSHORT() )
       {
-        value = makeInteger( -CommonServices.getCoercionManager().makeIntegerFrom( value ) ).shortValue();
+        value = makeInteger( -CoercionUtil.makeIntegerFrom(value) ).shortValue();
       }
       else if( type == JavaTypes.BYTE() || type == JavaTypes.pBYTE() )
       {
-        value = makeInteger( -CommonServices.getCoercionManager().makeIntegerFrom( value ) ).byteValue();
+        value = makeInteger( -CoercionUtil.makeIntegerFrom(value) ).byteValue();
       }
       else
       {

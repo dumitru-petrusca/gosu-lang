@@ -11,8 +11,10 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.extensions.PluginId;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.JavaSdk;
 import com.intellij.openapi.projectRoots.JavaSdkVersion;
@@ -38,7 +40,6 @@ import gw.lang.GosuVersion;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.module.IModule;
 import gw.plugin.ij.core.GosuAppComponent;
-import gw.plugin.ij.core.IDEAExtensionFolderLocator;
 import gw.plugin.ij.util.ExceptionUtil;
 import gw.plugin.ij.util.GosuBundle;
 import gw.plugin.ij.util.GosuModuleUtil;
@@ -324,11 +325,16 @@ public class GosuSdkUtils {
   }
 
   private static void addExtlibFolderToClasspath(@NotNull SdkModificator modificator) {
-    final File extensionFolder = new IDEAExtensionFolderLocator().getExtensionFolderPath();
+    final File extensionFolder = getExtensionFolderPath();
     if (extensionFolder != null) {
       Iterable<File> extJars = listFiles(extensionFolder, withExtension(JAR_EXTENSION));
       addSdkElements(modificator, extJars);
     }
+  }
+
+  public static File getExtensionFolderPath() {
+    final PluginId id = PluginManager.getPluginByClassName(TypeSystem.class.getName());
+    return id != null ? new File(PluginManager.getPlugin(id).getPath(), "extlib") : null;
   }
 
   private static Iterable<File> getApprovedJars(File dir) {

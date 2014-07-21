@@ -14,6 +14,7 @@ import gw.internal.gosu.ir.transform.util.IRTypeResolver;
 import gw.internal.gosu.parser.BeanAccess;
 import gw.internal.gosu.parser.GosuVarPropertyInfo;
 import gw.internal.gosu.parser.JavaFieldPropertyInfo;
+import gw.internal.gosu.parser.JavaPropertyInfo;
 import gw.internal.gosu.parser.expressions.Identifier;
 import gw.internal.gosu.parser.statements.MemberAssignmentStatement;
 import gw.internal.gosu.runtime.GosuRuntimeMethods;
@@ -156,8 +157,8 @@ public class MemberAssignmentStatementTransformer extends AbstractStatementTrans
 
     IRType type;
     IPropertyInfo terminalPi = ((IRPropertyFromPropertyInfo)pi).getTerminalProperty();
-    if( terminalPi instanceof IJavaPropertyInfo && isField( terminalPi ) ) {
-      type = IRTypeResolver.getDescriptor( ((IJavaPropertyInfo)terminalPi).getPublicField().getType() );
+    if( terminalPi instanceof JavaPropertyInfo && isField( terminalPi ) ) {
+      type = IRTypeResolver.getDescriptor( ((JavaPropertyInfo)terminalPi).getPublicField().getType() );
     }
     else {
       type = pi.getType();
@@ -216,8 +217,8 @@ public class MemberAssignmentStatementTransformer extends AbstractStatementTrans
       pi = ((IPropertyInfoDelegate)pi).getSource();
     }
 
-    if( pi instanceof IJavaPropertyInfo ) {
-      IJavaPropertyInfo jpi = (IJavaPropertyInfo)pi;
+    if( pi instanceof JavaPropertyInfo ) {
+      JavaPropertyInfo jpi = (JavaPropertyInfo)pi;
       return jpi.getWriteMethodInfo() == null && jpi.getPublicField() != null;
     }
 
@@ -235,8 +236,8 @@ public class MemberAssignmentStatementTransformer extends AbstractStatementTrans
       pi = ((IPropertyInfoDelegate)pi).getSource();
     }
 
-    if( pi instanceof IJavaPropertyInfo ) {
-      IJavaPropertyInfo jpi = (IJavaPropertyInfo)pi;
+    if( pi instanceof JavaPropertyInfo ) {
+      JavaPropertyInfo jpi = (JavaPropertyInfo)pi;
       return jpi.getPublicField().getName();
     }
 

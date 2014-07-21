@@ -17,6 +17,7 @@ import gw.lang.ir.IRSymbol;
 import gw.lang.ir.IRTypeConstants;
 import gw.lang.ir.statement.IRAssignmentStatement;
 import gw.lang.ir.statement.IRForEachStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.interval.AbstractIntIterator;
@@ -328,7 +329,7 @@ public class ForEachStatementTransformer extends AbstractStatementTransformer<Fo
     {
       _iCsr = 0;
       _arrayType = arrayType;
-      _array = CommonServices.getCoercionManager().convertValue(array, _arrayType);
+      _array = CoercionUtil.convertValue(array, _arrayType);
     }
 
     public boolean hasNext()

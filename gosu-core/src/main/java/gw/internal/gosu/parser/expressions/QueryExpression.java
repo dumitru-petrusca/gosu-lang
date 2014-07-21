@@ -17,6 +17,8 @@ import gw.lang.parser.expressions.ITypeVariableDefinition;
 import gw.lang.parser.expressions.ILiteralExpression;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.IFunctionType;
+import gw.lang.reflect.TypeSystem;
+import gw.lang.reflect.java.IJavaType;
 
 import java.util.List;
 import java.util.Map;
@@ -69,10 +71,22 @@ public class QueryExpression extends Expression implements IQueryExpression
   {
     if( _type == null )
     {
-      IQueryExpressionEvaluator evaluator = CommonServices.getEntityAccess().getQueryExpressionEvaluator( this );
-      _type = evaluator.getResultType();
+      _type = getResultType();
     }
     return _type;
+  }
+
+  public IType getResultType()
+  {
+    IType type = getEntityType();
+    if(type instanceof IJavaType && "entity".equals(type.getNamespace()))
+    {
+      return TypeSystem.getByFullName("gw.api.database.IQueryBeanResult").getParameterizedType(type);
+    }
+    else
+    {
+      return TypeSystem.getErrorType();
+    }
   }
 
 

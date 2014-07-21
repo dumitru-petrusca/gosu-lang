@@ -5,6 +5,7 @@
 package gw.internal.xml.xsd.typeprovider;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.lang.reflect.TypeSystem;
 
 import java.util.ArrayList;
@@ -53,20 +54,20 @@ public class MemoryCleanerThread extends Thread {
   }
 
   public static synchronized void invokeLater( Runnable r ) {
-    if (TypeSystem.isSingleModuleMode()) {
+    if (ExecutionMode.isRuntime()) {
       _todo.add( r );
       MemoryCleanerThread.class.notifyAll();
     }
   }
 
   public static void startThread() {
-    if (TypeSystem.isSingleModuleMode()) {
+    if (ExecutionMode.isRuntime()) {
       new MemoryCleanerThread().start();
     }
   }
 
   public static synchronized void stopCleaner() {
-    if (TypeSystem.isSingleModuleMode()) {
+    if (ExecutionMode.isRuntime()) {
       stop = true;
       MemoryCleanerThread.class.notifyAll();
     }

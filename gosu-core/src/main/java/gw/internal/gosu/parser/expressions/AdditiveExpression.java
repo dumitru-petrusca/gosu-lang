@@ -9,6 +9,7 @@ import gw.internal.gosu.parser.BeanAccess;
 import gw.internal.gosu.parser.ParseTree;
 import gw.internal.gosu.parser.ParserBase;
 import gw.lang.IDimension;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.expressions.IAdditiveExpression;
 import gw.lang.reflect.IPlaceholder;
 import gw.lang.reflect.IType;
@@ -168,21 +169,21 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
       {
         if( type == JavaTypes.BIG_DECIMAL() )
         {
-          BigDecimal lhsBD = CommonServices.getCoercionManager().makeBigDecimalFrom( lhsValue );
-          BigDecimal rhsBD = CommonServices.getCoercionManager().makeBigDecimalFrom( rhsValue );
+          BigDecimal lhsBD = CoercionUtil.makeBigDecimalFrom(lhsValue);
+          BigDecimal rhsBD = CoercionUtil.makeBigDecimalFrom(rhsValue);
           retValue = lhsBD.add( rhsBD );
         }
         else if( type == JavaTypes.BIG_INTEGER() )
         {
-          retValue = CommonServices.getCoercionManager().makeBigIntegerFrom( lhsValue ).add( CommonServices.getCoercionManager().makeBigIntegerFrom( rhsValue ) );
+          retValue = CoercionUtil.makeBigIntegerFrom(lhsValue).add( CoercionUtil.makeBigIntegerFrom(rhsValue) );
         }
         else if( type == JavaTypes.INTEGER() || type == JavaTypes.pINT() )
         {
-          retValue = CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) + CommonServices.getCoercionManager().makeIntegerFrom( rhsValue );
+          retValue = CoercionUtil.makeIntegerFrom(lhsValue) + CoercionUtil.makeIntegerFrom(rhsValue);
         }
         else if( type == JavaTypes.LONG() || type == JavaTypes.pLONG() )
         {
-          retValue = makeLong( CommonServices.getCoercionManager().makeLongFrom( lhsValue ) + CommonServices.getCoercionManager().makeLongFrom( rhsValue ) );
+          retValue = makeLong( CoercionUtil.makeLongFrom(lhsValue) + CoercionUtil.makeLongFrom(rhsValue) );
         }
         else if( type == JavaTypes.DOUBLE() || type == JavaTypes.pDOUBLE() )
         {
@@ -194,11 +195,11 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
         }
         else if( type == JavaTypes.SHORT() || type == JavaTypes.pSHORT() )
         {
-          retValue = Integer.valueOf( CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) + CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) ).shortValue();
+          retValue = Integer.valueOf( CoercionUtil.makeIntegerFrom(lhsValue) + CoercionUtil.makeIntegerFrom(rhsValue) ).shortValue();
         }
         else if( type == JavaTypes.BYTE() || type == JavaTypes.pBYTE() )
         {
-          retValue = (byte)(CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) + CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ));
+          retValue = (byte)(CoercionUtil.makeIntegerFrom(lhsValue) + CoercionUtil.makeIntegerFrom(rhsValue));
         }
         else
         {
@@ -209,21 +210,21 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
       {
         if( type == JavaTypes.BIG_DECIMAL() )
         {
-          BigDecimal lhsBD = CommonServices.getCoercionManager().makeBigDecimalFrom( lhsValue );
-          BigDecimal rhsBD = CommonServices.getCoercionManager().makeBigDecimalFrom( rhsValue );
+          BigDecimal lhsBD = CoercionUtil.makeBigDecimalFrom(lhsValue);
+          BigDecimal rhsBD = CoercionUtil.makeBigDecimalFrom(rhsValue);
           retValue = lhsBD.subtract( rhsBD );
         }
         else if( type == JavaTypes.BIG_INTEGER() )
         {
-          retValue = CommonServices.getCoercionManager().makeBigIntegerFrom( lhsValue ).subtract( CommonServices.getCoercionManager().makeBigIntegerFrom( rhsValue ) );
+          retValue = CoercionUtil.makeBigIntegerFrom(lhsValue).subtract( CoercionUtil.makeBigIntegerFrom(rhsValue) );
         }
         else if( type == JavaTypes.INTEGER() || type == JavaTypes.pINT() )
         {
-          retValue = CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) - CommonServices.getCoercionManager().makeIntegerFrom( rhsValue );
+          retValue = CoercionUtil.makeIntegerFrom(lhsValue) - CoercionUtil.makeIntegerFrom(rhsValue);
         }
         else if( type == JavaTypes.LONG() || type == JavaTypes.pLONG() )
         {
-          retValue = makeLong( CommonServices.getCoercionManager().makeLongFrom( lhsValue ) - CommonServices.getCoercionManager().makeLongFrom( rhsValue ) );
+          retValue = makeLong( CoercionUtil.makeLongFrom(lhsValue) - CoercionUtil.makeLongFrom(rhsValue) );
         }
         else if( type == JavaTypes.DOUBLE() || type == JavaTypes.pDOUBLE() )
         {
@@ -235,11 +236,11 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
         }
         else if( type == JavaTypes.SHORT() || type == JavaTypes.pSHORT() )
         {
-          retValue = Integer.valueOf( CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) - CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) ).shortValue();
+          retValue = Integer.valueOf( CoercionUtil.makeIntegerFrom(lhsValue) - CoercionUtil.makeIntegerFrom(rhsValue) ).shortValue();
         }
         else if( type == JavaTypes.BYTE() || type == JavaTypes.pBYTE() )
         {
-          retValue = (byte)(CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) - CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ));
+          retValue = (byte)(CoercionUtil.makeIntegerFrom(lhsValue) - CoercionUtil.makeIntegerFrom(rhsValue));
         }
         else
         {
@@ -260,7 +261,7 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
     {
       // Concatenate values as strings
 
-      return CommonServices.getCoercionManager().makeStringFrom( lhsValue ) + CommonServices.getCoercionManager().makeStringFrom( rhsValue );
+      return CommonServices.getEntityAccess().makeStringFrom(lhsValue) + CommonServices.getEntityAccess().makeStringFrom(rhsValue);
     }
   }
 

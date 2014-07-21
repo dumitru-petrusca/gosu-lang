@@ -4,7 +4,7 @@
 
 package gw.lang.parser.coercers;
 
-import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
 
 public class BigIntegerCoercer extends StandardCoercer
@@ -13,7 +13,7 @@ public class BigIntegerCoercer extends StandardCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeBigIntegerFrom( value );
+    return CoercionUtil.makeBigIntegerFrom(value);
   }
 
   public static BigIntegerCoercer instance()

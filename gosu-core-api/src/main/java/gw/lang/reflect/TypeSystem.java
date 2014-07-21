@@ -479,7 +479,7 @@ public class TypeSystem
 
   public static ITypeUsesMap getDefaultTypeUsesMap()
   {
-    return CommonServices.getEntityAccess().getDefaultTypeUses();
+    return CommonServices.getEntityAccess().getLanguageLevel().getDefaultTypeUses();
   }
 
   public static IType getCurrentCompilingType() {
@@ -726,23 +726,7 @@ public class TypeSystem
   }
 
   public static IJavaClassInfo getJavaClassInfo(Class jClass, IModule module) {
-    if (jClass == null) {
-      return null;
-    }
-    String fqn = jClass.getName().replace('$', '.');
-    if (IType.class.isAssignableFrom(jClass) && fqn.endsWith(ITypeRefFactory.SYSTEM_PROXY_SUFFIX)) {
-      IJavaType type = (IJavaType) get(jClass);
-      return type.getBackingClassInfo();
-    } else if (jClass.isArray()) {
-      Class componentType = jClass.getComponentType();
-      IJavaClassInfo javaClassInfo = getJavaClassInfo(componentType, module);
-      return javaClassInfo.getArrayType();
-    } else if(Proxy.class.isAssignableFrom(jClass)) {
-      IDefaultTypeLoader defaultTypeLoader = module.getModuleTypeLoader().getDefaultTypeLoader();
-      return defaultTypeLoader.getJavaClassInfoForClassDirectly(jClass, module);
-    } else {
-      return getJavaClassInfo(fqn, module);
-    }
+    return CommonServices.getTypeSystem().getJavaClassInfo(jClass, module);
   }
 
   public static Method[] getDeclaredMethods( Class cls )
@@ -841,10 +825,6 @@ public class TypeSystem
 
   public static IModule getGlobalModule() {
     return getExecutionEnvironment().getGlobalModule();
-  }
-
-  public static boolean isSingleModuleMode() {
-    return CommonServices.getTypeSystem().isSingleModuleMode();
   }
 
   public static IMetaType getDefaultType() {

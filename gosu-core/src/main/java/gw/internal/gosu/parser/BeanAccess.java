@@ -6,8 +6,8 @@ package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
 import gw.internal.gosu.parser.expressions.ConditionalExpression;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.reflect.IConstructorType;
 import gw.lang.reflect.MethodList;
 import gw.lang.reflect.gs.IGosuProgram;
@@ -182,16 +182,16 @@ public class BeanAccess
     }
     else if( lhsType == GosuParserTypes.STRING_TYPE() )
     {
-      bValue = CommonServices.getCoercionManager().makeStringFrom( lhsValue ).equals( CommonServices.getCoercionManager().makeStringFrom( rhsValue ) );
+      bValue = CommonServices.getEntityAccess().makeStringFrom(lhsValue).equals(CommonServices.getEntityAccess().makeStringFrom(rhsValue));
     }
     else if( lhsType == GosuParserTypes.BOOLEAN_TYPE() ||
              lhsType == JavaTypes.pBOOLEAN() )
     {
-      bValue = CommonServices.getCoercionManager().makeBooleanFrom( lhsValue ).booleanValue() == CommonServices.getCoercionManager().makeBooleanFrom( rhsValue ).booleanValue();
+      bValue = CoercionUtil.makeBooleanFrom(lhsValue).booleanValue() == CoercionUtil.makeBooleanFrom(rhsValue).booleanValue();
     }
     else if( lhsType == GosuParserTypes.DATETIME_TYPE() )
     {
-      bValue = CommonServices.getCoercionManager().makeDateFrom( lhsValue ).equals( CommonServices.getCoercionManager().makeDateFrom( rhsValue ) );
+      bValue = CoercionUtil.makeDateFrom(lhsValue).equals( CoercionUtil.makeDateFrom(rhsValue) );
     }
     else if( isBeanType( lhsType ) )
     {
@@ -210,7 +210,7 @@ public class BeanAccess
       {
         bValue = true;
         // Determine which operand to convert (support symmetry)
-        CommonServices.getCoercionManager().verifyTypesComparable( lhsType, rhsType, true );
+        CoercionUtil.verifyTypesComparable(lhsType, rhsType, true);
         int lhsLength = lhsType.getArrayLength( lhsValue );
         int rhsLength = rhsType.getArrayLength( rhsValue );
         if( lhsLength == rhsLength )
@@ -250,7 +250,7 @@ public class BeanAccess
     try
     {
       // Determine which operand to convert (support symmetry)
-      type = CommonServices.getCoercionManager().verifyTypesComparable( lhsType, rhsType, true );
+      type = CoercionUtil.verifyTypesComparable(lhsType, rhsType, true);
     }
     catch( ParseIssue e )
     {
@@ -259,16 +259,16 @@ public class BeanAccess
     boolean bConvertLhsType = type != lhsType;
     if( bConvertLhsType )
     {
-      lhsValue = CommonServices.getCoercionManager().convertValue(lhsValue, rhsType);
-      if( lhsValue == StandardCoercionManager.NO_DICE )
+      lhsValue = CoercionUtil.convertValue(lhsValue, rhsType);
+      if( lhsValue == CoercionUtil.NO_DICE)
       {
         return false;
       }
     }
     else
     {
-      rhsValue = CommonServices.getCoercionManager().convertValue(rhsValue, lhsType);
-      if( rhsValue == StandardCoercionManager.NO_DICE )
+      rhsValue = CoercionUtil.convertValue(rhsValue, lhsType);
+      if( rhsValue == CoercionUtil.NO_DICE)
       {
         return false;
       }

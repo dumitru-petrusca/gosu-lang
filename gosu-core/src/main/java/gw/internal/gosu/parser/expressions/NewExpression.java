@@ -7,8 +7,8 @@ package gw.internal.gosu.parser.expressions;
 import gw.internal.gosu.parser.*;
 
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.IExpression;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.parser.expressions.IInitializerExpression;
 import gw.lang.parser.expressions.INewExpression;
 import gw.lang.parser.expressions.ITypeLiteralExpression;
@@ -249,7 +249,7 @@ public class NewExpression extends Expression implements INewExpression
   }
 
   private Class<?> getComponentClass(IType type) {
-    if( StandardCoercionManager.isBoxed(type) )
+    if( CoercionUtil.isBoxed(type) )
     {
       type = TypeSystem.getPrimitiveType(type);
     }

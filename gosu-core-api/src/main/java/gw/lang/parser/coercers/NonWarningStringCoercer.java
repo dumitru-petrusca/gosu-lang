@@ -13,7 +13,7 @@ public class NonWarningStringCoercer extends StandardCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeStringFrom( value );
+    return CommonServices.getEntityAccess().makeStringFrom(value);
   }
 
   public static NonWarningStringCoercer instance()

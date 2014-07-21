@@ -34,11 +34,6 @@ public class Registry
   public static final String TAG_ALLOW_DEPRECATED_REFERENCES = "allow-deprecated-references";
 
   /**
-   * The xml tag for indicating if Gosu query expressions can reference entities.
-   */
-  public static final String TAG_ALLOW_ENTITY_QUERIES = "allow-entity-queries";
-
-  /**
    * The xml tag for indicating what class to use to initialize Gosu's Common Services with.
    */
   private static final String COMMON_SERVICE_INIT = "common-service-init";
@@ -71,11 +66,6 @@ public class Registry
    * Indicates if deprecated methods/properties s/b allowed.
    */
   private boolean _bAllowDeprecatedReferences;
-
-  /**
-   * Indicates if Gosu query expressions can reference entities.
-   */
-  private boolean _bAllowEntityQueires;
 
   /**
    * XMLNode specifications for additional typeloaders that will be created for
@@ -201,13 +191,6 @@ public class Registry
         setAllowDeprecatedReferences( Boolean.valueOf( allowDeprecatedRefs ) );
       }
 
-      String allowEntityQueries = getTag( doc, TAG_ALLOW_ENTITY_QUERIES ) == null ? null :
-                                  getTag( doc, TAG_ALLOW_ENTITY_QUERIES ).getTextContent();
-      if( allowEntityQueries != null )
-      {
-        setAllowEntityQueires( Boolean.valueOf( allowEntityQueries ) );
-      }
-
       Node typeLoaders = getTag( doc, TAG_TYPELOADERS );
       if( typeLoaders != null )
       {
@@ -315,20 +298,6 @@ public class Registry
   public void setAllowDeprecatedReferences( boolean bAllowDeprecatedReferences )
   {
     _bAllowDeprecatedReferences = bAllowDeprecatedReferences;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public boolean isAllowEntityQueires()
-  {
-    return _bAllowEntityQueires;
-  }
-
-  public void setAllowEntityQueires( boolean bAllowEntityQueires )
-  {
-    _bAllowEntityQueires = bAllowEntityQueires;
   }
 
   public void updateClasspath( List<String> classpath )

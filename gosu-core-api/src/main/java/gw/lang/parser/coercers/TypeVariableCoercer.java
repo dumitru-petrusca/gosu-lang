@@ -4,9 +4,9 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.ICoercer;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class TypeVariableCoercer implements ICoercer
 {
@@ -14,7 +14,7 @@ public class TypeVariableCoercer implements ICoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().convertValue( value, typeToCoerceTo );
+    return CoercionUtil.convertValue(value, typeToCoerceTo);
   }
 
   public boolean isExplicitCoercion()

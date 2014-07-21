@@ -10,119 +10,102 @@ import gw.internal.gosu.parser.ExtendedTypeDataFactory;
 import gw.lang.UnstableAPI;
 import gw.lang.parser.GlobalScope;
 import gw.lang.parser.IAttributeSource;
-import gw.lang.parser.IParseIssue;
-import gw.lang.parser.ITypeUsesMap;
+import gw.lang.parser.ICoercer;
 import gw.lang.parser.ILanguageLevel;
 import gw.lang.parser.expressions.IQueryExpression;
 import gw.lang.parser.expressions.IQueryExpressionEvaluator;
-import gw.lang.reflect.gs.ICompilableType;
 import gw.util.IFeatureFilter;
 import gw.util.ILogger;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 
 @UnstableAPI
-public interface IEntityAccess extends IService
-{
+public interface IEntityAccess extends IService {
+
   /**
-   * Get a set of type names that are automatically imported
+   * Returns a coercer from values of rhsType to values of lhsType if one exists.
+   * I tried to write a reasonable spec in the comments below that indicate exactly
+   * what should coerce to what.
    *
-   * @return Set of type names that are automatically imported
+   * @param lhsType the type to coerce to
+   * @param rhsType the type to coerce from
+   * @param runtime true if the coercion is happening at runtime rather than compile time
+   *                (note: This param should go away as we store the coercions on the parsed elements, rather than calling into the
+   *                coercion manager)
+   * @return a coercer from the lhsType to the rhsType, or null if no such coercer exists or is needed
    */
-  public ITypeUsesMap getDefaultTypeUses();
-
-  public boolean isDomainInstance( Object value );
-
-  public boolean isEntityClass( IType type );
-
-  public boolean isViewEntityClass( IType type );
-
-  public IType getPrimaryEntityClass( IType type );
-
-  public boolean isKeyableEntityClass( IType type );
-
-  public boolean isDomainClass( IType type );
-
-  public boolean isTypekey( IType type );
-
-  public Object getEntityInstanceFrom( Object entity, IType classDomain );
-
-  public boolean areBeansEqual( Object bean1, Object bean2 );
-
-  public boolean verifyValueForType( IType type, Object value );
-
-  public String makeStringFrom( Object obj );
-
-  public long getHashedEntityId( String strId, IType classEntity );
-
-  public boolean isInternal( IType type );
-
-  /**
-   * @return the main logger for all Gosu subsystems.  This logger must be available at all times during Gosu
-   * startup and execution.
-   */
-  public ILogger getLogger();
-
-  public Locale getLocale();
-
-  public Date getCurrentTime();
-
-  public void addEnhancementMethods(IType typeToEnhance, Collection methodsToAddTo);
-
-  public void addEnhancementProperties(IType typeToEnhance, Map propertyInfosToAddTo, boolean caseSensitive);
-
-  public IQueryExpressionEvaluator getQueryExpressionEvaluator( IQueryExpression queryExpression );
-
-  public IFeatureFilter getQueryExpressionFeatureFilter();
-
-  public ClassLoader getPluginClassLoader();
-
-  public Object constructObject( Class cls );
-
-  public IAttributeSource getAttributeSource( GlobalScope scope );
-
-  public Object[] convertToExternalIfNecessary( Object[] args, Class[] argTypes, Class methodOwner );
-
-  public Object convertToInternalIfNecessary( Object obj, Class methodOwner );
-
-  public boolean isExternal( Class methodOwner );
-
-  public StringBuilder getPluginRepositories();
-
-  public String getWebServerPaths();
-
-  public boolean isUnreachableCodeDetectionOn();
-
-  public boolean isWarnOnImplicitCoercionsOn();
-
-  IType getKeyType();
-
-  IPropertyInfo getEntityIdProperty( IType rootType );
-
-  boolean shouldAddWarning( IType type, IParseIssue warning );
-
-  boolean isServerMutable();
-  boolean isRetainDebugInfo();
-  boolean isDevMode();
-
-  ILanguageLevel getLanguageLevel();
-
-  List<IGosuClassLoadingObserver> getGosuClassLoadingObservers();
-
-  boolean areUsesStatementsAllowedInStatementLists(ICompilableType gosuClass);
-
-  List<IDirectory> getAdditionalSourceRoots();
-
-  void reloadedTypes(String[] types);
+  ICoercer getCoercerInternal(IType lhsType, IType rhsType, boolean runtime);
 
   String getLocalizedTypeName(IType type);
 
   String getLocalizedTypeInfoName(IType type);
 
+  boolean isExternal(Class methodOwner);
+
+  StringBuilder getPluginRepositories();
+
+  String getWebServerPaths();
+
+  List<IDirectory> getAdditionalSourceRoots();
+
+  ClassLoader getPluginClassLoader();
+
+  IType getPrimaryEntityClass(IType type);
+
+  /**
+   * Produce a date from a string using standard DateFormat parsing.
+   */
+  Date parseDateTime(String str) throws java.text.ParseException;
+
+  boolean isDateTime(String str) throws java.text.ParseException;
+
+  Number parseNumber(String strValue);
+
+  String makeStringFrom(Object obj);
+
+  IFeatureFilter getQueryExpressionFeatureFilter();
+
+  boolean isViewEntityClass(IType type);
+
+  boolean isDomainInstance(Object value);
+
+  boolean isEntityClass(IType type);
+
+  boolean verifyValueForType(IType type, Object value);
+
+  ILogger getLogger();
+
+  List<IGosuClassLoadingObserver> getGosuClassLoadingObservers();
+
+  IPropertyInfo getEntityIdProperty(IType rootType);
+
+  IType getKeyType();
+
+  ILanguageLevel getLanguageLevel();
+
+
+  // Runtime
+
+  boolean areBeansEqual(Object bean1, Object bean2);
+
+  IAttributeSource getAttributeSource(GlobalScope scope);
+
+  IQueryExpressionEvaluator getQueryExpressionEvaluator(IQueryExpression queryExpression);
+
+  Object getEntityInstanceFrom(Object entity, IType classDomain);
+
+  long getHashedEntityId(String strId, IType classEntity);
+
+  Date getCurrentTime();
+
+  Object[] convertToExternalIfNecessary(Object[] args, Class[] argTypes, Class methodOwner);
+
   ExtendedTypeDataFactory getExtendedTypeDataFactory(String typeName);
+
+  Object convertToInternalIfNecessary(Object obj, Class methodOwner);
+
+  void reloadedTypes(String[] types);
+
 }

@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class BooleanCoercer extends BaseBoxedCoercer
 {
@@ -13,7 +13,7 @@ public class BooleanCoercer extends BaseBoxedCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeBooleanFrom( value );
+    return CoercionUtil.makeBooleanFrom(value);
   }
 
   public static BooleanCoercer instance()

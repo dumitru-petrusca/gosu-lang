@@ -4,7 +4,7 @@
 
 package gw.internal.gosu.parser;
 
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.*;
 import gw.lang.reflect.java.IJavaType;
 import gw.lang.reflect.java.JavaTypes;
@@ -30,26 +30,26 @@ public class MetaType extends AbstractType implements IMetaType
    * These fields need to be lazu vars to avoid bombarding the typesystem with calls
    */
   private static final LocklessLazyVar<IJavaType> ROOT_TYPE =
-    new LocklessLazyVar<IJavaType>()
-    {
-      public IJavaType init()
-      {
-        IJavaType type = (IJavaType) TypeSystem.getByFullNameIfValid( RootType.class.getName().replace('$', '.'), TypeSystem.getGlobalModule() );
-        if( type == null )
-        {
-          throw new RuntimeException( "Cannot load gw.internal.gosu.parser.MetaType.RootType. The TypeSystem is not setup properly. It's highly likely Gosu is not in your classpath (perhaps via the project SDK)." );
-        }
-        return type;
-      }
-    };
+          new LocklessLazyVar<IJavaType>()
+          {
+            public IJavaType init()
+            {
+              IJavaType type = JavaType.get(RootType.class, (DefaultTypeLoader) TypeSystem.getDefaultTypeLoader());
+              if( type == null )
+              {
+                throw new RuntimeException( "Cannot load gw.internal.gosu.parser.MetaType.RootType. The TypeSystem is not setup properly. It's highly likely Gosu is not in your classpath (perhaps via the project SDK)." );
+              }
+              return type;
+            }
+          };
   static final LocklessLazyVar<IJavaType> DEFAULT_TYPE =
-    new LocklessLazyVar<IJavaType>()
-    {
-      public IJavaType init()
-      {
-        return (IJavaType) TypeSystem.getByFullNameIfValid( DefaultType.class.getName().replace('$', '.'), TypeSystem.getGlobalModule() );
-      }
-    };
+          new LocklessLazyVar<IJavaType>()
+          {
+            public IJavaType init()
+            {
+              return JavaType.get(DefaultType.class, (DefaultTypeLoader) TypeSystem.getDefaultTypeLoader());
+            }
+          };
 
   public static LocklessLazyVar<MetaType> ROOT_TYPE_TYPE =
     new LocklessLazyVar<MetaType>()
@@ -237,7 +237,7 @@ public class MetaType extends AbstractType implements IMetaType
             getType().equals( ROOT_TYPE.get() ) ||
             ((IMetaType)type).getType().equals( ROOT_TYPE.get() ) ||
             getType().isAssignableFrom( ((IMetaType)type).getType() ) ||
-            StandardCoercionManager.isStructurallyAssignable( getType(), ((IMetaType)type).getType() ));
+               CoercionUtil.isStructurallyAssignable(getType(), ((IMetaType) type).getType()));
   }
 
   /**
@@ -360,7 +360,7 @@ public class MetaType extends AbstractType implements IMetaType
     if( _allTypesInHierarchy == null )
     {
       //noinspection unchecked,RedundantCast
-      IType type = TypeSystem.get(getType().getClass(), TypeSystem.getGlobalModule());
+      IType type = JavaType.get(getType().getClass(), (DefaultTypeLoader) TypeSystem.getDefaultTypeLoader());
       _allTypesInHierarchy = (Set)getTypeInterfaces(type, new HashSet<IType>() );
     }
     return _allTypesInHierarchy;

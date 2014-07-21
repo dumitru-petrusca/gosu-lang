@@ -39,6 +39,6 @@ public class DefaultGosuProfilingService extends BaseService implements IGosuPro
 
   @Override
   protected void doInit() {
-    _time0 = CommonServices.getEntityAccess().getCurrentTime().getTime(); 
+    _time0 = CommonServices.getEntityAccess().getCurrentTime().getTime();
   }
 }

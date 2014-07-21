@@ -10,7 +10,7 @@ import java.io.File;
 
 public interface IPlatformHelper extends IService {
 
-  boolean isInIDE();
+  ExecutionMode getExecutionMode();
 
   boolean shouldCacheTypeNames();
 
@@ -20,9 +20,7 @@ public interface IPlatformHelper extends IService {
 
   File getIndexFile(String id);
 
-  File getIDEACachesDirFile();
-
-  public String getIDEACachesDir();
-
   public File getIDEACorruptionMarkerFile();
+
+  boolean isSupportCompileTimeAnnotation();
 }

@@ -4,8 +4,8 @@
 
 package gw.internal.gosu.parser;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.statements.LoopStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.IExceptionInfo;
 import gw.lang.reflect.IFeatureInfo;
@@ -211,7 +211,7 @@ public class ArrayExpansionMethodInfo implements IMethodInfo
           if( value != null && bArray )
           {
             //noinspection unchecked
-            results.addAll( (Collection)CommonServices.getCoercionManager().convertValue( value, JavaTypes.ARRAY_LIST() ) );
+            results.addAll( (Collection) CoercionUtil.convertValue(value, JavaTypes.ARRAY_LIST()) );
           }
           else
           {
@@ -232,7 +232,7 @@ public class ArrayExpansionMethodInfo implements IMethodInfo
       int i = 0;
       for( Object val : list )
       {
-        typeToCoerceTo.setArrayComponent( returnArray, i++, CommonServices.getCoercionManager().convertValue( val, typeToCoerceTo.getComponentType() ) );
+        typeToCoerceTo.setArrayComponent( returnArray, i++, CoercionUtil.convertValue(val, typeToCoerceTo.getComponentType()) );
       }
       return returnArray;
     }

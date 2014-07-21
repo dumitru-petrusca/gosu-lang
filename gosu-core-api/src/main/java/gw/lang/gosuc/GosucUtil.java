@@ -16,6 +16,7 @@ import java.util.List;
 /**
  */
 public class GosucUtil {
+
   public static String indent( String in ) {
     StringBuilder sb = new StringBuilder( in );
     sb.insert( 0, "  " );
@@ -28,8 +29,24 @@ public class GosucUtil {
     return sb.toString();
   }
 
-  public static IDirectory getDirectoryForPath( String path ) {
+  public static IDirectory getDirectoryForPath(String path) {
     return CommonServices.getFileSystem().getIDirectory( new File( path ) );
+  }
+
+  public static List<String> toPaths(List<IDirectory> dirs) {
+    List<String> paths = new ArrayList<String>();
+    for( IDirectory dir: dirs ) {
+      paths.add( dir.getPath().getPathString() );
+    }
+    return paths;
+  }
+
+  public static List<IDirectory> toDirectories(List<String> paths) {
+    List<IDirectory> dirs = new ArrayList<IDirectory>();
+    for (String path : paths) {
+      dirs.add(CommonServices.getFileSystem().getIDirectory(new File(path)));
+    }
+    return dirs;
   }
 
   public static List<String> makeStringPaths( List<IDirectory> sourcePaths ) {

@@ -5,6 +5,8 @@
 package gw.lang.parser;
 
 import gw.config.CommonServices;
+import gw.lang.reflect.IType;
+import gw.lang.reflect.gs.ICompilableType;
 
 public interface ILanguageLevel
 {
@@ -39,4 +41,16 @@ public interface ILanguageLevel
   boolean allowAllImplicitCoercions();
 
   boolean supportsNakedCatchStatements();
+
+  boolean supportHistoricalJavaAnnotationConstructors();
+
+  boolean isUnreachableCodeDetectionOn();
+
+  boolean isWarnOnImplicitCoercionsOn();
+
+  boolean areUsesStatementsAllowedInStatementLists(ICompilableType gosuClass);
+
+  boolean shouldAddWarning( IType type, IParseIssue warning );
+
+  ITypeUsesMap getDefaultTypeUses();
 }

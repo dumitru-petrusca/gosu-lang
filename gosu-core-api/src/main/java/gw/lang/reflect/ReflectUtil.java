@@ -5,6 +5,7 @@
 package gw.lang.reflect;
 
 import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.IGosuObject;
 import gw.util.GosuStringUtil;
@@ -230,7 +231,7 @@ public class ReflectUtil
 
   public static Object coerce( Object value, IType iType )
   {
-    return CommonServices.getCoercionManager().convertValue(value, iType );
+    return CoercionUtil.convertValue(value, iType);
   }
 
   public static IGosuObject getEnclosingClassInstance( IGosuObject obj )

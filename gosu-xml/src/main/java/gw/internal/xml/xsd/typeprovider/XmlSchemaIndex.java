@@ -5,6 +5,7 @@
 package gw.internal.xml.xsd.typeprovider;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
 import gw.internal.ext.org.apache.commons.collections.map.AbstractReferenceMap;
@@ -1102,7 +1103,7 @@ public class XmlSchemaIndex<T> {
       _indexed = true;
       try {
         readSchema( _schemaEF, null, caches );
-        if (!CommonServices.getPlatformHelper().isInIDE()) {
+        if (!ExecutionMode.isIDE()) {
           validate( caches );
         }
         String schemaAccessTypeName = _packageName + ".util";
@@ -1874,7 +1875,7 @@ public class XmlSchemaIndex<T> {
   }
 
   private static Iterable<? extends IFile> getSchemaLocationsFiles(IModule module) {
-    if (CommonServices.getPlatformHelper().isInIDE()) {
+    if (ExecutionMode.isIDE()) {
       module = TypeSystem.getGlobalModule();
     }
     Set<IFile> result = new LinkedHashSet<IFile>();

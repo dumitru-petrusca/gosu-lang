@@ -6,12 +6,12 @@ package gw.internal.gosu.parser.expressions;
 
 import gw.internal.gosu.parser.ParserBase;
 import gw.internal.gosu.parser.TypeLord;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.IGosuParser;
 import gw.lang.parser.expressions.IConditionalExpression;
 import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.java.JavaTypes;
-import gw.config.CommonServices;
 
 
 /**
@@ -69,46 +69,46 @@ public abstract class ConditionalExpression extends BinaryExpression implements 
 
       if( lhsType == JavaTypes.BIG_DECIMAL() )
       {
-        return CommonServices.getCoercionManager().makeBigDecimalFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeBigDecimalFrom( rhsValue ) );
+        return CoercionUtil.makeBigDecimalFrom(lhsValue).compareTo( CoercionUtil.makeBigDecimalFrom(rhsValue) );
       }
 
       if( lhsType == JavaTypes.BIG_INTEGER() )
       {
-        return CommonServices.getCoercionManager().makeBigIntegerFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeBigIntegerFrom( rhsValue ) );
+        return CoercionUtil.makeBigIntegerFrom(lhsValue).compareTo( CoercionUtil.makeBigIntegerFrom(rhsValue) );
       }
 
       if( lhsType == JavaTypes.INTEGER() || lhsType == JavaTypes.pINT() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return CoercionUtil.makeIntegerFrom(lhsValue).compareTo( CoercionUtil.makeIntegerFrom(rhsValue) );
       }
       if( lhsType == JavaTypes.LONG() || lhsType == JavaTypes.pLONG() )
       {
-        return CommonServices.getCoercionManager().makeLongFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeLongFrom( rhsValue ) );
+        return CoercionUtil.makeLongFrom(lhsValue).compareTo( CoercionUtil.makeLongFrom(rhsValue) );
       }
       if( lhsType == JavaTypes.DOUBLE() || lhsType == JavaTypes.pDOUBLE() )
       {
-        return CommonServices.getCoercionManager().makeDoubleFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeDoubleFrom( rhsValue ) );
+        return CoercionUtil.makeDoubleFrom(lhsValue).compareTo( CoercionUtil.makeDoubleFrom(rhsValue) );
       }
       if( lhsType == JavaTypes.FLOAT() || lhsType == JavaTypes.pFLOAT() )
       {
-        float f1 = CommonServices.getCoercionManager().makePrimitiveFloatFrom( lhsValue );
-        float f2 = CommonServices.getCoercionManager().makePrimitiveFloatFrom( rhsValue );
+        float f1 = CoercionUtil.makePrimitiveFloatFrom(lhsValue);
+        float f2 = CoercionUtil.makePrimitiveFloatFrom(rhsValue);
         return f1 > f2 ? 1 : f1 < f2 ? -1 : 0;
       }
       if( lhsType == JavaTypes.SHORT() || lhsType == JavaTypes.pSHORT() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return CoercionUtil.makeIntegerFrom(lhsValue).compareTo( CoercionUtil.makeIntegerFrom(rhsValue) );
       }
       if( lhsType == JavaTypes.BYTE() || lhsType == JavaTypes.pBYTE() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return CoercionUtil.makeIntegerFrom(lhsValue).compareTo( CoercionUtil.makeIntegerFrom(rhsValue) );
       }
     }
     catch( NumberFormatException nfe )
     {
       rhsValue = IGosuParser.ZERO;
     }
-    return CommonServices.getCoercionManager().makeDoubleFrom( lhsValue ).compareTo( CommonServices.getCoercionManager().makeDoubleFrom( rhsValue ) );
+    return CoercionUtil.makeDoubleFrom(lhsValue).compareTo( CoercionUtil.makeDoubleFrom(rhsValue) );
   }
 
   @Override

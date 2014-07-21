@@ -4,7 +4,6 @@
 
 package gw.internal.gosu.ir.transform.statement;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.TypeLoaderAccess;
 import gw.internal.gosu.parser.expressions.ArrayAccess;
 import gw.internal.gosu.parser.statements.ArrayAssignmentStatement;
@@ -14,10 +13,9 @@ import gw.lang.ir.IRStatement;
 import gw.lang.ir.IRExpression;
 import gw.lang.ir.IRSymbol;
 import gw.lang.ir.statement.IRStatementList;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.EvaluationException;
 import gw.lang.reflect.IType;
-import gw.lang.reflect.java.IJavaType;
-import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.java.JavaTypes;
 
 import java.util.List;
@@ -116,14 +114,14 @@ public class ArrayAssignmentStatementTransformer extends AbstractStatementTransf
     IType classObj = TypeLoaderAccess.instance().getIntrinsicTypeFromObject( obj );
     if( classObj.isArray() )
     {
-      value = CommonServices.getCoercionManager().convertValue( value, classObj.getComponentType() );
+      value = CoercionUtil.convertValue(value, classObj.getComponentType());
       classObj.setArrayComponent( obj, iIndex, value );
       return;
     }
 
     if( obj instanceof StringBuffer )
     {
-      ((StringBuffer)obj).setCharAt( iIndex, ((Character)CommonServices.getCoercionManager().convertValue( value, JavaTypes.CHARACTER() )).charValue() );
+      ((StringBuffer)obj).setCharAt( iIndex, ((Character) CoercionUtil.convertValue(value, JavaTypes.CHARACTER())).charValue() );
     }
 
     throw new EvaluationException( "The type, " + classObj.getName() + ", is not coercible to an indexed-writable array." );

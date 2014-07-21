@@ -428,6 +428,9 @@ public class JavaTypes {
           else {
             type = findTypeFromProject( c );
           }
+          if (type == null) {
+            throw new RuntimeException("Cannot load type for " + c);
+          }
           cache.put( c, type );
         }
       }

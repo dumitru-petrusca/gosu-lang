@@ -11,6 +11,7 @@ import gw.internal.gosu.parser.statements.ClassFileStatement;
 import gw.internal.gosu.parser.statements.ClassStatement;
 import gw.internal.gosu.parser.statements.NoOpStatement;
 import gw.internal.gosu.parser.statements.UsesStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.IExpression;
 import gw.lang.parser.IParseIssue;
 import gw.lang.parser.IParseTree;
@@ -593,7 +594,7 @@ public abstract class ParsedElement implements IParsedElement
 
     if( getLocation() == null ||
         getLocation().getEnclosingType() == null ||
-        CommonServices.getEntityAccess().shouldAddWarning( getLocation().getEnclosingType(), warning ) )
+        CommonServices.getEntityAccess().getLanguageLevel().shouldAddWarning( getLocation().getEnclosingType(), warning ) )
     {
       maybeInitLikelyNullFields();
 
@@ -809,7 +810,7 @@ public abstract class ParsedElement implements IParsedElement
       return null;
     }
 
-    return CommonServices.getCoercionManager().makeIntegerFrom( obj );
+    return CoercionUtil.makeIntegerFrom(obj);
   }
 
   public static Long makeLong( Object obj )
@@ -819,7 +820,7 @@ public abstract class ParsedElement implements IParsedElement
       return null;
     }
 
-    return CommonServices.getCoercionManager().makeLongFrom( obj );
+    return CoercionUtil.makeLongFrom(obj);
   }
 
   /**
@@ -837,7 +838,7 @@ public abstract class ParsedElement implements IParsedElement
       return Double.NaN;
     }
 
-    return CommonServices.getCoercionManager().makePrimitiveDoubleFrom( obj );
+    return CoercionUtil.makePrimitiveDoubleFrom(obj);
   }
 
   /**
@@ -855,7 +856,7 @@ public abstract class ParsedElement implements IParsedElement
       return Float.NaN;
     }
 
-    return CommonServices.getCoercionManager().makePrimitiveFloatFrom( obj );
+    return CoercionUtil.makePrimitiveFloatFrom(obj);
   }
 
   public void compactParseTree() {

@@ -4,7 +4,7 @@
 
 package gw.internal.gosu.parser.expressions;
 
-import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.expressions.IBitshiftExpression;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.java.JavaTypes;
@@ -50,11 +50,11 @@ public final class BitshiftExpression extends ArithmeticExpression implements IB
     {
       if( type == JavaTypes.pINT() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) << CommonServices.getCoercionManager().makeIntegerFrom( rhsValue );
+        return CoercionUtil.makeIntegerFrom(lhsValue) << CoercionUtil.makeIntegerFrom(rhsValue);
       }
       if( type == JavaTypes.pLONG() )
       {
-        return makeLong( CommonServices.getCoercionManager().makeLongFrom( lhsValue ) << CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return makeLong( CoercionUtil.makeLongFrom(lhsValue) << CoercionUtil.makeIntegerFrom(rhsValue) );
       }
 
       throw new UnsupportedNumberTypeException(type);
@@ -64,11 +64,11 @@ public final class BitshiftExpression extends ArithmeticExpression implements IB
     {
       if( type == JavaTypes.pINT() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) >> CommonServices.getCoercionManager().makeIntegerFrom( rhsValue );
+        return CoercionUtil.makeIntegerFrom(lhsValue) >> CoercionUtil.makeIntegerFrom(rhsValue);
       }
       if( type == JavaTypes.pLONG() )
       {
-        return makeLong( CommonServices.getCoercionManager().makeLongFrom( lhsValue ) >> CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return makeLong( CoercionUtil.makeLongFrom(lhsValue) >> CoercionUtil.makeIntegerFrom(rhsValue) );
       }
 
       throw new UnsupportedNumberTypeException(type);
@@ -78,11 +78,11 @@ public final class BitshiftExpression extends ArithmeticExpression implements IB
     {
       if( type == JavaTypes.pINT() )
       {
-        return CommonServices.getCoercionManager().makeIntegerFrom( lhsValue ) >>> CommonServices.getCoercionManager().makeIntegerFrom( rhsValue );
+        return CoercionUtil.makeIntegerFrom(lhsValue) >>> CoercionUtil.makeIntegerFrom(rhsValue);
       }
       if( type == JavaTypes.pLONG() )
       {
-        return makeLong( CommonServices.getCoercionManager().makeLongFrom( lhsValue ) >>> CommonServices.getCoercionManager().makeIntegerFrom( rhsValue ) );
+        return makeLong( CoercionUtil.makeLongFrom(lhsValue) >>> CoercionUtil.makeIntegerFrom(rhsValue) );
       }
 
       throw new UnsupportedNumberTypeException(type);

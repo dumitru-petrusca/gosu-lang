@@ -98,9 +98,13 @@ public class GosuClassPathThing {
     String ours = "gw.internal.gosu.compiler.protocols";
     String protocols = System.getProperty( strProtocolProp );
     if( protocols != null ) {
-      // Remove our protocol from the list
-      protocols = protocols.replace( PROTOCOL_PACKAGE + '|' , "" );
-      System.setProperty( strProtocolProp, protocols );
+      if (ours.equals(protocols)) {
+        System.clearProperty(strProtocolProp);
+      } else {
+        // Remove our protocol from the list
+        protocols = protocols.replace( PROTOCOL_PACKAGE + '|' , "" );
+        System.setProperty( strProtocolProp, protocols );
+      }
     }
   }
 

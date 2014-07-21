@@ -314,7 +314,6 @@
         <featureResolver class="gw.plugin.ij.lang.psi.impl.resolvers.PropertiesFeatureResolver"/>
         <featureResolver class="gw.plugin.ij.lang.psi.impl.resolvers.GosuMethodResolver"/>
         <featureResolver class="gw.plugin.ij.lang.psi.impl.resolvers.LocationAwareFeatureResolver"/>
-        <featureResolver class="gw.plugin.ij.lang.psi.impl.resolvers.ShadowedFeatureResolver" order="last"/>
         <featureResolver class="gw.plugin.ij.lang.psi.impl.resolvers.CatchAllFeatureResolver" order="last"/>
 
         <compilerParser class="gw.plugin.ij.compiler.parser.GosuClassCompilerParser"/>

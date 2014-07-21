@@ -5,13 +5,10 @@
 package gw.lang.reflect;
 
 import gw.lang.GosuShop;
+import gw.lang.parser.CoercionUtil;
+import gw.lang.parser.ICoercer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public interface ITypeInfo extends IAnnotatedFeatureInfo
 {
@@ -188,7 +185,7 @@ public interface ITypeInfo extends IAnnotatedFeatureInfo
           mis.put( new FunctionType( methodInfo ), methodInfo );
         }
       }
-      List<MethodScore> list = MethodScorer.instance().scoreMethods( new ArrayList<IInvocableType>( mis.keySet() ), Arrays.asList( params ), Collections.<IType>emptyList() );
+      List<MethodScore> list = MethodScorer.instance().scoreMethods(new ArrayList<IInvocableType>(mis.keySet()), Arrays.asList(params), Collections.<IType>emptyList());
       if( list.size() == 0 )
       {
         return null;
@@ -251,7 +248,7 @@ public interface ITypeInfo extends IAnnotatedFeatureInfo
           cis.put( GosuShop.getConstructorInfoFactory().makeConstructorType( constructorInfo ), constructorInfo );
         }
       }
-      List<MethodScore> list = MethodScorer.instance().scoreMethods( new ArrayList<IInvocableType>( cis.keySet() ), Arrays.asList( params ), Collections.<IType>emptyList() );
+      List<MethodScore> list = MethodScorer.instance().scoreMethods(new ArrayList<IInvocableType>(cis.keySet()), Arrays.asList(params), Collections.<IType>emptyList());
       if( list.size() == 0 )
       {
         return null;
@@ -362,5 +359,6 @@ public interface ITypeInfo extends IAnnotatedFeatureInfo
       }
       return type;
     }
+
   }
 }

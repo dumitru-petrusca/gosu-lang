@@ -5,6 +5,7 @@
 package gw.internal.gosu.ir.nodes;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.internal.gosu.ir.transform.util.IRTypeResolver;
 import gw.internal.gosu.parser.ClassJavaClassInfo;
 import gw.internal.gosu.parser.IGosuClassInternal;
@@ -47,6 +48,9 @@ public class JavaClassIRType implements IJavaClassIRType {
   }
 
   public static IRType get( IJavaClassInfo cls ) {
+    if (cls == null) {
+      throw new NullPointerException("Class Info should not be null.");
+    }
     JavaClassIRType javaClassIRType = IR_TYPES_BY_CLASS_INFO.get(cls);
     // NOTE pdalbora 11-Oct-2012 -- There are certain classes, in particular, the entity proxy classes, which get
     // re-defined during tests. So, I added this check to update the cache if the ClassLoader of the incoming class
@@ -59,7 +63,7 @@ public class JavaClassIRType implements IJavaClassIRType {
   }
 
   private static boolean shouldReplaceAnyway(IJavaClassInfo cls, JavaClassIRType javaClassIRType) {
-    return !CommonServices.getPlatformHelper().isInIDE() && !equal(javaClassIRType.getJavaClassInfo().getBackingClass().getClassLoader(), cls.getBackingClass().getClassLoader());
+    return ExecutionMode.isRuntime() && !equal(javaClassIRType.getJavaClassInfo().getBackingClass().getClassLoader(), cls.getBackingClass().getClassLoader());
   }
 
   private static boolean equal(Object o1, Object o2) {

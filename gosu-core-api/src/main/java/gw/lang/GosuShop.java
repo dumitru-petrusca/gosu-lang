@@ -26,6 +26,8 @@ import gw.lang.parser.ISymbol;
 import gw.lang.parser.ISymbolTable;
 import gw.lang.parser.ITokenizerInstructor;
 import gw.lang.parser.ITypeUsesMap;
+import gw.lang.parser.*;
+import gw.lang.parser.exceptions.ParseResultsException;
 import gw.lang.parser.expressions.IIdentifierExpression;
 import gw.lang.parser.expressions.INullExpression;
 import gw.lang.parser.template.ITemplateHost;
@@ -34,6 +36,7 @@ import gw.lang.parser.template.TemplateParseException;
 import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.IAnnotationInfoFactory;
 import gw.lang.reflect.IEntityAccess;
+import gw.lang.reflect.IErrorType;
 import gw.lang.reflect.IFeatureInfo;
 import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IMetaType;
@@ -296,13 +299,22 @@ public class GosuShop
         }
         for (IAnnotationInfo publishedType : publishedTypes) {
           IType fromType = TypeSystem.parseTypeLiteral((String) publishedType.getFieldValue("fromType"));
-          IType toType = TypeSystem.parseTypeLiteral((String) publishedType.getFieldValue("toType"));
+          IType toType = parseTypeLiteral((String) publishedType.getFieldValue("toType"));
           map.put(fromType, toType);
         }
         return map;
       }
     }
     return null;
+  }
+
+  public static IType parseTypeLiteral(String typeName) {
+    try {
+      IType type = GosuParserFactory.createParser(typeName).parseTypeLiteral(null).getType().getType();
+      return type;
+    } catch (ParseResultsException e) {
+      return TypeSystem.getErrorType();
+    }
   }
 
   public static IReducedDynamicFunctionSymbol createReducedDynamicFunctionSymbol(IDynamicFunctionSymbol symbol) {
@@ -375,10 +387,6 @@ public class GosuShop
       return GosuClassTypeLoader.ALL_EXTS_SET.contains(fileName.substring(i));
     }
     return false;
-  }
-
-  public static IGosuc makeGosucCompiler( String gosucProjectFile, ICustomParser custParser ) {
-    return CommonServices.getTypeSystem().makeGosucCompiler( gosucProjectFile, custParser );
   }
 
   public static IModule getModule(IType type) {

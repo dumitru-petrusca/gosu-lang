@@ -45,6 +45,10 @@ public class GosuProjectParserTest extends TestClass  {
   }
 
   private GosucModule makeModule( String modName, int iSrcSize, int iCpSize, String outpath, List<String> deps, int iExclSize ) {
+    List<String> contents = new ArrayList<String>();
+    for( int i = 0; i < iSrcSize; i++ ) {
+      contents.add( "/some/content/path/" + i + ".whatever" );
+    }
     List<String> sources = new ArrayList<String>();
     for( int i = 0; i < iSrcSize; i++ ) {
       sources.add( "/some/source/path/" + i + ".whatever" );
@@ -62,6 +66,6 @@ public class GosuProjectParserTest extends TestClass  {
     for( String dep: deps ) {
       dependencies.add( new GosucDependency( dep, !exported ) );
     }
-    return new GosucModule( modName, sources, classpath, outpath, dependencies, exclusions );
+    return new GosucModule( modName, contents, sources, classpath, outpath, dependencies, exclusions );
   }
 }

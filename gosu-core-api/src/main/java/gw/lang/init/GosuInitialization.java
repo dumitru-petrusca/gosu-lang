@@ -4,14 +4,19 @@
 
 package gw.lang.init;
 
+import gw.fs.IDirectory;
 import gw.lang.UnstableAPI;
+import gw.lang.gosuc.GosucModule;
+import gw.lang.parser.ITypeUsesMap;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
 import gw.util.GosuExceptionUtil;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 @UnstableAPI
@@ -67,6 +72,20 @@ public class GosuInitialization
     _initialized = true;
   }
 
+  public void initializeCompiler(GosucModule module) {
+    if (_initialized) {
+      throw new IllegalStateException("Illegal attempt to re-initialize Gosu");
+    }
+    try {
+      Class cls = Class.forName("gw.internal.gosu.init.InternalGosuInit");
+      Method m = cls.getMethod("initializeCompiler", IExecutionEnvironment.class, GosucModule.class);
+      m.invoke(null, _execEnv, module);
+    } catch (Exception e) {
+      throw GosuExceptionUtil.forceThrow( e );
+    }
+    _initialized = true;
+  }
+
   public void reinitializeRuntime( List<GosuPathEntry> pathEntries ) {
     if (_initialized) {
       uninitializeRuntime();
@@ -93,6 +112,20 @@ public class GosuInitialization
     _initialized = true;
   }
 
+  public void uninitializeCompiler() {
+    if (!_initialized) {
+      throw new IllegalStateException("Illegal attempt to uninitialize Gosu");
+    }
+    try {
+      Class cls = Class.forName("gw.internal.gosu.init.InternalGosuInit");
+      Method m = cls.getMethod("uninitializeCompiler", IExecutionEnvironment.class );
+      m.invoke(null, _execEnv );
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+    _initialized = false;
+  }
+
   public void uninitializeMultipleModules() {
     if (!_initialized) {
       throw new IllegalStateException("Illegal attempt to uninitialize Gosu");
@@ -104,7 +137,7 @@ public class GosuInitialization
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
-    _initialized = true;
+    _initialized = false;
   }
 
   // utilities

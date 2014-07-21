@@ -129,9 +129,9 @@ public class MethodPartSignatureVisitor extends SignatureVisitor {
   @Override
   public void visitClassType( String name ) {
     if( _typeArg == null ) {
-      if( !_currentType.getName().startsWith( AsmUtil.makeDotName( name ) ) ) {
-        throw new IllegalStateException( "Name should match current type" );
-      }
+//      if( !_currentType.getName().startsWith( AsmUtil.makeDotName( name ) ) ) {
+//        throw new IllegalStateException( "Name should match current type" );
+//      }
       _typeArg = _currentType;
     }
     else {

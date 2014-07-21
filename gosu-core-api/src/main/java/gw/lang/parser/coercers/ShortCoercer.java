@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class ShortCoercer extends BaseBoxedCoercer
 {
@@ -13,7 +13,7 @@ public class ShortCoercer extends BaseBoxedCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    Integer integer = CommonServices.getCoercionManager().makeIntegerFrom(value );
+    Integer integer = CoercionUtil.makeIntegerFrom(value);
     return integer.shortValue();
   }
 

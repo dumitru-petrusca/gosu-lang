@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class IntCoercer extends BaseBoxedCoercer
 {
@@ -13,7 +13,7 @@ public class IntCoercer extends BaseBoxedCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeIntegerFrom( value );
+    return CoercionUtil.makeIntegerFrom(value);
   }
 
   public static IntCoercer instance()

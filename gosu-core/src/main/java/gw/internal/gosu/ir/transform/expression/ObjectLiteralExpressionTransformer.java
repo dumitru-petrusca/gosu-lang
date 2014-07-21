@@ -9,6 +9,7 @@ import gw.internal.gosu.parser.expressions.ObjectLiteralExpression;
 import gw.lang.ir.IRExpression;
 import gw.internal.gosu.ir.transform.ExpressionTransformer;
 import gw.internal.gosu.ir.transform.TopLevelTransformationContext;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.HashedObjectLiteral;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
@@ -45,7 +46,7 @@ public class ObjectLiteralExpressionTransformer extends AbstractExpressionTransf
 
   public static Object getObjectFromTypeAndId( IType type, Object idValue )
   {
-    String strLocalOrPublicId = CommonServices.getCoercionManager().makeStringFrom( idValue );
+    String strLocalOrPublicId = CommonServices.getEntityAccess().makeStringFrom(idValue);
     long lId = 0;
     try
     {
@@ -65,6 +66,6 @@ public class ObjectLiteralExpressionTransformer extends AbstractExpressionTransf
     }
 
     HashedObjectLiteral objectLiteral = new HashedObjectLiteral( type, lId );
-    return CommonServices.getCoercionManager().convertValue( objectLiteral, objectLiteral.getAssignableClass() );
+    return CoercionUtil.convertValue(objectLiteral, objectLiteral.getAssignableClass());
   }
 }

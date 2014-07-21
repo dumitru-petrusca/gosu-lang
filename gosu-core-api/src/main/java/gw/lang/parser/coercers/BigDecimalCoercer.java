@@ -4,7 +4,7 @@
 
 package gw.lang.parser.coercers;
 
-import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
 
 public class BigDecimalCoercer extends StandardCoercer
@@ -13,7 +13,7 @@ public class BigDecimalCoercer extends StandardCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeBigDecimalFrom( value );
+    return CoercionUtil.makeBigDecimalFrom(value);
   }
 
   public static BigDecimalCoercer instance()

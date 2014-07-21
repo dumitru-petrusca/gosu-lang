@@ -9,6 +9,7 @@ import gw.lang.GosuShop;
 import gw.lang.function.IBlock;
 import gw.lang.parser.ICoercer;
 import gw.lang.parser.IResolvingCoercer;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IParameterInfo;
@@ -68,7 +69,7 @@ public class FunctionToInterfaceCoercer extends BaseCoercer implements IResolvin
   {
     if( !returnType.isAssignableFrom( type ) )
     {
-      final ICoercer coercer = CommonServices.getCoercionManager().findCoercer( returnType, type, true );
+      final ICoercer coercer = CoercionUtil.findCoercer(returnType, type, true);
       if( coercer == null )
       {
         if( JavaTypes.pVOID().equals(returnType) )

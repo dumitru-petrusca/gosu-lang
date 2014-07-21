@@ -4,7 +4,6 @@
 
 package gw.internal.gosu.ir.transform.expression;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.ir.transform.ExpressionTransformer;
 import gw.internal.gosu.ir.transform.TopLevelTransformationContext;
 import gw.internal.gosu.parser.BeanAccess;
@@ -12,6 +11,7 @@ import gw.internal.gosu.parser.expressions.UnaryExpression;
 import gw.internal.gosu.parser.expressions.UnsupportedNumberTypeException;
 import gw.lang.IDimension;
 import gw.lang.ir.IRExpression;
+import gw.lang.parser.CoercionUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -84,35 +84,35 @@ public class UnaryExpressionTransformer extends AbstractExpressionTransformer<Un
 
       if( value instanceof BigDecimal )
       {
-        value = CommonServices.getCoercionManager().makeBigDecimalFrom( value ).negate();
+        value = CoercionUtil.makeBigDecimalFrom(value).negate();
       }
       else if( value instanceof BigInteger )
       {
-        value = CommonServices.getCoercionManager().makeBigIntegerFrom( value ).negate();
+        value = CoercionUtil.makeBigIntegerFrom(value).negate();
       }
       else if( value instanceof Integer )
       {
-        value = -CommonServices.getCoercionManager().makeIntegerFrom( value );
+        value = -CoercionUtil.makeIntegerFrom(value);
       }
       else if( value instanceof Long )
       {
-        value = -CommonServices.getCoercionManager().makeLongFrom( value );
+        value = -CoercionUtil.makeLongFrom(value);
       }
       else if( value instanceof Double )
       {
-        value = -CommonServices.getCoercionManager().makeDoubleFrom( value );
+        value = -CoercionUtil.makeDoubleFrom(value);
       }
       else if( value instanceof Float )
       {
-        value = -CommonServices.getCoercionManager().makeFloatFrom( value );
+        value = -CoercionUtil.makeFloatFrom(value);
       }
       else if( value instanceof Short )
       {
-        value = (short)-CommonServices.getCoercionManager().makeIntegerFrom( value ).shortValue();
+        value = (short)-CoercionUtil.makeIntegerFrom(value).shortValue();
       }
       else if( value instanceof Byte )
       {
-        value = (byte)-CommonServices.getCoercionManager().makeIntegerFrom( value ).byteValue();
+        value = (byte)-CoercionUtil.makeIntegerFrom(value).byteValue();
       }
       else
       {

@@ -78,7 +78,6 @@ import gw.lang.parser.GlobalScope;
 import gw.lang.parser.IAttributeSource;
 import gw.lang.parser.IBlockClass;
 import gw.lang.parser.ICapturedSymbol;
-import gw.lang.parser.ICoercionManager;
 import gw.lang.parser.ICustomExpressionRuntime;
 import gw.lang.parser.IDynamicFunctionSymbol;
 import gw.lang.parser.IExpression;
@@ -1228,7 +1227,7 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
   {
     if( expr.getType() != JavaTypes.STRING() )
     {
-      return callMethod( ICoercionManager.class, "makeStringFrom", new Class[]{Object.class},
+      return callMethod( IEntityAccess.class, "makeStringFrom", new Class[]{Object.class},
               callStaticMethod( CommonServices.class, "getCoercionManager", new Class[0], Collections.<IRExpression>emptyList() ),
               Collections.singletonList(ExpressionTransformer.compile( expr, _cc() )));
     }

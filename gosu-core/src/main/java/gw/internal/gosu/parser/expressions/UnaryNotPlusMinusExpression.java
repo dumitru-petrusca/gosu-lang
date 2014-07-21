@@ -4,8 +4,8 @@
 
 package gw.internal.gosu.parser.expressions;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.Expression;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.expressions.IUnaryNotPlusMinusExpression;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.java.JavaTypes;
@@ -72,33 +72,33 @@ public final class UnaryNotPlusMinusExpression extends Expression implements IUn
 
     if( isNot() )
     {
-      return CommonServices.getCoercionManager().makePrimitiveBooleanFrom( value ) ? Boolean.FALSE : Boolean.TRUE;
+      return CoercionUtil.makePrimitiveBooleanFrom(value) ? Boolean.FALSE : Boolean.TRUE;
     }
     else if( isBitNot() )
     {
       IType type = getExpression().getType();
       if( type == JavaTypes.pBOOLEAN() )
       {
-        Object obj = !CommonServices.getCoercionManager().makeBooleanFrom( value );
-        return CommonServices.getCoercionManager().makePrimitiveBooleanFrom( obj );
+        Object obj = !CoercionUtil.makeBooleanFrom(value);
+        return CoercionUtil.makePrimitiveBooleanFrom(obj);
       }
       if( type == JavaTypes.pINT() )
       {
-        int d = ~CommonServices.getCoercionManager().makeIntegerFrom( value );
+        int d = ~CoercionUtil.makeIntegerFrom(value);
         return Integer.valueOf( d );
       }
       if( type == JavaTypes.pLONG() )
       {
-        return makeLong( ~CommonServices.getCoercionManager().makeLongFrom( value ) );
+        return makeLong( ~CoercionUtil.makeLongFrom(value) );
       }
       if( type == JavaTypes.pSHORT() )
       {
-        int d = ~CommonServices.getCoercionManager().makeIntegerFrom( value );
+        int d = ~CoercionUtil.makeIntegerFrom(value);
         return Integer.valueOf( d ).shortValue();
       }
       if( type == JavaTypes.pBYTE() )
       {
-        return (byte)( ~(CommonServices.getCoercionManager().makeIntegerFrom( value ).intValue()) );
+        return (byte)( ~(CoercionUtil.makeIntegerFrom(value).intValue()) );
       }
       if( type == JavaTypes.pDOUBLE() )
       {

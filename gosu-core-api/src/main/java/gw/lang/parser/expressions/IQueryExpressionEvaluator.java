@@ -11,8 +11,6 @@ public interface IQueryExpressionEvaluator
   public Object evaluate();
   public Object evaluate( Object[] ctxArgs );
 
-  public IType getResultType();
-
   public void addConditionalOrExpression( IWhereClauseConditionalOrExpression whereClauseConditionalOrExpression );
 
   public void addConditionalAndExpression( IWhereClauseConditionalAndExpression whereClauseConditionalAndExpression );

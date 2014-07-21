@@ -15,8 +15,9 @@ import gw.lang.ir.IRSymbol;
 import gw.lang.ir.expression.IRConditionalAndExpression;
 import gw.lang.ir.expression.IRRelationalExpression;
 import gw.lang.ir.statement.IRAssignmentStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
-import gw.lang.parser.ICoercionManager;
+import gw.lang.reflect.IEntityAccess;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.java.JavaTypes;
 import gw.config.CommonServices;
@@ -153,7 +154,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
       return false;
     }
 
-    final ICoercionManager coercionMgr = CommonServices.getCoercionManager();
+    final IEntityAccess access = CommonServices.getEntityAccess();
 
     if( strOperator.equals( ">" ) )
     {
@@ -163,7 +164,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
       }
       else if( lhsType == GosuParserTypes.DATETIME_TYPE() )
       {
-        return coercionMgr.makeDateFrom( lhsValue ).after( coercionMgr.makeDateFrom( rhsValue ) ) ? Boolean.TRUE : Boolean.FALSE;
+        return CoercionUtil.makeDateFrom(lhsValue).after( CoercionUtil.makeDateFrom(rhsValue) ) ? Boolean.TRUE : Boolean.FALSE;
       }
       else
       {
@@ -183,7 +184,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
         }
       }
 
-      return coercionMgr.makeStringFrom( lhsValue ).compareTo( coercionMgr.makeStringFrom( rhsValue ) ) > 0 ? Boolean.TRUE : Boolean.FALSE;
+      return access.makeStringFrom( lhsValue ).compareTo( access.makeStringFrom( rhsValue ) ) > 0 ? Boolean.TRUE : Boolean.FALSE;
     }
     else if( strOperator.equals( "<" ) )
     {
@@ -193,7 +194,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
       }
       else if( lhsType == GosuParserTypes.DATETIME_TYPE() )
       {
-        return coercionMgr.makeDateFrom( lhsValue ).before( coercionMgr.makeDateFrom( rhsValue ) ) ? Boolean.TRUE : Boolean.FALSE;
+        return CoercionUtil.makeDateFrom(lhsValue).before( CoercionUtil.makeDateFrom(rhsValue) ) ? Boolean.TRUE : Boolean.FALSE;
       }
       else
       {
@@ -213,7 +214,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
         }
       }
 
-      return coercionMgr.makeStringFrom( lhsValue ).compareTo( coercionMgr.makeStringFrom( rhsValue ) ) < 0 ? Boolean.TRUE : Boolean.FALSE;
+      return access.makeStringFrom( lhsValue ).compareTo( access.makeStringFrom( rhsValue ) ) < 0 ? Boolean.TRUE : Boolean.FALSE;
     }
     else if( strOperator.equals( ">=" ) )
     {
@@ -223,8 +224,8 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
       }
       else if( lhsType == GosuParserTypes.DATETIME_TYPE() )
       {
-        Date l = coercionMgr.makeDateFrom( lhsValue );
-        Date r = coercionMgr.makeDateFrom( rhsValue );
+        Date l = CoercionUtil.makeDateFrom(lhsValue);
+        Date r = CoercionUtil.makeDateFrom(rhsValue);
         return (l.compareTo( r ) >= 0) ? Boolean.TRUE : Boolean.FALSE;
       }
       else
@@ -245,7 +246,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
         }
       }
 
-      return coercionMgr.makeStringFrom( lhsValue ).compareTo( coercionMgr.makeStringFrom( rhsValue ) ) >= 0 ? Boolean.TRUE : Boolean.FALSE;
+      return access.makeStringFrom( lhsValue ).compareTo( access.makeStringFrom( rhsValue ) ) >= 0 ? Boolean.TRUE : Boolean.FALSE;
     }
     else // if( _strOperator.equals( "<=" ) )
     {
@@ -255,8 +256,8 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
       }
       else if( lhsType == GosuParserTypes.DATETIME_TYPE() )
       {
-        Date l = coercionMgr.makeDateFrom( lhsValue );
-        Date r = coercionMgr.makeDateFrom( rhsValue );
+        Date l = CoercionUtil.makeDateFrom(lhsValue);
+        Date r = CoercionUtil.makeDateFrom(rhsValue);
         return (l.before( r ) || l.equals( r )) ? Boolean.TRUE : Boolean.FALSE;
       }
       else
@@ -277,7 +278,7 @@ public class RelationalExpressionTransformer extends AbstractExpressionTransform
         }
       }
 
-      return coercionMgr.makeStringFrom( lhsValue ).compareTo( coercionMgr.makeStringFrom( rhsValue ) ) <= 0 ? Boolean.TRUE : Boolean.FALSE;
+      return access.makeStringFrom( lhsValue ).compareTo( access.makeStringFrom( rhsValue ) ) <= 0 ? Boolean.TRUE : Boolean.FALSE;
     }
   }
 

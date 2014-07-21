@@ -4,10 +4,9 @@
 
 package gw.internal.gosu.runtime;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.ir.transform.AbstractElementTransformer;
 import gw.internal.gosu.parser.TypeLord;
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IExpando;
 import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IPlaceholder;
@@ -333,7 +332,7 @@ public class GosuRuntimeMethods {
     if( o instanceof Boolean ) {
       return !((Boolean)o).booleanValue();
     }
-    return !CommonServices.getCoercionManager().makePrimitiveBooleanFrom( o );
+    return !CoercionUtil.makePrimitiveBooleanFrom(o);
   }
 
   public static void invokeUnlockOrDisposeOrCloseMethod( Object o )
@@ -384,7 +383,7 @@ public class GosuRuntimeMethods {
       return true;
     }
 
-    return StandardCoercionManager.isStructurallyAssignable( toType, fromType );
+    return CoercionUtil.isStructurallyAssignable( toType, fromType );
   }
 
   public static void print( Object obj )

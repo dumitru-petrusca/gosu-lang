@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class FloatCoercer extends BaseBoxedCoercer
 {
@@ -13,7 +13,7 @@ public class FloatCoercer extends BaseBoxedCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeFloatFrom( value );
+    return CoercionUtil.makeFloatFrom(value);
   }
 
   public static FloatCoercer instance()

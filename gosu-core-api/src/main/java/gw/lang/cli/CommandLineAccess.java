@@ -11,6 +11,7 @@ import gw.internal.ext.org.apache.commons.cli.CommandLineParser;
 import gw.internal.ext.org.apache.commons.cli.Option;
 import gw.internal.ext.org.apache.commons.cli.Options;
 import gw.internal.ext.org.apache.commons.cli.ParseException;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.IPropertyInfo;
 import gw.lang.reflect.IType;
@@ -198,13 +199,13 @@ public class CommandLineAccess {
       }
       if (type == JavaTypes.DATE()) {
         try {
-          return CommonServices.getCoercionManager().parseDateTime( value.toString() );
+          return CommonServices.getEntityAccess().parseDateTime( value.toString() );
         } catch (java.text.ParseException e) {
           throw new RuntimeException( e );
         }
       }
     }
-    return CommonServices.getCoercionManager().convertValue( value, type );
+    return CoercionUtil.convertValue(value, type);
   }
 
   private static String getCurrentProgramName() {

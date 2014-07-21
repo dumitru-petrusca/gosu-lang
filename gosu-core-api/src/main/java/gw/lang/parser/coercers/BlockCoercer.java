@@ -4,11 +4,11 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IType;
 import gw.lang.parser.IBlockClass;
 import gw.lang.function.IBlock;
-import gw.config.CommonServices;
 import gw.util.GosuClassUtil;
 
 import java.lang.reflect.Proxy;
@@ -42,12 +42,12 @@ public class BlockCoercer extends BaseCoercer
         if( IBlockClass.INVOKE_METHOD_NAME.equals( method.getName() ) )
         {
           Object val = finalInvoke.invoke( blk, args );
-          return CommonServices.getCoercionManager().convertValue( val, funType.getReturnType() );
+          return CoercionUtil.convertValue(val, funType.getReturnType());
         }
         else if( IBlockClass.INVOKE_WITH_ARGS_METHOD_NAME.equals( method.getName() ) )
         {
           Object val = blk.invokeWithArgs( (Object[]) args[0] );
-          return CommonServices.getCoercionManager().convertValue( val, funType.getReturnType() );
+          return CoercionUtil.convertValue(val, funType.getReturnType());
         }
         else
         {

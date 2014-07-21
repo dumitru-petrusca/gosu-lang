@@ -10,6 +10,7 @@ import gw.lang.GosuShop;
 import gw.lang.PublishedName;
 import gw.lang.javadoc.IDocRef;
 import gw.lang.javadoc.IMethodNode;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.EvaluationException;
 import gw.lang.parser.TypeVarToTypeMap;
 import gw.lang.reflect.IAnnotationInfo;
@@ -176,7 +177,7 @@ public class JavaPropertyInfo extends JavaBaseFeatureInfo implements IJavaProper
           rhs = getFeatureType();
           lhs = TypeSystem.get(field.getType());
         }
-        if(CommonServices.getCoercionManager().canCoerce(lhs, rhs)) {
+        if(CoercionUtil.findCoercer(lhs, rhs, false) != null) {
           _publicField = field;
           break;
         }
@@ -596,7 +597,7 @@ public class JavaPropertyInfo extends JavaBaseFeatureInfo implements IJavaProper
           rVal = _getMethod.invoke( ctx, args );
         } else {
           rVal = ((FieldJavaClassField)_publicField).get(ctx);
-          rVal = CommonServices.getCoercionManager().convertValue(rVal, getFeatureType());
+          rVal = CoercionUtil.convertValue(rVal, getFeatureType());
         }
         if( _bExternal )
         {
@@ -637,7 +638,7 @@ public class JavaPropertyInfo extends JavaBaseFeatureInfo implements IJavaProper
 
           _setMethod.invoke( ctx, args );
         } else {
-          value = CommonServices.getCoercionManager().convertValue(value, TypeSystem.get(_publicField.getType()));
+          value = CoercionUtil.convertValue(value, TypeSystem.get(_publicField.getType()));
           ((FieldJavaClassField)_publicField).set(ctx, value);
         }
       }

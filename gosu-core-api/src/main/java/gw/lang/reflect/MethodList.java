@@ -4,7 +4,7 @@
 
 package gw.lang.reflect;
 
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.CoercionUtil;
 import gw.util.DynamicArray;
 
 import java.util.Collection;
@@ -151,7 +151,7 @@ public class MethodList extends DynamicArray<IMethodInfo> {
         toReturnType = TypeSystem.replaceTypeVariableTypeParametersWithBoundingTypes( toReturnType, miTo.getOwnersType() );
         if( !toReturnType.equals( fromReturnType ) &&
             !toReturnType.isAssignableFrom( fromReturnType ) &&
-            !StandardCoercionManager.arePrimitiveTypesAssignable( toReturnType, fromReturnType ) ) {
+            !CoercionUtil.arePrimitiveTypesAssignable(toReturnType, fromReturnType) ) {
           continue;
         }
         IParameterInfo[] fromParams = miFrom.getParameters();
@@ -170,7 +170,7 @@ public class MethodList extends DynamicArray<IMethodInfo> {
               iScore += 2;
             }
             else if( fromParamType.isAssignableFrom( toParamType ) ||
-                     StandardCoercionManager.arePrimitiveTypesAssignable( fromParamType, toParamType ) ) {
+                     CoercionUtil.arePrimitiveTypesAssignable(fromParamType, toParamType) ) {
               // types are contravariant
               iScore += 1;
             }

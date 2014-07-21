@@ -5,9 +5,9 @@
 package gw.lang.reflect;
 
 import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.ICoercer;
 import gw.lang.parser.IExpression;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.parser.TypeSystemAwareCache;
 import gw.lang.parser.coercers.BasePrimitiveCoercer;
 import gw.lang.reflect.java.JavaTypes;
@@ -132,7 +132,7 @@ public class MethodScorer {
       // null  +1
       iScore = 1;
     }
-    else if( StandardCoercionManager.arePrimitiveTypesAssignable( paramType, argType ) ) {
+    else if( CoercionUtil.arePrimitiveTypesAssignable(paramType, argType) ) {
       // Primitive coercion  +(2..9)
       iScore = BasePrimitiveCoercer.getPriorityOf( paramType, argType );
     }
@@ -160,7 +160,7 @@ public class MethodScorer {
         }
       }
       else {
-        ICoercer iCoercer = CommonServices.getCoercionManager().findCoercer( paramType, argType, false );
+        ICoercer iCoercer = CoercionUtil.findCoercer( paramType, argType, false );
         if( iCoercer != null ) {
           if( iCoercer instanceof BasePrimitiveCoercer ) {
             // Coercible (non-standard primitive)  +24 + primitive-coercion-score  (0 is best score for pimitivie coercer)

@@ -4,8 +4,8 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
-import gw.config.CommonServices;
 
 public class CharCoercer extends BaseBoxedCoercer
 {
@@ -19,7 +19,7 @@ public class CharCoercer extends BaseBoxedCoercer
     }
     else
     {
-      Double aDouble = CommonServices.getCoercionManager().makeDoubleFrom( value );
+      Double aDouble = CoercionUtil.makeDoubleFrom(value);
       return (char)aDouble.intValue();
     }
   }

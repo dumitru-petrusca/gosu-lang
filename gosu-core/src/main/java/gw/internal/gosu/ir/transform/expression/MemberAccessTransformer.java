@@ -31,6 +31,7 @@ import gw.lang.ir.IRType;
 import gw.lang.ir.expression.IRCompositeExpression;
 import gw.lang.ir.statement.IRAssignmentStatement;
 import gw.lang.ir.statement.IRSyntheticStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.EvaluationException;
 import gw.lang.parser.IBlockClass;
 import gw.lang.parser.ICustomExpressionRuntime;
@@ -606,7 +607,7 @@ public class MemberAccessTransformer extends AbstractExpressionTransformer<Membe
     List<IAnnotationInfo> annotationInfoList = property.getAnnotationsOfType( GosuTypes.AUTOCREATE() );
     Object value;
     boolean usingAutoCreateAnnotation = annotationInfoList != null && annotationInfoList.size() > 0;
-    if( usingAutoCreateAnnotation )
+    if( usingAutoCreateAnnotation && !ea.isEntityClass(property.getFeatureType()))
     {
       IAnnotationInfo annotation = annotationInfoList.get( 0 );
       Autocreate o = (Autocreate)annotation.getInstance();
@@ -635,7 +636,7 @@ public class MemberAccessTransformer extends AbstractExpressionTransformer<Membe
       throw new EvaluationException( "Property, " + property.getName() + ", on class, " + TypeSystem.getFromObject( rootValue ).getRelativeName() + ", is null and immutable." );
     }
 
-    value = CommonServices.getCoercionManager().convertValue( value, property.getFeatureType() );
+    value = CoercionUtil.convertValue(value, property.getFeatureType());
     property.getAccessor().setValue( rootValue, value );
     return usingAutoCreateAnnotation ? property.getAccessor().getValue( rootValue ) : value;
   }

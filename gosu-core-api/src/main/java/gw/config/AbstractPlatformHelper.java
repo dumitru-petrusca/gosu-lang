@@ -7,25 +7,28 @@ package gw.config;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
 import gw.internal.gosu.util.RabinKarpHash;
+import gw.lang.parser.ILanguageLevel;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.module.IModule;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractPlatformHelper extends BaseService implements IPlatformHelper {
 
   private static final String[] IGNORE_DIRECTORY_PATTERNS = new String[]{
       //"generated/pcf/",
-      "geterated/pcfjunit/", // don't verify code generated for PCFs in sources
+      "generated/pcfjunit/", // don't verify code generated for PCFs in sources
       "pcfjunit/com/guidewire/tools/web/config/pcf/MyRowSet",
       "pcfjunit/com/guidewire/tools/web/config/pcf/MultiModeLV",
       "pcfjunit/com/guidewire/pl/web/symbol/VariableElementTest/VariableElementTest",
       "pcfjunit/com/guidewire/pl/web/symbol/require/RequireElementTestDV",
       "pcfjunit/com/guidewire/pl/web/navigation/page/CodeBlockTest",
       "pcfjunit/com/guidewire/pl/web/navigation/location/BadPopup",
+      "pcfjunit/com/guidewire/pl/web/navigation/ConstructorTest",
       "pcfjunit/com/guidewire/pl/web/config/sectionwidget/dupIDs",
       "pcfjunit/com/guidewire/pl/web/navigation/ConstructorTest/ConstructorTest",
       "pcfjunit/com/guidewire/pl/web/treeview/TreeViewWidgetBadTypeTest/TreeViewWidgetTestBadType",
@@ -100,7 +103,6 @@ public abstract class AbstractPlatformHelper extends BaseService implements IPla
   }
 
   public boolean isPathIgnored(String relativePath) {
-
     final IFile file = CommonServices.getFileSystem().getIFile(new File(relativePath));
     // AHK - We use file.getParent().hasChild() instead of file.exists() since we don't want to hit the disk
     // for the file existence check if we don't have to, and hasChild() will usually work off the cached sub-files
@@ -114,15 +116,10 @@ public abstract class AbstractPlatformHelper extends BaseService implements IPla
           }
         }
       }
-      //System.out.println("Ignoring: " + relativePath);
       return true;
     }
 
-//    for (String pattern : IGNORE_DIRECTORY_PATTERNS) {
-//      if (relativePath.contains(pattern)) {
-//        return true;
-//      }
-//    }
+    relativePath = relativePath.replace("\\", "/");
     return HASH.matches(relativePath);
   }
 
@@ -132,17 +129,12 @@ public abstract class AbstractPlatformHelper extends BaseService implements IPla
   }
 
   @Override
-  public String getIDEACachesDir() {
-    throw new RuntimeException("Not supported");
-  }
-
-  @Override
-  public File getIDEACachesDirFile() {
-    throw new RuntimeException("Not supported");
-  }
-
-  @Override
   public File getIDEACorruptionMarkerFile() {
     throw new RuntimeException("Not supported");
+  }
+
+  @Override
+  public boolean isSupportCompileTimeAnnotation() {
+    return !ILanguageLevel.Util.STANDARD_GOSU() && !ExecutionMode.isIDE();
   }
 }

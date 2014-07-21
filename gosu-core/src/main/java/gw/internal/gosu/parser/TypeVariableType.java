@@ -73,6 +73,9 @@ public class TypeVariableType extends AbstractType implements ITypeVariableType
   public String getNameWithBoundingType()
   {
     return getRelativeName() + "." + getBoundingType().getName();
+    // NOTE pdalbora 7-May-2014 -- Merge conflict. We both had the same intent: generate a unique string for a
+    // TypeVariableType. Original version below.
+//     return TypeLord.getDefaultParameterizedTypeWithTypeVars( getBoundingType() ).getName();
   }
 
   public String getNamespace()

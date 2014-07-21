@@ -5,6 +5,7 @@
 package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.fs.IFile;
 import gw.internal.gosu.ir.transform.util.IRTypeResolver;
 import gw.internal.gosu.parser.expressions.*;
@@ -53,6 +54,7 @@ import gw.lang.IReentrant;
 import gw.lang.annotation.UsageTarget;
 import gw.lang.function.IBlock;
 import gw.lang.ir.IRType;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.ExternalSymbolMapForMap;
 import gw.lang.parser.GlobalScope;
 import gw.lang.parser.GosuParserFactory;
@@ -60,7 +62,6 @@ import gw.lang.parser.GosuParserTypes;
 import gw.lang.parser.IBlockClass;
 import gw.lang.parser.ICapturedSymbol;
 import gw.lang.parser.ICoercer;
-import gw.lang.parser.ICoercionManager;
 import gw.lang.parser.IDynamicFunctionSymbol;
 import gw.lang.parser.IDynamicPropertySymbol;
 import gw.lang.parser.IDynamicSymbol;
@@ -94,7 +95,6 @@ import gw.lang.parser.ParserOptions;
 import gw.lang.parser.PostCompilationAnalysis;
 import gw.lang.parser.ScriptabilityModifiers;
 import gw.lang.parser.SourceCodeReader;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.parser.StandardScope;
 import gw.lang.parser.SymbolType;
 import gw.lang.parser.ThreadSafeSymbolTable;
@@ -131,35 +131,7 @@ import gw.lang.parser.statements.IUsesStatement;
 import gw.lang.parser.statements.IUsesStatementList;
 import gw.lang.parser.statements.TerminalType;
 import gw.lang.parser.template.TemplateParseException;
-import gw.lang.reflect.ConstructorInfoBuilder;
-import gw.lang.reflect.FeatureManager;
-import gw.lang.reflect.FunctionType;
-import gw.lang.reflect.IBlockType;
-import gw.lang.reflect.ICanBeAnnotation;
-import gw.lang.reflect.IConstructorInfo;
-import gw.lang.reflect.IConstructorType;
-import gw.lang.reflect.IEnumType;
-import gw.lang.reflect.IErrorType;
-import gw.lang.reflect.IFunctionType;
-import gw.lang.reflect.IInvocableType;
-import gw.lang.reflect.IMetaType;
-import gw.lang.reflect.IMethodInfo;
-import gw.lang.reflect.INamespaceType;
-import gw.lang.reflect.IOptionalParamCapable;
-import gw.lang.reflect.IParameterInfo;
-import gw.lang.reflect.IPlaceholder;
-import gw.lang.reflect.IPropertyInfo;
-import gw.lang.reflect.IRelativeTypeInfo;
-import gw.lang.reflect.IScriptabilityModifier;
-import gw.lang.reflect.IType;
-import gw.lang.reflect.ITypeInfo;
-import gw.lang.reflect.ITypeVariableType;
-import gw.lang.reflect.MethodList;
-import gw.lang.reflect.MethodScore;
-import gw.lang.reflect.MethodScorer;
-import gw.lang.reflect.Modifier;
-import gw.lang.reflect.TypeInfoUtil;
-import gw.lang.reflect.TypeSystem;
+import gw.lang.reflect.*;
 import gw.lang.reflect.gs.ClassType;
 import gw.lang.reflect.gs.GosuClassTypeLoader;
 import gw.lang.reflect.gs.ICompilableType;
@@ -246,7 +218,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
 
   GosuParser( ISymbolTable symTable, IScriptabilityModifier scriptabilityConstraint )
   {
-    this(symTable, scriptabilityConstraint, CommonServices.getEntityAccess().getDefaultTypeUses());
+    this(symTable, scriptabilityConstraint, TypeSystem.getDefaultTypeUsesMap());
   }
 
   GosuParser( ISymbolTable symTable, IScriptabilityModifier scriptabilityConstraint, ITypeUsesMap tuMap )
@@ -598,7 +570,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
               previousStatement == null ||
                       currentStatement.isNoOp() ||
                       previousStatement.getLeastSignificantTerminalStatement( bAbsolute ) == null || !bAbsolute[0],
-              !CommonServices.getEntityAccess().isUnreachableCodeDetectionOn(), Res.MSG_UNREACHABLE_STMT );
+              !CommonServices.getEntityAccess().getLanguageLevel().isUnreachableCodeDetectionOn(), Res.MSG_UNREACHABLE_STMT );
     }
 
     if( isParsingFunction() && !isParsingBlock() )
@@ -1528,7 +1500,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
     return first instanceof ILiteralExpression &&
            !(second instanceof ILiteralExpression) &&
            JavaTypes.STRING().equals(first.getType()) &&
-           CommonServices.getCoercionManager().canCoerce( second.getType(), JavaTypes.STRING() );
+           CoercionUtil.canCoerce(second.getType(), JavaTypes.STRING());
   }
 
   private Expression wrapExpressionIfNeeded( Expression first, Expression second )
@@ -1986,14 +1958,13 @@ public final class GosuParser extends ParserBase implements IGosuParser
           break;
         }
       }
-      ICoercionManager cocerionManager = CommonServices.getCoercionManager();
       boolean bDontWarn = bHasCoercionWarning ||                                     // rhs has coercion warning, or
               ((lhs.getType() != JavaTypes.OBJECT() && rhs.getType() != JavaTypes.OBJECT()) || // neither side is Object, or
                       (lhs.getType() == JavaTypes.pVOID() || rhs.getType() == JavaTypes.pVOID()) ||   // one side is "null", or
                       (lhs.getType() != null && BeanAccess.isBeanType( lhs.getType() ) &&         // both sides are "beans"
                               rhs.getType() != null && BeanAccess.isBeanType( rhs.getType() )) ||        // ... , or
-                      cocerionManager.resolveCoercerStatically( lhs.getType(), rhs.getType() ) == // coercer is symmetric
-                              cocerionManager.resolveCoercerStatically( rhs.getType(), lhs.getType() ));
+                  CoercionUtil.resolveCoercerStatically( lhs.getType(), rhs.getType() ) == // coercer is symmetric
+                      CoercionUtil.resolveCoercerStatically( rhs.getType(), lhs.getType() ));
       verifyOrWarn( e, bDontWarn, true,
               Res.MSG_ASYMMETRICAL_COMPARISON, lhs.getType(), rhs.getType() );
     }
@@ -2504,7 +2475,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
             }
           }
           e.setType( rhsType );
-          e.setCoercer( CommonServices.getCoercionManager().resolveCoercerStatically( rhsType, lhs.getType() ) );
+          e.setCoercer( CoercionUtil.resolveCoercerStatically(rhsType, lhs.getType()) );
 
           warn( lhs, lhs.getType() instanceof IErrorType ||
                   rhs.getType() instanceof IErrorType ||
@@ -6976,7 +6947,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   {
     if( rawContextType != null && boundContextType != null )
     {
-      ICoercer iCoercer = CommonServices.getCoercionManager().resolveCoercerStatically( boundContextType, expressionType );
+      ICoercer iCoercer = CoercionUtil.resolveCoercerStatically( boundContextType, expressionType );
       if( iCoercer instanceof IResolvingCoercer )
       {
         IType resolvedType = ((IResolvingCoercer)iCoercer).resolveType( rawContextType, expressionType );
@@ -8720,7 +8691,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   {
     return getGosuClass() == null ||
             (getGosuClass() instanceof IGosuProgramInternal  && ((IGosuProgramInternal) getGosuClass()).allowsUses()) ||
-            CommonServices.getEntityAccess().areUsesStatementsAllowedInStatementLists(getGosuClass());
+            CommonServices.getEntityAccess().getLanguageLevel().areUsesStatementsAllowedInStatementLists(getGosuClass());
   }
 
   private int getStatementDepth()
@@ -9380,7 +9351,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       verify( ein, LoopStatement.isIteratorType( typeIn ) || typeIn instanceof ErrorType,
               Res.MSG_EXPECTING_ARRAYTYPE_FOREACH, typeIn.getName() );
       forEachStmt.setInExpression( ein );
-      forEachStmt.setStructuralIterable( StandardCoercionManager.isStructurallyAssignable_Laxed( JavaTypes.ITERABLE(), typeIn ) );
+      forEachStmt.setStructuralIterable( CoercionUtil.isStructurallyAssignable_Laxed( JavaTypes.ITERABLE(), typeIn ) );
       if( strIdentifier != null )
       {
         // Create a temporary symbol for the identifier part of the foreach statement
@@ -10772,9 +10743,9 @@ public final class GosuParser extends ParserBase implements IGosuParser
         if( !(typeExpected instanceof ErrorType) )
         {
           IPropertyInfo lhsPi = ma.getPropertyInfo();
-          if( lhsPi instanceof IJavaPropertyInfo &&
-                  ((IJavaPropertyInfo)lhsPi).getWriteMethodInfo() == null &&
-                  ((IJavaPropertyInfo)lhsPi).getPublicField() != null )
+          if( lhsPi instanceof JavaPropertyInfo &&
+                  ((JavaPropertyInfo)lhsPi).getWriteMethodInfo() == null &&
+                  ((JavaPropertyInfo)lhsPi).getPublicField() != null )
           {
             typeExpected = TypeSystem.get(((IJavaPropertyInfo) lhsPi).getPublicField().getType());
           }
@@ -11504,7 +11475,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
         pushDynamicFunctionSymbol( dfsDecl );
         functionStmt.setDynamicFunctionSymbol( dfsDecl );
         verifyOrWarn( functionStmt, isTerminal( statement, dfsDecl.getReturnType() ),
-                !CommonServices.getEntityAccess().isUnreachableCodeDetectionOn(),
+                !CommonServices.getEntityAccess().getLanguageLevel().isUnreachableCodeDetectionOn(),
                 Res.MSG_MISSING_RETURN );
       }
       pushStatement( functionStmt );
@@ -12885,7 +12856,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       if( otherSide instanceof NumericLiteral )
       {
         NumericLiteral nl = (NumericLiteral)otherSide;
-        boolean repsAreIdentical = new BigDecimal( nl.getStrValue() ).equals( CommonServices.getCoercionManager().makeBigDecimalFrom( nl.getValue() ) );
+        boolean repsAreIdentical = new BigDecimal( nl.getStrValue() ).equals( CoercionUtil.makeBigDecimalFrom(nl.getValue()) );
         verify( (ParsedElement)otherSide, repsAreIdentical, Res.MSG_LOSS_OF_PRECISION_IN_NUMERIC_LITERAL, nl.getStrValue() + "bd" );
       }
     }
@@ -13279,7 +13250,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   public IGosuClassInternal parseClass( String strQualifiedClassName, ISourceFileHandle sourceFile, boolean bThrowOnWarnings, boolean bFullyCompile ) throws ParseResultsException
   {
     GosuClassTypeLoader classLoader;
-    if (!CommonServices.getPlatformHelper().isInIDE()) {
+    if (!ExecutionMode.isIDE()) {
       classLoader = GosuClassTypeLoader.getDefaultClassLoader(TypeSystem.getGlobalModule());
     } else {
       IFile file = sourceFile.getFile();
@@ -13465,7 +13436,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
         {
           IType argType = argTypes[i];
           IType boundArgType = TypeLord.boundTypes( paramType, getCurrentlyInferringFunctionTypeVars() );
-          ICoercer coercer = CommonServices.getCoercionManager().resolveCoercerStatically( boundArgType, argType );
+          ICoercer coercer = CoercionUtil.resolveCoercerStatically( boundArgType, argType );
           if( coercer instanceof IResolvingCoercer )
           {
             argTypes[i] = ((IResolvingCoercer)coercer).resolveType( paramType, argType );

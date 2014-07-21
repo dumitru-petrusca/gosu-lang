@@ -1034,8 +1034,8 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
    * Potentially generates a bridge method for an overridden method where the super method is in a proxy
    * and the proxy is for a Java interface having param types that are transformed to non-bytecode types
    * in the type system.
-   * E.g., A guidewire platform plugin interface may declare UserBase or the like as a parameter type,
-   * which is always represented as the corresponding app derivative: UserBase -> CC's User. Essentially,
+   * E.g., A guidewire platform plugin interface may declare User or the like as a parameter type,
+   * which is always represented as the corresponding app derivative: User -> CC's User. Essentially,
    * we need to generate a bridge method to make the otherwise unsavory covariant parameter types work
    * in method overrides.
    */

@@ -213,9 +213,14 @@ public class FileSystemImpl extends BaseService implements IFileSystem {
 
   private void loadProtocolAdapters() {
     ServiceLoader<IProtocolAdapter> adapters = ServiceLoader.load(IProtocolAdapter.class, getClass().getClassLoader());
-    for (IProtocolAdapter adapter : adapters) {
-      for (String protocol : adapter.getSupportedProtocols()) {
-        _protocolAdapters.put(protocol, adapter);
+    for (Iterator<IProtocolAdapter> adapterIterator = adapters.iterator(); adapterIterator.hasNext(); ) {
+      try {
+        IProtocolAdapter adapter = adapterIterator.next();
+        for (String protocol : adapter.getSupportedProtocols()) {
+          _protocolAdapters.put(protocol, adapter);
+        }
+      } catch (ServiceConfigurationError e) {
+        // It's not in the classpath, just ignore
       }
     }
   }

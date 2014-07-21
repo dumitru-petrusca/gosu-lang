@@ -243,7 +243,7 @@ public class AsmClass implements IAsmType, IGeneric {
 
     @Override
     public void visit( int version, int access, String name, String signature, String superName, String[] interfaces ) {
-      _type = AsmUtil.makeType( name );
+      _type = AsmUtil.makeType( "L" + name + ";" ); // name is passed in ASM 'internal' format, converting to java internal fqn
       AsmClass outerClass = ensureOuterIsLoadedFirst(); // barf
       _version = version;
       _modifiers = access;

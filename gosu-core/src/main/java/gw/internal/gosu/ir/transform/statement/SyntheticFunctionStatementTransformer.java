@@ -33,6 +33,7 @@ import gw.internal.gosu.parser.statements.VarStatement;
 import gw.lang.ir.IRExpression;
 import gw.lang.ir.IRStatement;
 import gw.lang.ir.statement.IRReturnStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.ISymbol;
 import gw.lang.parser.StandardSymbolTable;
 import gw.lang.reflect.FunctionType;
@@ -182,7 +183,7 @@ public class SyntheticFunctionStatementTransformer extends AbstractStatementTran
   {
     ImplicitTypeAsExpression cast = new ImplicitTypeAsExpression();
     cast.setLHS( expr );
-    cast.setCoercer( CommonServices.getCoercionManager().resolveCoercerStatically( JavaTypes.OBJECT(), expr.getType() ) );
+    cast.setCoercer( CoercionUtil.resolveCoercerStatically(JavaTypes.OBJECT(), expr.getType()) );
     cast.setType( TypeSystem.getBoxType( expr.getType() ) );
     return cast;
   }

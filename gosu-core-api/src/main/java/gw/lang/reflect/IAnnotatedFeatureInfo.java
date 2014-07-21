@@ -133,4 +133,5 @@ public interface IAnnotatedFeatureInfo extends IFeatureInfo
       return true;
     }
   }
+
 }

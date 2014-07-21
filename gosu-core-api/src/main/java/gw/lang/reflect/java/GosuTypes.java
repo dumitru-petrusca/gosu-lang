@@ -9,8 +9,16 @@ import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.TypeSystemShutdownListener;
+import gw.lang.reflect.gs.ClassType;
+import gw.lang.reflect.gs.GosuClassTypeLoader;
+import gw.lang.reflect.gs.IGosuClass;
+import gw.lang.reflect.gs.ISourceFileHandle;
+import gw.lang.reflect.gs.StringSourceFileHandle;
+import gw.util.StreamUtil;
 import gw.util.concurrent.LockingLazyVar;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +60,25 @@ public class GosuTypes {
     IType type = CACHE.get(fqn);
     if (type == null) {
       type = TypeSystem.getByFullNameIfValid(fqn, TypeSystem.getGlobalModule());
+      if (type == null) {
+        String path = fqn.replace('.', '/') + ".gs";
+        byte[] content;
+        InputStream is = null;
+        try {
+          is = GosuTypes.class.getClassLoader().getResourceAsStream(path);
+          content = StreamUtil.getContent(is);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        } finally {
+          try {
+            is.close();
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        }
+        ISourceFileHandle sourceFile = new StringSourceFileHandle(fqn, new String(content), false, ClassType.Class);
+        type = GosuClassTypeLoader.getDefaultClassLoader().makeNewClass(sourceFile);
+      }
       CACHE.put(fqn, type);
     }
     return type;

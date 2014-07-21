@@ -4,7 +4,6 @@
 
 package gw.internal.gosu.parser;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.java.classinfo.CompileTimeExpressionParser;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceEnumConstant;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceField;
@@ -13,6 +12,7 @@ import gw.lang.GosuShop;
 import gw.lang.javadoc.IClassDocNode;
 import gw.lang.javadoc.IDocRef;
 import gw.lang.javadoc.IVarNode;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.EvaluationException;
 import gw.lang.parser.IExpression;
 import gw.lang.reflect.FeatureManager;
@@ -248,8 +248,16 @@ public class JavaFieldPropertyInfo extends JavaBaseFeatureInfo implements IJavaF
       if( rhs == null ) {
         return false;
       }
-      IExpression pr = CompileTimeExpressionParser.parse( rhs, field.getEnclosingClass(), getFeatureType() );
-      return pr.isCompileTimeConstant();
+      // NOTE pdalbora 14-Jan-2014 -- Restoring the try/catch here. The reason is that if the field initializer is not
+      // a compile-time constant, then the source will be unparseable (not sure if that's a bug in getRhs()) and will
+      // throw an exception. In that case, we can assume that the field initializer is not a compile-time constant
+      // and return false.
+      try {
+        IExpression pr = CompileTimeExpressionParser.parse( rhs, field.getEnclosingClass(), getFeatureType() );
+        return pr.isCompileTimeConstant();
+      } catch (Exception e) {
+        return false;
+      }
     }
     else if( field instanceof AsmFieldJavaClassField &&
              ((AsmFieldJavaClassField)field).getStaticValue() != null ) {
@@ -322,7 +330,7 @@ public class JavaFieldPropertyInfo extends JavaBaseFeatureInfo implements IJavaF
 
       try
       {
-        value = CommonServices.getCoercionManager().convertValue( value, getFeatureType() );
+        value = CoercionUtil.convertValue(value, getFeatureType());
         ((FieldJavaClassField)_field).set( null, value );
       }
       catch( IllegalAccessException e )
@@ -357,7 +365,7 @@ public class JavaFieldPropertyInfo extends JavaBaseFeatureInfo implements IJavaF
 
       try
       {
-        value = CommonServices.getCoercionManager().convertValue( value, getFeatureType() );
+        value = CoercionUtil.convertValue(value, getFeatureType());
         ((FieldJavaClassField)_field).set( ctx, value );
       }
       catch( IllegalAccessException e )

@@ -4,13 +4,13 @@
 
 package gw.lang.parser.coercers;
 
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.IResolvingCoercer;
 import gw.lang.parser.ICoercer;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.TypeSystemShutdownListener;
 import gw.lang.reflect.java.JavaTypes;
-import gw.config.CommonServices;
 import gw.util.concurrent.LockingLazyVar;
 
 public class BasePrimitiveCoercer extends StandardCoercer implements IResolvingCoercer
@@ -94,7 +94,7 @@ public class BasePrimitiveCoercer extends StandardCoercer implements IResolvingC
   {
     if( value == null )
     {
-      return CommonServices.getCoercionManager().convertNullAsPrimitive( _primitiveType, false );
+      return CoercionUtil.convertNullAsPrimitive(_primitiveType, false);
     }
     else
     {

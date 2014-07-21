@@ -30,7 +30,6 @@ import gw.util.StreamUtil;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -246,7 +245,7 @@ public class EnhancementIndex implements IEnhancementIndex
   }
 
   public static String parseEnhancedTypeName(InputStream stream) {
-    ISourceCodeTokenizer tokenizer = GosuShop.createSourceCodeTokenizer(new InputStreamReader(stream));
+    ISourceCodeTokenizer tokenizer = GosuShop.createSourceCodeTokenizer(StreamUtil.getInputStreamReader(stream));
     StringBuilder name = new StringBuilder();
     boolean mark = false;
     boolean enhancementFound = false;

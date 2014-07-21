@@ -22,6 +22,11 @@ public class DefaultSingleModule extends GlobalModule
     super(execEnv, IExecutionEnvironment.DEFAULT_SINGLE_MODULE_NAME);
   }
 
+  public DefaultSingleModule( ExecutionEnvironment execEnv, String name )
+  {
+    super(execEnv, name);
+  }
+
   protected List<IDirectory> getAdditionalSourceRoots() {
     return CommonServices.getEntityAccess().getAdditionalSourceRoots();
   }
@@ -34,12 +39,6 @@ public class DefaultSingleModule extends GlobalModule
       CommonServices.getTypeSystem().pushTypeLoader( this, new DynamicTypeLoader( this ) );
     }
     createGlobalTypeloaders( );
-  }
-
-  @Override
-  public IDirectory getOutputPath()
-  {
-    return null;
   }
 
   @Override

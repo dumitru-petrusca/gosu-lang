@@ -102,7 +102,7 @@ public class EvalExpressionTransformer extends EvalBasedTransformer<EvalExpressi
                                                 IType[] immediateFuncTypeParams, IType enclosingClass, IParsedElement evalExpr,
                                                 ISymbolTable compileTimeLocalContextSymbols, IExternalSymbolMap runtimeLocalSymbolValues )
   {
-    String strSource = CommonServices.getCoercionManager().makeStringFrom( source );
+    String strSource = CommonServices.getEntityAccess().makeStringFrom(source);
     IGosuProgramParser parser = GosuParserFactory.createProgramParser();
     List<ICapturedSymbol> capturedSymbols = evalExpr instanceof EvalExpression ? ((EvalExpression)evalExpr).getCapturedForBytecode() : Collections.<ICapturedSymbol>emptyList();
     //debugInfo( compileTimeLocalContextSymbols );

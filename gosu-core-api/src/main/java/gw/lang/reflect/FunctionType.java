@@ -5,17 +5,11 @@
 package gw.lang.reflect;
 
 import gw.internal.gosu.parser.StringCache;
-import gw.lang.parser.GosuParserTypes;
-import gw.lang.parser.IExpression;
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.*;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.gs.IGenericTypeVariable;
-import gw.lang.parser.IScriptPartId;
 import gw.lang.reflect.java.IJavaClassInfo;
-import gw.lang.parser.IBlockClass;
-import gw.lang.parser.ScriptPartId;
-import gw.lang.parser.TypeVarToTypeMap;
 import gw.util.Pair;
 import gw.util.concurrent.LockingLazyVar;
 
@@ -652,7 +646,7 @@ public class FunctionType extends AbstractType implements IFunctionType, IGeneri
       {
         //covariant return types
         return getReturnType().isAssignableFrom( otherType.getReturnType() ) ||
-                StandardCoercionManager.arePrimitiveTypesAssignable( getReturnType(), otherType.getReturnType() ) ||
+            CoercionUtil.arePrimitiveTypesAssignable( getReturnType(), otherType.getReturnType() ) ||
                getReturnType() == GosuParserTypes.NULL_TYPE();
       }
     }
@@ -677,7 +671,7 @@ public class FunctionType extends AbstractType implements IFunctionType, IGeneri
     {
       IType myParamType = lhsParams[i];
       IType otherParamType = rhsParams[i];                    //## todo: this is a hack; we need to tighten this up
-      if( !StandardCoercionManager.arePrimitiveTypesAssignable( otherParamType, myParamType ) ) {
+      if( !CoercionUtil.arePrimitiveTypesAssignable( otherParamType, myParamType ) ) {
         if( !(otherParamType.isAssignableFrom( myParamType ) || myParamType instanceof ITypeVariableType) )
         {
           return false;

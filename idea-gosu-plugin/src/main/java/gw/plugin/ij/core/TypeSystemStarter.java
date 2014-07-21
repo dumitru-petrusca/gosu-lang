@@ -26,7 +26,6 @@ import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import gw.config.CommonServices;
-import gw.config.IExtensionFolderLocator;
 import gw.config.IPlatformHelper;
 import gw.fs.IDirectory;
 import gw.lang.GosuShop;
@@ -171,7 +170,6 @@ public class TypeSystemStarter {
     } catch (Exception e) {
       LOG.error(e);
     }
-    CommonServices.getKernel().redefineService_Privileged(IExtensionFolderLocator.class, new IDEAExtensionFolderLocator());
     CommonServices.getKernel().redefineService_Privileged(IPlatformHelper.class, new IDEAPlatformHelper(project));
     List<IModule> modules = defineModules(project);
 

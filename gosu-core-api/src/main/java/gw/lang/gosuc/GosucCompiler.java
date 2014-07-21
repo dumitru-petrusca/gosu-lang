@@ -13,7 +13,6 @@ import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.ICompilable;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
-import gw.lang.reflect.gs.IFileSystemGosuClassRepository;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.module.IModule;
@@ -30,26 +29,38 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class GosucCompiler {
+
   public List<IType> compile( GosucProject project, Collection<? extends CharSequence> typeNames ) {
-    final List<IType> types = new ArrayList<IType>();
     if( !typeNames.isEmpty() ) {
       if( typeNames.contains( "-all" ) ) {
         typeNames = project.getAllDefinedTypes();
       }
-      for( CharSequence typeName : typeNames ) {
-        System.out.println( "Compiling " + typeName + "..." );
-        final IType type = TypeSystem.getByFullNameIfValid( typeName.toString() );
-        if( type != null ) {
-          if( compileType( type ) ) {
-            types.add( type );
-          }
-        }
-        else {
-          System.out.println( " - can't be compiled, name is invalid" );
-        }
+    }
+    return compile(typeNames);
+  }
+
+  public List<IType> compile(Collection<? extends CharSequence> typeNames ) {
+    final List<IType> types = new ArrayList<IType>();
+    for (CharSequence typeName : typeNames) {
+      IType type = compile(typeName);
+      if (type != null) {
+        types.add(type);
       }
     }
     return types;
+  }
+
+  private IType compile(CharSequence typeName) {
+    System.out.println("Compiling " + typeName + "...");
+    final IType type = TypeSystem.getByFullNameIfValid(typeName.toString());
+    if (type != null) {
+      if (compileType(type)) {
+        return type;
+      }
+    } else {
+      System.out.println(" - can't be compiled, name is invalid");
+    }
+    return null;
   }
 
   private boolean compileType( IType type ) {
@@ -63,10 +74,13 @@ public class GosucCompiler {
       return false;
     }
     IModule module = type.getTypeLoader().getModule();
+    //TODO-dp in the Ferrite compiler everything is in the JRE/Default module
+/*
     if( module == TypeSystem.getJreModule() ) {
       // This is a Gosu library file e.g., an enhancement, we don't handle these now, ideally they'll come precompiled
       return false;
     }
+*/
     TypeSystem.pushModule( module );
     try {
       IGosuClass gsClass = (IGosuClass)type;
@@ -118,7 +132,7 @@ public class GosucCompiler {
       classFile[0] = child;
     }
     catch( Exception e ) {
-      System.out.println( e.getMessage() );
+      e.printStackTrace();
     }
     return classFile[0];
   }

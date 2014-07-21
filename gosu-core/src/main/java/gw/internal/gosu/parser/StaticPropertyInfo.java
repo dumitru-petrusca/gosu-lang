@@ -4,7 +4,7 @@
 
 package gw.internal.gosu.parser;
 
-import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.BaseFeatureInfo;
 import gw.lang.parser.EvaluationException;
 import gw.lang.reflect.IAnnotationInfo;
@@ -150,7 +150,7 @@ public class StaticPropertyInfo extends BaseFeatureInfo implements IPropertyInfo
 
       try
       {
-        value = CommonServices.getCoercionManager().convertValue(value, getFeatureType());
+        value = CoercionUtil.convertValue(value, getFeatureType());
         _setter.invoke( _type, new Object[]{value} );
       }
       catch( Exception e )

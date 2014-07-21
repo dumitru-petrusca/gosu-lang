@@ -5,6 +5,7 @@
 package com.guidewire.editor.devtools.explorer;
 
 import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
 import gw.lang.parser.IHasInnerClass;
 import gw.lang.parser.Keyword;
@@ -199,7 +200,7 @@ public class ClassGenerator {
             : "    return " +
             (!returnType.isPrimitive()
                 ? "null"
-                : CommonServices.getCoercionManager().convertNullAsPrimitive(returnType, false))));
+                : CoercionUtil.convertNullAsPrimitive(returnType, false))));
     sb.append("}\n");
   }
 

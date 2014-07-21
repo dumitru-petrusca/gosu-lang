@@ -5,7 +5,7 @@
 package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.exceptions.ParseResultsException;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ReflectUtil;
@@ -37,14 +37,12 @@ public class StandardCoercionManagerTest extends TestClass
   // because coercionRequiresWarningIfImplicit had lhs and rhs swapped in one of its checks.
   //
   public void testCoercionFromObjectToStringIsNotImplicit() {
-    StandardCoercionManager cm = (StandardCoercionManager) CommonServices.getCoercionManager();
-    Assert.assertTrue(cm.canCoerce(JavaTypes.STRING(), JavaTypes.OBJECT()));
-    Assert.assertTrue(cm.coercionRequiresWarningIfImplicit(JavaTypes.STRING(), JavaTypes.OBJECT()));
+    Assert.assertTrue(CoercionUtil.canCoerce(JavaTypes.STRING(), JavaTypes.OBJECT()));
+    Assert.assertTrue(CoercionUtil.coercionRequiresWarningIfImplicit(JavaTypes.STRING(), JavaTypes.OBJECT()));
   }
 
   public void testCoercionFromPrimitiveIntToComparableDoesNotHaveWarning() {
-    StandardCoercionManager cm = (StandardCoercionManager) CommonServices.getCoercionManager();
-    Assert.assertFalse( cm.coercionRequiresWarningIfImplicit( JavaTypes.COMPARABLE(), JavaTypes.pINT() ) );
+    Assert.assertFalse( CoercionUtil.coercionRequiresWarningIfImplicit( JavaTypes.COMPARABLE(), JavaTypes.pINT() ) );
   }
 
   public void testMetaIntrinsicTypeCoercesToClass()

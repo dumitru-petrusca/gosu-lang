@@ -5,6 +5,7 @@
 package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.fs.IFile;
 import gw.internal.gosu.compiler.GosuClassLoader;
 import gw.internal.gosu.compiler.SingleServingGosuClassLoader;
@@ -2442,7 +2443,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
     ISource source = _sourceFileHandle.getSource();
     parser.setScript(source);
     _parseInfo.updateSource(source.getSource());
-    if (CommonServices.getPlatformHelper().isInIDE()) {
+    if (ExecutionMode.isIDE()) {
       parser.setThrowParseExceptionForWarnings(true);
       parser.setDontOptimizeStatementLists(true);
       parser.setWarnOnCaseIssue(true);
@@ -2528,7 +2529,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
       return _parser;
     } else {
       GosuParser parser = createParser(symbolTable);
-      if (CommonServices.getPlatformHelper().isInIDE()) {
+      if (ExecutionMode.isIDE()) {
         _parser = parser;
       }
       return parser;

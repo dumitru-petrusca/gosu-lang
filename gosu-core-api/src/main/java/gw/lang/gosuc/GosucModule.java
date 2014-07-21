@@ -11,10 +11,12 @@ import gw.lang.reflect.module.INativeModule;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GosucModule implements INativeModule, Serializable {
   private String _name;
+  private List<String> _contentRoots;
   private List<String> _allSourceRoots;
   private List<String> _excludedRoots;
   private List<String> _classpath;
@@ -22,11 +24,14 @@ public class GosucModule implements INativeModule, Serializable {
   private List<GosucDependency> _dependencies;
 
   public GosucModule(String name,
+                     List<String> contentRoots,
                      List<String> allSourceRoots,
                      List<String> classpath,
                      String outputPath,
                      List<GosucDependency> dependencies,
                      List<String> excludedRoots) {
+
+    _contentRoots = contentRoots;
     _allSourceRoots = new ArrayList<String>();
     for (String sourceRoot : allSourceRoots) {
       if (!sourceRoot.endsWith(".jar")) {
@@ -36,12 +41,25 @@ public class GosucModule implements INativeModule, Serializable {
     _excludedRoots = new ArrayList<String>(excludedRoots);
     _classpath = classpath;
     _outputPath = outputPath;
-    _dependencies = dependencies;
+    _dependencies = dependencies != null ? dependencies : Collections.<GosucDependency>emptyList();
     _name = name;
   }
 
-  public List<String> getAllSourceRoots() {
-    return _allSourceRoots;
+  public GosucModule(String name,
+                     String contentRoot,
+                     List<String> sourceRoots,
+                     List<String> classpath,
+                     String outputPath,
+                     List<GosucDependency> dependencies) {
+    this(name, Collections.singletonList(contentRoot), sourceRoots, classpath, outputPath, dependencies, Collections.<String>emptyList());
+  }
+
+  public List<String> getContentRoots() {
+    return _contentRoots;
+  }
+
+  public String getContentRoot() {
+    return _contentRoots.get(0);
   }
 
   public List<String> getExcludedRoots() {
@@ -72,6 +90,9 @@ public class GosucModule implements INativeModule, Serializable {
 
   public String write() {
     return getName() + " {\n" +
+        "  contentpath {\n" +
+        writeRoots(getContentRoots()) +
+        "  }\n" +
         "  sourcepath {\n" +
         writeRoots(getAllSourceRoots()) +
         "  }\n" +
@@ -88,6 +109,10 @@ public class GosucModule implements INativeModule, Serializable {
         writeDependencies() +
         "  }\n" +
         "}\n";
+  }
+
+  public List<String> getAllSourceRoots() {
+    return _allSourceRoots;
   }
 
   private String writeRoots(List<String> roots) {
@@ -108,7 +133,7 @@ public class GosucModule implements INativeModule, Serializable {
 
   private String writeOutputPath() {
     return _outputPath != null ? "    \"" + _outputPath + "\"\n" :
-        "    \"\"\n";
+            "    \"\"\n";
   }
 
   private String writeDependencies() {
@@ -124,13 +149,14 @@ public class GosucModule implements INativeModule, Serializable {
     parser.verify(parser.match(null, ISourceCodeTokenizer.TT_WORD, false), "Expecting module name");
     String name = t.getStringValue();
     parser.verify(parser.match(null, '{', false), "Expecting '{' to begin module definition");
+    List<String> contentpaths = parsePaths("contentpath", parser);
     List<String> sourcepaths = parsePaths("sourcepath", parser);
     List<String> excludedRoots = parsePaths("excludedpath", parser);
     List<String> classpath = parseClasspath(parser);
     String outputPath = parseOutputPath(parser);
     List<GosucDependency> deps = parseDependencies(parser);
     parser.verify(parser.match(null, '}', false), "Expecting '}' to close module definition");
-    return new GosucModule(name, sourcepaths, classpath, outputPath, deps, excludedRoots);
+    return new GosucModule(name, contentpaths, sourcepaths, classpath, outputPath, deps, excludedRoots);
   }
 
   private static List<GosucDependency> parseDependencies(GosucProjectParser parser) {
@@ -208,6 +234,9 @@ public class GosucModule implements INativeModule, Serializable {
 
     GosucModule that = (GosucModule) o;
 
+    if (!_contentRoots.equals(that._contentRoots)) {
+      return false;
+    }
     if (!_allSourceRoots.equals(that._allSourceRoots)) {
       return false;
     }
@@ -233,6 +262,7 @@ public class GosucModule implements INativeModule, Serializable {
   @Override
   public int hashCode() {
     int result = _name.hashCode();
+    result = 31 * result + _contentRoots.hashCode();
     result = 31 * result + _allSourceRoots.hashCode();
     result = 31 * result + _excludedRoots.hashCode();
     result = 31 * result + _classpath.hashCode();

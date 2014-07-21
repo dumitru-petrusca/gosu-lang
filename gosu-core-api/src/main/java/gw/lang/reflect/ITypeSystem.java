@@ -240,8 +240,6 @@ public interface ITypeSystem extends IService
 
   IMetaType getDefaultType();
 
-  boolean isSingleModuleMode();
-
   void addShutdownListener(TypeSystemShutdownListener listener);
 
   void pushModule(IModule gosuModule);
@@ -250,5 +248,5 @@ public interface ITypeSystem extends IService
 
   IType replaceTypeVariableTypeParametersWithBoundingTypes( IType iType, IType type );
 
-  IGosuc makeGosucCompiler( String gosucProjectFile, ICustomParser custParser );
+  IJavaClassInfo getJavaClassInfo(Class jClass, IModule module);
 }

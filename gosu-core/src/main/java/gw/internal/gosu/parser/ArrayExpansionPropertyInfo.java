@@ -4,8 +4,8 @@
 
 package gw.internal.gosu.parser;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.statements.LoopStatement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.IExpansionPropertyInfo;
 import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.IFeatureInfo;
@@ -218,14 +218,14 @@ public class ArrayExpansionPropertyInfo implements IExpansionPropertyInfo
         Object value = elem == null ? null : accessor.getValue( elem );
         if( value != null && bArray )
         {
-          results.addAll( (Collection)CommonServices.getCoercionManager().convertValue( value, JavaTypes.ARRAY_LIST() ) );
+          results.addAll( (Collection) CoercionUtil.convertValue(value, JavaTypes.ARRAY_LIST()) );
         }
         else
         {
           results.add( value );
         }
       }
-      return CommonServices.getCoercionManager().convertValue( results, getFeatureType() );
+      return CoercionUtil.convertValue(results, getFeatureType());
     }
 
     public void setValue( Object ctx, Object value )

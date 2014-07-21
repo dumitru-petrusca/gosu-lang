@@ -4,7 +4,7 @@
 
 package gw.lang.parser.coercers;
 
-import gw.config.CommonServices;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.reflect.IType;
 
 public class DateCoercer extends StandardCoercer
@@ -13,7 +13,7 @@ public class DateCoercer extends StandardCoercer
 
   public Object coerceValue( IType typeToCoerceTo, Object value )
   {
-    return CommonServices.getCoercionManager().makeDateFrom( value );
+    return CoercionUtil.makeDateFrom(value);
   }
 
   public static DateCoercer instance()

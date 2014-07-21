@@ -6,6 +6,7 @@ package gw.internal.gosu.parser.expressions;
 
 import gw.internal.gosu.parser.Expression;
 import gw.internal.gosu.parser.TypeLord;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
 import gw.lang.parser.ICoercer;
 import gw.lang.parser.Keyword;
@@ -92,15 +93,15 @@ public class TypeAsExpression extends Expression implements ITypeAsExpression
     //============================================================================
     if( argType == GosuParserTypes.NUMBER_TYPE() )
     {
-      return CommonServices.getCoercionManager().makeDoubleFrom( value );
+      return CoercionUtil.makeDoubleFrom(value);
     }
     else if( argType == GosuParserTypes.STRING_TYPE() )
     {
-      return CommonServices.getCoercionManager().makeStringFrom( value );
+      return CommonServices.getEntityAccess().makeStringFrom(value);
     }
     else if( argType == GosuParserTypes.DATETIME_TYPE() )
     {
-      Date date = CommonServices.getCoercionManager().makeDateFrom( value );
+      Date date = CoercionUtil.makeDateFrom(value);
       if ( date != null ) {
         return date;
       }

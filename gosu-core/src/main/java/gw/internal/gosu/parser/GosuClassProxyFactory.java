@@ -4,8 +4,8 @@
 
 package gw.internal.gosu.parser;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceDefaultValue;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.ISource;
 import gw.lang.parser.Keyword;
 import gw.lang.reflect.IAnnotatedFeatureInfo;
@@ -605,7 +605,7 @@ public class GosuClassProxyFactory
                 : "    return " +
                   (!returnType.isPrimitive()
                    ? "null"
-                   : CommonServices.getCoercionManager().convertNullAsPrimitive( returnType, false ))) );
+                   : CoercionUtil.convertNullAsPrimitive(returnType, false))) );
     sb.append( "}\n" );
   }
 

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import gw.lang.parser.StandardCoercionManager;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.expressions.ICollectionInitializerExpression;
 import gw.lang.parser.IExpression;
 import gw.lang.reflect.IType;
@@ -63,7 +63,7 @@ public class CollectionInitializerExpression extends Expression implements IColl
     {
       return Array.newInstance(getArrayClass(type.getTypeParameters()[0]), 0).getClass();
     }
-    if( StandardCoercionManager.isBoxed(type) )
+    if( CoercionUtil.isBoxed(type) )
     {
       type = TypeSystem.getPrimitiveType( type );
     }

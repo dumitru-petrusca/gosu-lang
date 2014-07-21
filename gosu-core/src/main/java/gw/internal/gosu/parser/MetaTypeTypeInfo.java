@@ -149,7 +149,7 @@ public class MetaTypeTypeInfo extends BaseFeatureInfo implements IRelativeTypeIn
   {
     if( FIND.method( methods, "forName", JavaTypes.STRING() ) == null )
     {
-      IType iIntrinsicType = TypeSystem.getByFullName( LocalClassForNameHack.class.getName(), TypeSystem.getGlobalModule() );
+      IType iIntrinsicType = JavaType.get( LocalClassForNameHack.class, (DefaultTypeLoader) TypeSystem.getDefaultTypeLoader());
       StaticMethodInfoDelegate forName =
         new StaticMethodInfoDelegate( this, iIntrinsicType.getTypeInfo().getMethod( "forName", JavaTypes.STRING() ) )
         {
@@ -426,7 +426,7 @@ public class MetaTypeTypeInfo extends BaseFeatureInfo implements IRelativeTypeIn
   }
 
   private IType getTypeOfType(IType type) {
-    return TypeSystem.get( type.getClass(), TypeSystem.getGlobalModule() );
+    return JavaType.get(type.getClass(), (DefaultTypeLoader) TypeSystem.getDefaultTypeLoader());
   }
 
   private void loadMetaTypeMethods( Set<IMethodInfo> methods )

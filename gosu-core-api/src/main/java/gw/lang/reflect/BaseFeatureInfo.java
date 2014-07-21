@@ -295,7 +295,7 @@ public abstract class BaseFeatureInfo implements IAttributedFeatureInfo
           IType container = _intrType == null ? getContainer().getOwnersType() : _intrType;
           if( container instanceof ITypeRef ) {
             _deprecated = getAnnotationsOfType(
-                    TypeSystem.getByFullName("gw.lang.Deprecated", container.getTypeLoader().getModule().getExecutionEnvironment().getGlobalModule()));
+                    TypeSystem.get(gw.lang.Deprecated.class, container.getTypeLoader().getModule().getExecutionEnvironment().getGlobalModule()));
           }
           else {
             _deprecated = Collections.emptyList();

@@ -24,10 +24,10 @@ import gw.internal.gosu.parser.statements.HideFieldNoOpStatement;
 import gw.internal.gosu.parser.statements.VarStatement;
 import gw.lang.annotation.UsageModifier;
 import gw.lang.annotation.UsageTarget;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
 import gw.lang.parser.ICapturedSymbol;
 import gw.lang.parser.ICoercer;
-import gw.lang.parser.ICoercionManager;
 import gw.lang.parser.IFullParserState;
 import gw.lang.parser.IGosuValidator;
 import gw.lang.parser.INonCapturableSymbol;
@@ -45,7 +45,6 @@ import gw.lang.parser.IToken;
 import gw.lang.parser.ITypeUsesMap;
 import gw.lang.parser.Keyword;
 import gw.lang.parser.ScriptPartId;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.parser.StandardScope;
 import gw.lang.parser.exceptions.ImplicitCoercionError;
 import gw.lang.parser.exceptions.ImplicitCoercionWarning;
@@ -955,8 +954,8 @@ public abstract class ParserBase implements IParserPart
   private static IType makeBoxedTypeIfEitherOperandIsBoxed( IType lhsType, IType rhsType, IType retType )
   {
     if( retType.isPrimitive() &&
-        (StandardCoercionManager.isBoxed( lhsType ) ||
-         StandardCoercionManager.isBoxed( rhsType ) ) )
+        (CoercionUtil.isBoxed( lhsType ) ||
+         CoercionUtil.isBoxed( rhsType ) ) )
     {
       retType = TypeLord.getBoxedTypeFromPrimitiveType( retType );
     }
@@ -1531,7 +1530,7 @@ public abstract class ParserBase implements IParserPart
           {
             try
             {
-              CommonServices.getCoercionManager().isDateTime( str );
+              CommonServices.getEntityAccess().isDateTime( str );
             }
             catch( java.text.ParseException e )
             {
@@ -1590,17 +1589,16 @@ public abstract class ParserBase implements IParserPart
   {
     try
     {
-      final ICoercionManager coercionManager = CommonServices.getCoercionManager();
-      coercionManager.verifyTypesComparable(lhsType, rhsType, bBiDirectional);
+      CoercionUtil.verifyTypesComparable(lhsType, rhsType, bBiDirectional);
 
-      boolean isImplicit = coercionManager.coercionRequiresWarningIfImplicit(lhsType, rhsType);
+      boolean isImplicit = CoercionUtil.coercionRequiresWarningIfImplicit(lhsType, rhsType);
       if( isImplicit && bBiDirectional )
       {
-        isImplicit = coercionManager.coercionRequiresWarningIfImplicit(rhsType, lhsType);
+        isImplicit = CoercionUtil.coercionRequiresWarningIfImplicit(rhsType, lhsType);
       }
       if( bWarnOnCoercion &&
-          CommonServices.getEntityAccess().isWarnOnImplicitCoercionsOn() &&
-          isImplicit )
+          CommonServices.getEntityAccess().getLanguageLevel().isWarnOnImplicitCoercionsOn() &&
+          CoercionUtil.coercionRequiresWarningIfImplicit(lhsType, rhsType) )
       {
         if( CommonServices.getEntityAccess().getLanguageLevel().allowAllImplicitCoercions() )
         {
@@ -2200,8 +2198,7 @@ public abstract class ParserBase implements IParserPart
     }
 
     IType typeToCoerceFrom = expressionToCoerce.getType();
-    ICoercionManager cocerionManager = CommonServices.getCoercionManager();
-    ICoercer coercer = cocerionManager.resolveCoercerStatically( resolvedTypeToCoerceTo, typeToCoerceFrom );
+    ICoercer coercer = CoercionUtil.resolveCoercerStatically(resolvedTypeToCoerceTo, typeToCoerceFrom);
 
     if( coercer == null )
     {

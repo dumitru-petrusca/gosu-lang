@@ -4,15 +4,14 @@
 
 package gw.internal.gosu.parser.statements;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.BeanAccess;
 import gw.internal.gosu.parser.ErrorType;
 import gw.internal.gosu.parser.Statement;
 import gw.internal.gosu.parser.TypeLoaderAccess;
 import gw.internal.gosu.parser.TypeLord;
 import gw.internal.gosu.parser.expressions.Literal;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.GosuParserTypes;
-import gw.lang.parser.StandardCoercionManager;
 import gw.lang.parser.statements.ILoopStatement;
 import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IPlaceholder;
@@ -34,7 +33,7 @@ public abstract class LoopStatement extends Statement implements ILoopStatement
     return typeIn.isArray() ||
            typeIn instanceof ErrorType ||
            JavaTypes.ITERABLE().isAssignableFrom( typeIn ) ||
-           StandardCoercionManager.isStructurallyAssignable_Laxed( JavaTypes.ITERABLE(), typeIn ) ||
+           CoercionUtil.isStructurallyAssignable_Laxed( JavaTypes.ITERABLE(), typeIn ) ||
            JavaTypes.ITERATOR().isAssignableFrom( typeIn ) ||
            typeIn == GosuParserTypes.STRING_TYPE() ||
            (typeIn instanceof IPlaceholder && ((IPlaceholder)typeIn).isPlaceholder());
@@ -195,7 +194,7 @@ public abstract class LoopStatement extends Statement implements ILoopStatement
   public boolean isConditionLiteralTrue() {
     return getExpression() instanceof Literal &&
            getExpression().isCompileTimeConstant() &&
-           CommonServices.getCoercionManager().makePrimitiveBooleanFrom( getExpression().evaluate() );
+           CoercionUtil.makePrimitiveBooleanFrom(getExpression().evaluate());
   }
 
   static class ArrayIterator implements Iterator
@@ -208,7 +207,7 @@ public abstract class LoopStatement extends Statement implements ILoopStatement
     {
       _iCsr = 0;
       _arrayType = arrayType;
-      _array = CommonServices.getCoercionManager().convertValue(array, _arrayType);
+      _array = CoercionUtil.convertValue(array, _arrayType);
     }
 
     public boolean hasNext()

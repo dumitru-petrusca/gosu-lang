@@ -4,10 +4,10 @@
 
 package gw.internal.gosu.parser.expressions;
 
-import gw.config.CommonServices;
 import gw.internal.gosu.parser.BeanAccess;
 import gw.internal.gosu.parser.Expression;
 import gw.internal.gosu.parser.Statement;
+import gw.lang.parser.CoercionUtil;
 import gw.lang.parser.EvaluationException;
 import gw.lang.parser.exceptions.ParseException;
 import gw.lang.parser.statements.ITerminalStatement;
@@ -162,7 +162,7 @@ final public class InitializerAssignment extends Statement implements IInitializ
     {
       throw GosuExceptionUtil.forceThrow( e );
     }
-    value = CommonServices.getCoercionManager().convertValue( value, pi.getFeatureType() );
+    value = CoercionUtil.convertValue(value, pi.getFeatureType());
     return value;
   }
 

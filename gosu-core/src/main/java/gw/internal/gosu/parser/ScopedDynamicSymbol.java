@@ -12,6 +12,7 @@ import gw.lang.parser.IAttributeSource;
 import gw.lang.parser.ISymbol;
 import gw.lang.parser.ISymbolTable;
 import gw.lang.reflect.IType;
+import gw.util.concurrent.LocklessLazyVar;
 
 /**
  */
@@ -20,7 +21,11 @@ public class ScopedDynamicSymbol extends AbstractDynamicSymbol
   private static final String PREFIX = "_gosu_global_";
 
   private GlobalScope _scope;
-  private IAttributeSource _attrSource;
+  private LocklessLazyVar<IAttributeSource> _attrSource = new LocklessLazyVar<IAttributeSource>() {
+    protected IAttributeSource init() {
+      return CommonServices.getEntityAccess().getAttributeSource(_scope);
+    }
+  };
   private String _strAttr;
   private String _typePrefixName;
 
@@ -45,22 +50,21 @@ public class ScopedDynamicSymbol extends AbstractDynamicSymbol
     }
 
     _scope = scope;
-    resetAttributeSource();
   }
 
   public Object getValue()
   {
-    return _attrSource.getAttribute( getAttributeName() );
+    return _attrSource.get().getAttribute( getAttributeName() );
   }
 
-  public Object getValueDirectly()
+    public Object getValueDirectly()
   {
     return getValue();
   }
 
   public void setValue( Object value )
   {
-    _attrSource.setAttribute( getAttributeName(), value );
+    _attrSource.get().setAttribute( getAttributeName(), value );
   }
 
   public void setValueDirectly( Object value )
@@ -86,15 +90,6 @@ public class ScopedDynamicSymbol extends AbstractDynamicSymbol
     TypeVarToTypeMap actualParamByVarName = TypeLord.mapTypeByVarName( gsClass, gsClass, true );
     IType type = TypeLord.getActualType( getType(), actualParamByVarName, true );
     return new ScopedDynamicSymbol( _symTable, (String)getName(), _typePrefixName, type, _scope );
-  }
-
-  private void resetAttributeSource()
-  {
-    _attrSource = CommonServices.getEntityAccess().getAttributeSource( _scope );
-    if( _attrSource == null )
-    {
-      throw new IllegalStateException( "No attribute source available for: " + _scope );
-    }
   }
 
   public String getAttributeName()
