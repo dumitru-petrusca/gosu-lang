@@ -38,7 +38,7 @@ public class GosucModule implements INativeModule, Serializable {
         _allSourceRoots.add(sourceRoot);
       }
     }
-    _excludedRoots = new ArrayList<String>(excludedRoots);
+    _excludedRoots = new ArrayList<>(excludedRoots);
     _classpath = classpath;
     _outputPath = outputPath;
     _dependencies = dependencies != null ? dependencies : Collections.<GosucDependency>emptyList();

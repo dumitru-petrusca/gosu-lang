@@ -187,10 +187,10 @@ public class CoercionUtil {
    */
   public static boolean coercionRequiresWarningIfImplicit( IType lhsType, IType rhsType )
   {
-    //=============================================================================
-    //  Anything can be coerced to a string
-    //=============================================================================
-    if( JavaTypes.STRING() == lhsType )
+    //==================================================================================
+    // Upcasting
+    //==================================================================================
+    if( lhsType == rhsType )
     {
       return false;
     }
@@ -202,7 +202,7 @@ public class CoercionUtil {
     {
       return false;
     }
-    if ( rhsType.isPrimitive() && lhsType.isAssignableFrom( TypeSystem.getBoxType(rhsType) ) )
+    if ( rhsType.isPrimitive() && lhsType.isAssignableFrom( TypeSystem.getBoxType( rhsType ) ) )
     {
       return false;
     }

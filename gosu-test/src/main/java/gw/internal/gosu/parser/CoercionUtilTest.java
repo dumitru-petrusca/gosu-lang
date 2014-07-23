@@ -27,7 +27,7 @@ import java.util.List;
  *
  * @author cgross
  */
-public class StandardCoercionManagerTest extends TestClass
+public class CoercionUtilTest extends TestClass
 {
   //
   // regression test CC-44423
@@ -61,7 +61,7 @@ public class StandardCoercionManagerTest extends TestClass
 
   public void testStringCoercionWorksCorrectly()
   {
-    Object val = eval( "var x = new gw.internal.gosu.parser.StandardCoercionManagerTest.ToStringTest()\n" +
+    Object val = eval( "var x = new gw.internal.gosu.parser.CoercionUtilTest.ToStringTest()\n" +
                        "return x as String");
     Assert.assertEquals( "test", val );
   }
@@ -309,7 +309,7 @@ public class StandardCoercionManagerTest extends TestClass
 
   public void testBlockCoercesToSimpleInterface()
   {
-    Runnable runnable = (Runnable)eval( "var blk = \\-> gw.internal.gosu.parser.StandardCoercionManagerTest.setTestBoolean(true) \n" +
+    Runnable runnable = (Runnable)eval( "var blk = \\-> gw.internal.gosu.parser.CoercionUtilTest.setTestBoolean(true) \n" +
                                         "return blk as java.lang.Runnable" );
     testBool = false;
     Assert.assertFalse( "The boolean has yet to be set", testBool );
@@ -343,7 +343,7 @@ public class StandardCoercionManagerTest extends TestClass
   {
     try
     {
-      GosuTestUtil.compileExpression( "var blk = \\ x : String -> gw.internal.gosu.parser.StandardCoercionManagerTest.setTestBoolean(true) \n" +
+      GosuTestUtil.compileExpression( "var blk = \\ x : String -> gw.internal.gosu.parser.CoercionUtilTest.setTestBoolean(true) \n" +
                                           "return blk as java.lang.Runnable" );
       Assert.fail( "Should not have been able to compile since the block takes an argument, and runnable does not" );
     }
@@ -357,8 +357,8 @@ public class StandardCoercionManagerTest extends TestClass
   {
     try
     {
-      GosuTestUtil.compileExpression( "var blk = \\ x : String -> gw.internal.gosu.parser.StandardCoercionManagerTest.setTestBoolean(true) \n" +
-                                          "return blk as gw.internal.gosu.parser.StandardCoercionManagerTest.MultiMethodInterface" );
+      GosuTestUtil.compileExpression( "var blk = \\ x : String -> gw.internal.gosu.parser.CoercionUtilTest.setTestBoolean(true) \n" +
+                                          "return blk as gw.internal.gosu.parser.CoercionUtilTest.MultiMethodInterface" );
       Assert.fail( "Should not have been able to compile since the block takes an argument, and runnable does not" );
     }
     catch( ParseResultsException e )
@@ -371,7 +371,7 @@ public class StandardCoercionManagerTest extends TestClass
   {
     @SuppressWarnings({"unchecked"})
     ParamInterface<Boolean> pi = (ParamInterface<Boolean>)eval( "var blk = \\-> true \n" +
-                                                                "return blk as gw.internal.gosu.parser.StandardCoercionManagerTest.ParamInterface<Boolean>" );
+                                                                "return blk as gw.internal.gosu.parser.CoercionUtilTest.ParamInterface<Boolean>" );
     Assert.assertTrue( pi.get() );
   }
 
@@ -427,7 +427,7 @@ public class StandardCoercionManagerTest extends TestClass
     try
     {
       @SuppressWarnings({"UnusedDeclaration"})
-      Boolean b = (Boolean)GosuTestUtil.evalGosu( "var x = foo as gw.internal.gosu.parser.StandardCoercionManagerTest.ParamInterface<Object>\n" +
+      Boolean b = (Boolean)GosuTestUtil.evalGosu( "var x = foo as gw.internal.gosu.parser.CoercionUtilTest.ParamInterface<Object>\n" +
                                                         "var y = x as block():Boolean;" +
                                                         "return y()", "foo", new ParamInterface<Object>(){
         public Boolean get()
@@ -470,7 +470,7 @@ public class StandardCoercionManagerTest extends TestClass
   {
     try
     {
-      GosuTestUtil.compileExpression( "var y : gw.internal.gosu.parser.StandardCoercionManagerTest.MultiMethodInterface\n" +
+      GosuTestUtil.compileExpression( "var y : gw.internal.gosu.parser.CoercionUtilTest.MultiMethodInterface\n" +
                                          "return y as block():Object" );
       Assert.fail( "Should not have been able to compile since the interface has two methods on it" );
     }
