@@ -1598,23 +1598,23 @@ public abstract class ParserBase implements IParserPart
       }
       if( bWarnOnCoercion &&
           CommonServices.getEntityAccess().getLanguageLevel().isWarnOnImplicitCoercionsOn() &&
-          CoercionUtil.coercionRequiresWarningIfImplicit(lhsType, rhsType) )
+          isImplicit )
       {
         if( CommonServices.getEntityAccess().getLanguageLevel().allowAllImplicitCoercions() )
         {
           element.addParseWarning( new ImplicitCoercionWarning( state,
-                                                                Res.MSG_IMPLICIT_COERCION_WARNING,
-                                                                lhsType,
-                                                                rhsType.getDisplayName(),
-                                                                lhsType.getDisplayName() ) );
+              Res.MSG_IMPLICIT_COERCION_WARNING,
+              lhsType,
+              rhsType.getDisplayName(),
+              lhsType.getDisplayName() ) );
         }
         else
         {
           element.addParseException( new ImplicitCoercionError( state,
-                                                                Res.MSG_IMPLICIT_COERCION_ERROR,
-                                                                lhsType,
-                                                                rhsType.getDisplayName(),
-                                                                lhsType.getDisplayName() ) );
+              Res.MSG_IMPLICIT_COERCION_ERROR,
+              lhsType,
+              rhsType.getDisplayName(),
+              lhsType.getDisplayName() ) );
         }
       }
       if( rhsType instanceof ErrorType )

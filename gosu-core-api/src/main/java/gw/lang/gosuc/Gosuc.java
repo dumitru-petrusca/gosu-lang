@@ -9,6 +9,7 @@ import gw.config.IGlobalLoaderProvider;
 import gw.config.IMemoryMonitor;
 import gw.fs.IDirectory;
 import gw.lang.GosuShop;
+import gw.lang.gosuc.simple.SoutCompilerDriver;
 import gw.lang.init.GosuInitialization;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
@@ -324,7 +325,7 @@ public class Gosuc implements IGosuc {
   public List<IType> compile(IModule module, List<String> types) {
     TypeSystem.pushModule(module);
     try {
-      return new GosucCompiler().compile(_project, types);
+      return new GosucCompiler(new SoutCompilerDriver()).compile(_project, types);
     } finally {
       TypeSystem.popModule(module);
     }

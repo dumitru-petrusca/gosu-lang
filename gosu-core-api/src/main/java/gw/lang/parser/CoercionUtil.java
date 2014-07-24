@@ -665,9 +665,14 @@ public class CoercionUtil {
   private static ICoercer identityOrRuntime( IType typeToCoerceTo, IType typeToCoerceFrom )
   {
     if( TypeSystem.isBytecodeType( typeToCoerceFrom ) &&
-            TypeSystem.isBytecodeType( typeToCoerceTo ) )
+        TypeSystem.isBytecodeType( typeToCoerceTo ) )
     {
       return IdentityCoercer.instance(); // (perf) class-to-class downcast can use checkcast bytecode
+    }
+    if( typeToCoerceTo instanceof IGosuClass && ((IGosuClass)typeToCoerceTo).isStructure() &&
+        typeToCoerceFrom instanceof IMetaType )
+    {
+      return IdentityCoercer.instance();
     }
     return RuntimeCoercer.instance();
   }

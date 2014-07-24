@@ -10,5 +10,5 @@ public interface ICompilerDriver {
   public static final int ERROR = 0;
   public static final int WARNING = 1;
 
-  void sendCompileIssue(File file, int category, long offset, long line, long column, String message) throws IOException;
+  void sendCompileIssue(File file, int category, long offset, long line, long column, String message);
 }

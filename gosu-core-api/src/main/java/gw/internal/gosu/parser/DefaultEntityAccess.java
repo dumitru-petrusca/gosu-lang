@@ -22,6 +22,7 @@ import gw.lang.parser.expressions.IQueryExpressionEvaluator;
 import gw.lang.reflect.AbstractTypeSystemListener;
 import gw.lang.reflect.IBlockType;
 import gw.lang.reflect.IEntityAccess;
+import gw.lang.reflect.IErrorType;
 import gw.lang.reflect.IFeatureInfo;
 import gw.lang.reflect.IFunctionType;
 import gw.lang.reflect.IGosuClassLoadingObserver;
@@ -391,7 +392,7 @@ public class DefaultEntityAccess extends BaseService implements IEntityAccess
     //=============================================================================
     //  Anything can be coerced to a string
     //=============================================================================
-    if( JavaTypes.STRING() == lhsType )
+    if( JavaTypes.STRING() == lhsType && !(rhsType instanceof IErrorType) )
     {
       if( JavaTypes.pCHAR().equals( rhsType ) || JavaTypes.CHARACTER().equals( rhsType ) )
       {
@@ -443,10 +444,14 @@ public class DefaultEntityAccess extends BaseService implements IEntityAccess
     // Class<T> <- Meta<T' instanceof JavaType>
     //=============================================================================
     if( (JavaTypes.CLASS().equals( lhsType.getGenericType() ) &&
-            rhsType instanceof IMetaType && ((IMetaType)rhsType).getType() instanceof IHasJavaClass) )
+            (rhsType instanceof IMetaType &&
+                    (((IMetaType)rhsType).getType() instanceof IHasJavaClass ||
+                            ((IMetaType)rhsType).getType() instanceof IMetaType && ((IMetaType)((IMetaType)rhsType).getType()).getType() instanceof IHasJavaClass)))  )
     {
       if( !lhsType.isParameterizedType() ||
               lhsType.getTypeParameters()[0].isAssignableFrom( ((IMetaType)rhsType).getType() ) ||
+              CoercionUtil.isStructurallyAssignable(lhsType.getTypeParameters()[0], rhsType) ||
+              CoercionUtil.isStructurallyAssignable(lhsType.getTypeParameters()[0], ((IMetaType) rhsType).getType()) ||
               (((IMetaType)rhsType).getType().isPrimitive() && CoercionUtil.canCoerce(lhsType.getTypeParameters()[0], ((IMetaType) rhsType).getType())) )
       {
         return MetaTypeToClassCoercer.instance();

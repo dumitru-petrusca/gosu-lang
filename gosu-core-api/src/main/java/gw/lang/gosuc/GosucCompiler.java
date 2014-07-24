@@ -6,6 +6,7 @@ package gw.lang.gosuc;
 
 import gw.fs.IDirectory;
 import gw.fs.IFile;
+import gw.lang.gosuc.simple.ICompilerDriver;
 import gw.lang.parser.IParseIssue;
 import gw.lang.parser.exceptions.ParseResultsException;
 import gw.lang.parser.exceptions.ParseWarning;
@@ -29,6 +30,11 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class GosucCompiler {
+  private ICompilerDriver _driver;
+
+  public GosucCompiler(ICompilerDriver driver) {
+    _driver = driver;
+  }
 
   public List<IType> compile( GosucProject project, Collection<? extends CharSequence> typeNames ) {
     if( !typeNames.isEmpty() ) {
@@ -51,14 +57,13 @@ public class GosucCompiler {
   }
 
   private IType compile(CharSequence typeName) {
-    System.out.println("Compiling " + typeName + "...");
     final IType type = TypeSystem.getByFullNameIfValid(typeName.toString());
     if (type != null) {
       if (compileType(type)) {
         return type;
       }
     } else {
-      System.out.println(" - can't be compiled, name is invalid");
+      System.out.println(typeName + " - can't be compiled, name is invalid");
     }
     return null;
   }
@@ -71,6 +76,9 @@ public class GosucCompiler {
       //## hack: need to check for IGosuClass for now, but other compilable types
       // need to use ParseResultsException or we need to define some other class
       // to unify how parse issues are reported.
+      return false;
+    }
+    if (hasDoNotVerifyAnnotation((IGosuClass) type)) {
       return false;
     }
     IModule module = type.getTypeLoader().getModule();
@@ -88,7 +96,9 @@ public class GosucCompiler {
       final ParseResultsException parseException = gsClass.getParseResultsException();
       if( parseException != null ) {
         for( IParseIssue issue: parseException.getParseIssues() ) {
-          System.out.println( (issue instanceof ParseWarning ? "Warning: " : "Error: ") + issue.getConsoleMessage() );
+          File file = gsClass.getSourceFileHandle().getFile().toJavaFile();
+          int category = issue instanceof ParseWarning ? ICompilerDriver.WARNING : ICompilerDriver.ERROR;
+          _driver.sendCompileIssue(file, category, issue.getTokenStart(), issue.getLine(), issue.getColumn(),issue.getUIMessage());
         }
       }
 
@@ -154,10 +164,6 @@ public class GosucCompiler {
   }
 
   private void createClassFile( File outputFile, IGosuClass gosuClass ) throws IOException {
-    if (hasDoNotVerifyAnnotation(gosuClass)) {
-      return;
-    }
-
     final byte[] bytes = TypeSystem.getGosuClassLoader().getBytes(gosuClass);
     OutputStream out = new FileOutputStream( outputFile );
     try {

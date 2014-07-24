@@ -1,6 +1,8 @@
 package gw.lang.gosuc.simple;
 
 import gw.config.CommonServices;
+import gw.config.IMemoryMonitor;
+import gw.config.IPlatformHelper;
 import gw.fs.FileFactory;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
@@ -25,6 +27,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class GosuCompiler implements IGosuCompiler {
+  private final LocklessLazyVar<IType> doNotVerifyResourceType = new LocklessLazyVar<IType>() {
+    protected IType init() {
+      return TypeSystem.getByFullNameIfValid("gw.testharness.DoNotVerifyResource");
+    }
+  };
   protected static ICompilerDriver _driver;
   protected GosuInitialization _gosuInitialization;
 
@@ -32,44 +39,29 @@ public class GosuCompiler implements IGosuCompiler {
     _driver = driver;
   }
 
-  private static int reportIssuesImpl(File file, List<IParseIssue> issues, int kind) throws Exception {
-    for (IParseIssue issue : issues) {
-      _driver.sendCompileIssue(file, kind, issue.getTokenStart().intValue(), issue.getLine(), issue.getColumn(), issue.getUIMessage());
-    }
-    return issues.size();
-  }
-
-  private boolean reportIssues(File file, ParseResultsException e) throws Exception {
-    reportIssuesImpl(file, e.getParseWarnings(), ICompilerDriver.WARNING);
-    final int errorCount = reportIssuesImpl(file, e.getParseExceptions(), ICompilerDriver.ERROR);
-    return errorCount > 0;
-  }
-
   public boolean compile(File sourceFile, Collection<File> outputFiles) throws Exception {
     IFile file = FileFactory.instance().getIFile(sourceFile);
     IModule module = TypeSystem.getExecutionEnvironment().getGlobalModule();
     List typeNames = Arrays.asList(TypeSystem.getTypesForFile(module, file));
-    List<IType> types = new GosucCompiler().compile(typeNames);
+
+    List<IType> types = new GosucCompiler(_driver).compile(typeNames);
+
     boolean hasErrors = false;
     for (IType type : types) {
       if (type instanceof IGosuClass) {
-        final IGosuClass klass = (IGosuClass) type;
-        final ParseResultsException e = klass.getParseResultsException();
-        if (e != null && shouldReportIssues(klass)) {
-          hasErrors |= reportIssues(sourceFile, e);
-        }
         if (outputFiles != null) {
           IDirectory moduleOutputDirectory = module.getOutputPath();
           if (moduleOutputDirectory != null) {
-            String outRelativePath = klass.getName().replace('.', File.separatorChar) + ".class";
+            String outRelativePath = type.getName().replace('.', File.separatorChar) + ".class";
             File outputFile = new File(moduleOutputDirectory.getPath().getFileSystemPathString(), outRelativePath);
             if (outputFile.exists() && outputFile.length() > 0) {
-              collectInnerClassOutputFiles(outputFile, klass, outputFiles);
+              collectInnerClassOutputFiles(outputFile, (IGosuClass)type, outputFiles);
             }
           }
         }
       }
     }
+
     return hasErrors;
   }
 
@@ -87,9 +79,14 @@ public class GosuCompiler implements IGosuCompiler {
   public void initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders, List<String> classpath, String outputPath) {
     final long start = System.currentTimeMillis();
 
+    CommonServices.getKernel().redefineService_Privileged(IMemoryMonitor.class, new CompilerMemoryMonitor());
+    CommonServices.getKernel().redefineService_Privileged(IPlatformHelper.class, new CompilerPlatformHelper());
+
     IExecutionEnvironment execEnv = TypeSystem.getExecutionEnvironment();
     _gosuInitialization = GosuInitialization.instance(execEnv);
-    GosucModule gosucModule = new GosucModule("module name", contentRoots, sourceFolders, classpath, outputPath, Collections.<GosucDependency>emptyList(), Collections.<String>emptyList());
+    GosucModule gosucModule = new GosucModule(
+        IExecutionEnvironment.DEFAULT_SINGLE_MODULE_NAME, contentRoots, sourceFolders, classpath,
+        outputPath, Collections.<GosucDependency>emptyList(), Collections.<String>emptyList());
     _gosuInitialization.initializeCompiler(gosucModule);
 
     System.out.println("Initialized Gosu Compiler -> " + (System.currentTimeMillis() - start) + "ms");
@@ -107,7 +104,7 @@ public class GosuCompiler implements IGosuCompiler {
     return CommonServices.getPlatformHelper().isPathIgnored(sourceFile);
   }
 
-  protected boolean shouldReportIssues(IGosuClass gosuClass) {
-    return false;
+  protected boolean shouldCompile(IGosuClass gosuClass) {
+    return !gosuClass.getTypeInfo().hasAnnotation(doNotVerifyResourceType.get());
   }
 }
