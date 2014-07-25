@@ -44,9 +44,9 @@ public class TestCompileMojo extends AbstractCompileMojo {
   }
 
   @Override
-  protected List<File> getClassPath() {
+  protected List<String> getClassPath() {
     return Lists.newArrayList(
-            new File(mavenProject.getBuild().getTestOutputDirectory()),
-            new File(mavenProject.getBuild().getOutputDirectory()));
+            mavenProject.getBuild().getTestOutputDirectory(),
+            mavenProject.getBuild().getOutputDirectory());
   }
 }

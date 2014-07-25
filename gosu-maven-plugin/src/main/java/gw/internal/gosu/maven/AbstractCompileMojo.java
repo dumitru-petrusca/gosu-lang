@@ -192,6 +192,7 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
       classpath.add(rtJar.getAbsolutePath());
     }
 
+    classpath.addAll(getClassPath());
     classpath.addAll(getDependencies());
     classpath.addAll(getJreClassPath());
     return classpath;
@@ -201,7 +202,7 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
 
   protected abstract List<File> getSources();
 
-  protected abstract List<File> getClassPath();
+  protected abstract List<String> getClassPath();
 
   protected List<String> getJreClassPath() {
     return Collections.emptyList();
