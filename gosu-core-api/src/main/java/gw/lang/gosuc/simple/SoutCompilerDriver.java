@@ -1,23 +1,36 @@
 package gw.lang.gosuc.simple;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SoutCompilerDriver implements ICompilerDriver {
-  private int nErrors;
+  private List<String> errors = new ArrayList<>();
+  private List<String> warnings = new ArrayList<>();
 
   @Override
   public void sendCompileIssue(File file, int category, long offset, long line, long column, String message) {
-    String text = "";
     if (category == WARNING) {
-      text = "Warning: ";
+      warnings.add(String.format("%s:[%s,%s] warning: %s", file.getAbsolutePath(), line, column, message));
     } else if (category == ERROR) {
-      text = "Error: ";
-      nErrors++;
+      errors.add(String.format("%s:[%s,%s] error: %s", file.getAbsolutePath(), line, column, message));
     }
-    System.out.println(text + message);
+  }
+
+  @Override
+  public void registerOutput(File sourceFile, File outputFile) {
+    // nothing to do
   }
 
   public boolean hasErrors() {
-    return nErrors > 0;
+    return errors.size() > 0;
+  }
+
+  public List<String> getErrors() {
+    return errors;
+  }
+
+  public List<String> getWarnings() {
+    return warnings;
   }
 }

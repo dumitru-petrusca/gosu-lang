@@ -6,25 +6,25 @@ import gw.config.IPlatformHelper;
 import gw.fs.FileFactory;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
-import gw.lang.gosuc.GosucCompiler;
 import gw.lang.gosuc.GosucDependency;
 import gw.lang.gosuc.GosucModule;
 import gw.lang.init.GosuInitialization;
 import gw.lang.parser.IParseIssue;
 import gw.lang.parser.exceptions.ParseResultsException;
+import gw.lang.parser.exceptions.ParseWarning;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.IGosuClass;
+import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
 import gw.util.concurrent.LocklessLazyVar;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.util.*;
+
+import static gw.lang.gosuc.simple.ICompilerDriver.*;
 
 public class GosuCompiler implements IGosuCompiler {
   private final LocklessLazyVar<IType> doNotVerifyResourceType = new LocklessLazyVar<IType>() {
@@ -34,49 +34,165 @@ public class GosuCompiler implements IGosuCompiler {
   };
   protected static ICompilerDriver _driver;
   protected GosuInitialization _gosuInitialization;
+  protected File _compilingSourceFile;
 
   public GosuCompiler(ICompilerDriver driver) {
     _driver = driver;
   }
 
-  public boolean compile(File sourceFile, Collection<File> outputFiles) throws Exception {
-    IFile file = FileFactory.instance().getIFile(sourceFile);
-    IModule module = TypeSystem.getExecutionEnvironment().getGlobalModule();
-    List typeNames = Arrays.asList(TypeSystem.getTypesForFile(module, file));
+  public boolean compile(File sourceFile) throws Exception {
+    _compilingSourceFile = sourceFile;
 
-    List<IType> types = new GosucCompiler(_driver).compile(typeNames);
+    IType type = getType(_compilingSourceFile);
+    if (type == null) {
+      _driver.sendCompileIssue(_compilingSourceFile, ERROR, 0, 0, 0, "Cannot find type in the Gosu Type System.");
+      return false;
+    }
 
-    boolean hasErrors = false;
-    for (IType type : types) {
-      if (type instanceof IGosuClass) {
-        if (outputFiles != null) {
-          IDirectory moduleOutputDirectory = module.getOutputPath();
-          if (moduleOutputDirectory != null) {
-            String outRelativePath = type.getName().replace('.', File.separatorChar) + ".class";
-            File outputFile = new File(moduleOutputDirectory.getPath().getFileSystemPathString(), outRelativePath);
-            if (outputFile.exists() && outputFile.length() > 0) {
-              collectInnerClassOutputFiles(outputFile, (IGosuClass)type, outputFiles);
-            }
+    if (isCompilable(type)) {
+      if (type.isValid()) {
+        createOutputFiles((IGosuClass) type);
+      } else {
+        ParseResultsException parseException = ((IGosuClass) type).getParseResultsException();
+        if (parseException != null) {
+          for (IParseIssue issue : parseException.getParseIssues()) {
+            int category = issue instanceof ParseWarning ? WARNING : ERROR;
+            _driver.sendCompileIssue(_compilingSourceFile, category, issue.getTokenStart(), issue.getLine(), issue.getColumn(), issue.getUIMessage());
           }
         }
       }
     }
 
-    return hasErrors;
+    return false;
   }
 
-  private void collectInnerClassOutputFiles(File outputFile, IGosuClass gosuClass, Collection<File> outputFiles) throws IOException {
-    outputFiles.add(outputFile);
-    for (IGosuClass innerClass : gosuClass.getInnerClasses()) {
-      final String innerClassName = String.format("%s$%s.class", outputFile.getName().substring( 0, outputFile.getName().lastIndexOf( '.' ) ), innerClass.getRelativeName());
-      File innerClassFile = new File( outputFile.getParent(), innerClassName );
-      if (innerClassFile.exists() && innerClassFile.length() > 0) {
-        collectInnerClassOutputFiles(innerClassFile, innerClass, outputFiles);
+  private IType getType(File file) {
+    IFile ifile = FileFactory.instance().getIFile(file);
+    IModule module = TypeSystem.getGlobalModule();
+    String[] typesForFile = TypeSystem.getTypesForFile(module, ifile);
+    if (typesForFile.length != 0) {
+      return TypeSystem.getByFullNameIfValid(typesForFile[0], module);
+    }
+    return null;
+  }
+
+  private boolean isCompilable(IType type) {
+    return type instanceof IGosuClass && !type.getTypeInfo().hasAnnotation(doNotVerifyResourceType.get());
+  }
+
+  private void createOutputFiles(IGosuClass gsClass) {
+    IDirectory moduleOutputDirectory = TypeSystem.getGlobalModule().getOutputPath();
+    if (moduleOutputDirectory == null) {
+      throw new RuntimeException("Can't make class file, no output path defined.");
+    }
+
+    final String outRelativePath = gsClass.getName().replace('.', File.separatorChar) + ".class";
+    File child = new File(moduleOutputDirectory.getPath().getFileSystemPathString());
+    mkdirs(child);
+    try {
+      for (StringTokenizer tokenizer = new StringTokenizer(outRelativePath, File.separator + "/"); tokenizer.hasMoreTokens(); ) {
+        String token = tokenizer.nextToken();
+        child = new File(child, token);
+        if (!child.exists()) {
+          if (token.endsWith(".class")) {
+            createNewFile(child);
+          } else {
+            mkDir(child);
+          }
+        }
+      }
+      createClassFile(child, gsClass);
+    } catch (Exception e) {
+      e.printStackTrace();
+      _driver.sendCompileIssue(_compilingSourceFile, ERROR, 0, 0, 0, combine("Cannot create .class files.", toMessage(e)));
+    }
+
+    maybeCopySourceFile(child.getParentFile(), gsClass, _compilingSourceFile);
+  }
+
+  private String toMessage(Throwable e) {
+    String msg = e.getMessage();
+    while (e.getCause() != null) {
+      e = e.getCause();
+      String newMsg = e.getMessage();
+      if (newMsg != null) {
+        msg = newMsg;
+      }
+    }
+    return msg;
+  }
+
+  private String combine(String message1, String message2) {
+    if (message1 == null) {
+      message1 = "";
+    } else {
+      message1 = message1 + "\n";
+    }
+    return message1 + message2;
+  }
+
+  private void mkDir(File file) {
+    file.mkdir();
+  }
+
+  private void mkdirs(File file) {
+    file.mkdirs();
+  }
+
+  private void createNewFile(File file) throws IOException {
+    file.createNewFile();
+  }
+
+  private void maybeCopySourceFile(File parent, IGosuClass gsClass, File sourceFile) {
+    ISourceFileHandle sfh = gsClass.getSourceFileHandle();
+    IFile srcFile = sfh.getFile();
+    if (srcFile != null) {
+      File file = new File(srcFile.getPath().getFileSystemPathString());
+      if (file.isFile()) {
+        try {
+          copyFile(file, new File(parent, file.getName()));
+        } catch (IOException e) {
+          e.printStackTrace();
+          _driver.sendCompileIssue(sourceFile, ERROR, 0, 0, 0, "Cannot coopy source file to output folder.");
+        }
       }
     }
   }
 
-  public void initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders, List<String> classpath, String outputPath) {
+  public void copyFile(File sourceFile, File destFile) throws IOException {
+    if (sourceFile.isDirectory()) {
+      mkdirs(destFile);
+      return;
+    }
+
+    if (!destFile.exists()) {
+      mkdirs(destFile.getParentFile());
+      createNewFile(destFile);
+    }
+
+    try (FileChannel source = new FileInputStream(sourceFile).getChannel();
+         FileChannel destination = new FileOutputStream(destFile).getChannel()) {
+      destination.transferFrom(source, 0, source.size());
+    }
+  }
+
+  private void createClassFile(File outputFile, IGosuClass gosuClass) throws IOException {
+    final byte[] bytes = TypeSystem.getGosuClassLoader().getBytes(gosuClass);
+    try (OutputStream out = new FileOutputStream(outputFile)) {
+      out.write(bytes);
+      _driver.registerOutput(_compilingSourceFile, outputFile);
+    }
+    for (IGosuClass innerClass : gosuClass.getInnerClasses()) {
+      final String innerClassName = String.format("%s$%s.class", outputFile.getName().substring(0, outputFile.getName().lastIndexOf('.')), innerClass.getRelativeName());
+      File innerClassFile = new File(outputFile.getParent(), innerClassName);
+      if (innerClassFile.isFile()) {
+        createNewFile(innerClassFile);
+      }
+      createClassFile(innerClassFile, innerClass);
+    }
+  }
+
+  public long initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders, List<String> classpath, String outputPath) {
     final long start = System.currentTimeMillis();
 
     CommonServices.getKernel().redefineService_Privileged(IMemoryMonitor.class, new CompilerMemoryMonitor());
@@ -89,7 +205,7 @@ public class GosuCompiler implements IGosuCompiler {
         outputPath, Collections.<GosucDependency>emptyList(), Collections.<String>emptyList());
     _gosuInitialization.initializeCompiler(gosucModule);
 
-    System.out.println("Initialized Gosu Compiler -> " + (System.currentTimeMillis() - start) + "ms");
+    return System.currentTimeMillis() - start;
   }
 
   public void unitializeGosu() {
@@ -102,9 +218,5 @@ public class GosuCompiler implements IGosuCompiler {
 
   public boolean isPathIgnored(String sourceFile) {
     return CommonServices.getPlatformHelper().isPathIgnored(sourceFile);
-  }
-
-  protected boolean shouldCompile(IGosuClass gosuClass) {
-    return !gosuClass.getTypeInfo().hasAnnotation(doNotVerifyResourceType.get());
   }
 }

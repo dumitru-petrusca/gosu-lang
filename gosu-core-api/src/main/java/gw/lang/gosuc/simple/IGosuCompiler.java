@@ -9,13 +9,13 @@ import java.util.List;
  */
 public interface IGosuCompiler {
 
-  void initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders,
+  long initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders,
                       List<String> classpath, String outputPath);
 
   void unitializeGosu();
 
   boolean isPathIgnored(String sourceFile);
 
-  boolean compile(File sourceFile, Collection<File> outputFiles) throws Exception;
+  boolean compile(File sourceFile) throws Exception;
 
 }

@@ -13,6 +13,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -56,8 +57,9 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
+    Log log = getLog();
     if (skip) {
-      getLog().info("Skipping Gosu compiler plugin");
+      log.info("Skipping Gosu compiler plugin");
       return;
     }
 
@@ -79,12 +81,18 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
 
       SoutCompilerDriver driver = new SoutCompilerDriver();
       GosuCompiler compiler = new GosuCompiler(driver);
+      long initTime, compileTime;
       try {
-        compiler.initializeGosu(contentRoots, null, sources, classpath, getOutputFolder().getAbsolutePath());
+        String outputPath = getOutputFolder().getAbsolutePath();
+        initTime = compiler.initializeGosu(contentRoots, null, sources, classpath, outputPath);
         List<File> compilableFiles = getCompilableFiles(sources);
+        log.info(String.format("Compiling %s source file to %s", compilableFiles.size(), outputPath));
+        logLine();
+        compileTime = System.currentTimeMillis();
         for (File compilableFile : compilableFiles) {
-          compiler.compile(compilableFile, new ArrayList<File>());
+          compiler.compile(compilableFile);
         }
+        compileTime = System.currentTimeMillis() - compileTime;
       } catch (Exception e) {
         e.printStackTrace();
         throw new MojoExecutionException("Failed to compile gosu classes", e);
@@ -93,9 +101,24 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
       }
 
       if (driver.hasErrors()) {
+        log.error("COMPILATION ERROR :");
+        logLine();
+        for (String error : driver.getErrors()) {
+          log.error(error);
+        }
+        for (String warning : driver.getWarnings()) {
+          log.error(warning);
+        }
         throw new MojoFailureException("Gosu compilation failed.");
       }
+
+      log.info(String.format("Initialization took %sms.", initTime));
+      log.info(String.format("Compilation took %sms.", compileTime));
     }
+  }
+
+  private void logLine() {
+    getLog().info("-------------------------------------------------------------");
   }
 
   private List<File> getCompilableFiles(List<String> sources) {
