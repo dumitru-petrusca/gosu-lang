@@ -57,7 +57,7 @@ public abstract class XmlSchemaResourceTypeLoaderBase<T> extends TypeLoaderBase 
     }
   };
 
-  public XmlSchemaResourceTypeLoaderBase( String fileExtension, IModule module ) {
+  public XmlSchemaResourceTypeLoaderBase(String fileExtension) {
     super( module );
     _fileExtension = fileExtension;
   }

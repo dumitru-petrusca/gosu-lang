@@ -49,7 +49,6 @@ public class GosuClassCompilingStack
       list = new LinkedList<IType>();
       g_compilingClassStack.set(list);
     }
-    TypeSystem.pushModule(gsClass.getTypeLoader().getModule());
     list.add( 0, gsClass );
   }
 
@@ -59,7 +58,6 @@ public class GosuClassCompilingStack
     if( list != null )
     {
       IType type = list.remove( 0 );
-      TypeSystem.popModule( type.getTypeLoader().getModule() );
     }
   }
 }

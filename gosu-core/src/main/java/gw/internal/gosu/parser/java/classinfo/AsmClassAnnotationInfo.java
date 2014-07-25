@@ -10,7 +10,6 @@ import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.java.IJavaAnnotatedElement;
 import gw.lang.reflect.java.IJavaClassInfo;
 import gw.lang.reflect.java.IJavaClassMethod;
-import gw.lang.reflect.java.IJavaClassType;
 import gw.lang.reflect.java.asm.AsmAnnotation;
 
 import java.lang.annotation.Annotation;
@@ -64,7 +63,7 @@ public class AsmClassAnnotationInfo implements IAnnotationInfo {
   }
 
   private Object makeArray( String fieldName, List l ) {
-    IJavaClassInfo classInfo = TypeSystem.getJavaClassInfo( _annotation.getType().getName(), ((IJavaClassType)_owner).getModule() );
+    IJavaClassInfo classInfo = TypeSystem.getJavaClassInfo( _annotation.getType().getName());
     try {
       IJavaClassMethod method = classInfo.getDeclaredMethod( fieldName );
       IJavaClassInfo ci = method.getReturnClassInfo();

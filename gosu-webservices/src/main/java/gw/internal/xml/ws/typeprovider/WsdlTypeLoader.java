@@ -4,7 +4,6 @@
 
 package gw.internal.xml.ws.typeprovider;
 
-import gw.fs.IDirectory;
 import gw.fs.IFile;
 import gw.internal.xml.IXmlLoggerFactory;
 import gw.internal.xml.config.XmlServices;
@@ -12,7 +11,6 @@ import gw.internal.xml.ws.WsiAdditions;
 import gw.internal.xml.xsd.typeprovider.XmlSchemaIndex;
 import gw.internal.xml.xsd.typeprovider.XmlSchemaResourceTypeLoaderBase;
 import gw.internal.xml.xsd.typeprovider.schema.XmlSchema;
-import gw.lang.reflect.RefreshKind;
 import gw.lang.reflect.module.IModule;
 import gw.util.ILogger;
 import gw.util.Pair;
@@ -27,7 +25,7 @@ public class WsdlTypeLoader extends XmlSchemaResourceTypeLoaderBase<Object> {
   // This constructor is called reflectively
   @SuppressWarnings( { "UnusedDeclaration" } )
   public WsdlTypeLoader( IModule module ) {
-    super( "wsdl", module );
+    super( "wsdl");
   }
 
   public ILogger getLogger() {

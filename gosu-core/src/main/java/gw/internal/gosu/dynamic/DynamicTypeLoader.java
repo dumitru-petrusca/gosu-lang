@@ -19,8 +19,8 @@ import java.util.Set;
 public class DynamicTypeLoader extends TypeLoaderBase {
   private static final Set<String> TYPE_NAMES = Collections.singleton( DynamicType.QNAME );
 
-  public DynamicTypeLoader( IModule module ) {
-    super( module );
+  public DynamicTypeLoader() {
+    super( );
   }
 
   @Override

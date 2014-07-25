@@ -61,7 +61,7 @@ public class WrappingJavaBackedTestType extends WrappingTestTypeBase implements 
 
   @Override
   public IJavaClassInfo getBackingClassInfo() {
-    return new ClassJavaClassInfo(_implCLass, getTypeLoader().getModule());
+    return new ClassJavaClassInfo(_implCLass);
   }
 
   @Override

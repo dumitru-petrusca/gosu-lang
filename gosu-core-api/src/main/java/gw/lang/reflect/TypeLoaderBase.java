@@ -25,24 +25,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class TypeLoaderBase extends BaseService implements ITypeLoader {
-  protected IModule _module;
   protected Set<String> _typeNames;
 
-  /**
-   * @deprecated use TypeLoaderBase( IModule )
-   */
   protected TypeLoaderBase() {
-    this(TypeSystem.getCurrentModule());
-    System.out.println("WARNING: " + getClass().getName() + " was constructed without specifying a module!");
-  }
-
-  protected TypeLoaderBase(IModule module) {
-    _module = module;
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 
   @Override
@@ -125,7 +110,7 @@ public abstract class TypeLoaderBase extends BaseService implements ITypeLoader 
   }
 
   public String toString() {
-    return this.getClass().getSimpleName() + " for module " + getModule().getName();
+    return this.getClass().getSimpleName();
   }
 
   @Override
@@ -169,7 +154,7 @@ public abstract class TypeLoaderBase extends BaseService implements ITypeLoader 
   }
 
   private String getId() {
-    return _module.getName() + "$" + getClass().getSimpleName();
+    return getClass().getSimpleName();
   }
 
   protected void deleteIndexFile() {

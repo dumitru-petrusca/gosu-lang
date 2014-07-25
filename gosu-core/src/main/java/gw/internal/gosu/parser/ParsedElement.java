@@ -29,7 +29,6 @@ import gw.lang.reflect.IFeatureInfo;
 import gw.lang.reflect.ITypeInfo;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.IGosuClass;
-import gw.lang.reflect.module.IModule;
 import gw.util.GosuObjectUtil;
 
 import java.util.ArrayList;
@@ -645,49 +644,42 @@ public abstract class ParsedElement implements IParsedElement
   }
   public boolean isSuppressed( IWarningSuppressor suppressor )
   {
-    IModule mod = getGosuClass() == null ? null : getModule();
-    if( mod != null ) {
-      TypeSystem.pushModule( mod );
-    }
-    try
+    for( IGosuAnnotation anno: getAnnotations() )
     {
-      for( IGosuAnnotation anno: getAnnotations() )
+      if( anno.getType() == TypeSystem.get( SuppressWarnings.class ) )
       {
-        if( anno.getType() == TypeSystem.get( SuppressWarnings.class ) )
+        IExpression annoExpr = anno.getExpression();
+        if( annoExpr instanceof AnnotationExpression )
         {
-          IExpression annoExpr = anno.getExpression();
-          if( annoExpr instanceof AnnotationExpression )
+          if( ((AnnotationExpression)annoExpr).getArgs() != null )
           {
-            if( ((AnnotationExpression)annoExpr).getArgs() != null )
+            for( Expression expr : ((AnnotationExpression)annoExpr).getArgs() )
             {
-              for( Expression expr : ((AnnotationExpression)annoExpr).getArgs() )
+              Object value = expr.evaluate();
+              if( value instanceof String )
               {
-                Object value = expr.evaluate();
-                if( value instanceof String )
+                if( suppressor.isSuppressed( (String)value ) )
                 {
-                  if( suppressor.isSuppressed( (String)value ) )
+                  return true;
+                }
+              }
+              else if( value instanceof Object[] )
+              {
+                for( Object o: (Object[])value )
+                {
+                  if( suppressor.isSuppressed( (String)o ) )
                   {
                     return true;
                   }
                 }
-                else if( value instanceof Object[] )
+              }
+              else if( value instanceof List )
+              {
+                for( Object o: (List)value )
                 {
-                  for( Object o: (Object[])value )
+                  if( suppressor.isSuppressed( (String)o ) )
                   {
-                    if( suppressor.isSuppressed( (String)o ) )
-                    {
-                      return true;
-                    }
-                  }
-                }
-                else if( value instanceof List )
-                {
-                  for( Object o: (List)value )
-                  {
-                    if( suppressor.isSuppressed( (String)o ) )
-                    {
-                      return true;
-                    }
+                    return true;
                   }
                 }
               }
@@ -695,16 +687,9 @@ public abstract class ParsedElement implements IParsedElement
           }
         }
       }
-      ParsedElement parent = (ParsedElement)getParent();
-      return parent != null && parent.isSuppressed( suppressor );
     }
-    finally
-    {
-      if( mod != null )
-      {
-        TypeSystem.popModule( mod );
-      }
-    }
+    ParsedElement parent = (ParsedElement)getParent();
+    return parent != null && parent.isSuppressed( suppressor );
   }
 
   public List<IGosuAnnotation> getAnnotations()
@@ -943,11 +928,6 @@ public abstract class ParsedElement implements IParsedElement
     _lnf._bSynthetic = bSynthetic;
   }
 
-  public IModule getModule() {
-    IParsedElement parent = getParent();
-    return parent == null ? null : parent.getModule();
-  }
-  
   public static IFeatureInfo getEnclosingFeatureInfo( Stack<IFeatureInfo> enclosingFeatureInfos )
   {
     if( enclosingFeatureInfos.empty() )

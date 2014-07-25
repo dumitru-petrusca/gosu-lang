@@ -8,7 +8,6 @@ import gw.internal.gosu.parser.Statement;
 import gw.lang.parser.Keyword;
 import gw.lang.parser.statements.ITerminalStatement;
 import gw.lang.parser.statements.IUsesStatement;
-import gw.lang.reflect.module.IModule;
 
 /**
  */
@@ -60,7 +59,4 @@ public class UsesStatement extends Statement implements IUsesStatement
     return Keyword.KW_uses + " " + getTypeName();
   }
 
-  public IModule getModule() {
-    return getGosuClass().getClassStatement().getModule();
-  }
 }

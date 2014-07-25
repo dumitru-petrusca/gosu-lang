@@ -11,7 +11,6 @@ import gw.lang.reflect.module.IModule;
 import gw.util.Pair;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,7 +18,7 @@ import java.util.Map;
 public class XmlSchemaResourceTypeLoader extends XmlSchemaResourceTypeLoaderBase<Object> {
 
   public XmlSchemaResourceTypeLoader( IModule module ) {
-    super( "xsd", module );
+    super( "xsd");
   }
 
   protected XmlSchemaIndex<Object> loadSchemaForNamespace( String namespace, IFile resourceFile, Map<Pair<URL,String>, XmlSchema> caches  ) {

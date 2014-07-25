@@ -7,6 +7,7 @@ package gw.internal.gosu.properties;
 import gw.config.CommonServices;
 import gw.fs.IFile;
 import gw.internal.gosu.util.StringUtil;
+import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.module.IModule;
 import gw.util.Pair;
 import gw.util.concurrent.LockingLazyVar;
@@ -35,11 +36,10 @@ public class PropertiesPropertySet implements PropertySet {
 
     private static final String EXTENSION = ".properties";
 
-    private final IModule _module;
     private final LockingLazyVar<Map<String,IFile>> _filesByTypeName = new LockingLazyVar<Map<String, IFile>>() {
       @Override
       protected Map<String, IFile> init() {
-        List<Pair<String, IFile>> propertiesFiles = _module.getFileRepository().findAllFilesByExtension(EXTENSION);
+        List<Pair<String, IFile>> propertiesFiles = TypeSystem.getGlobalModule().getFileRepository().findAllFilesByExtension(EXTENSION);
         final int initialCapacity = propertiesFiles.size();
         Map<String,IFile> result = new HashMap<String, IFile>( initialCapacity );
         for (Pair<String,IFile> pair : propertiesFiles) {
@@ -71,8 +71,7 @@ public class PropertiesPropertySet implements PropertySet {
       return _filesByTypeName.get().get(name);
     }
 
-    public Source(IModule module) {
-      _module = module;
+    public Source() {
     }
 
     @Override

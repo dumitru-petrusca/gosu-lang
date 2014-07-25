@@ -19,11 +19,9 @@ import java.util.List;
 
 public class AsmFieldJavaClassField implements IJavaClassField {
   private AsmField _field;
-  private IModule _module;
 
-  public AsmFieldJavaClassField( AsmField field, IModule module ) {
+  public AsmFieldJavaClassField(AsmField field) {
     _field = field;
-    _module = module;
   }
 
   @Override
@@ -43,14 +41,14 @@ public class AsmFieldJavaClassField implements IJavaClassField {
 
   @Override
   public IJavaClassInfo getType() {
-    return JavaSourceUtil.getClassInfo( _field.getType().getRawType().getNameWithArrayBrackets(), _module );
+    return JavaSourceUtil.getClassInfo( _field.getType().getRawType().getNameWithArrayBrackets());
   }
 
   @Override
   public IJavaClassType getGenericType() {
-    IJavaClassType type = AsmTypeJavaClassType.createType( _field.getType(), _module );
+    IJavaClassType type = AsmTypeJavaClassType.createType( _field.getType());
     if( type == null ) {
-      throw new IllegalStateException( "Unable to create a generic type for the field " + _field.getName() + " on " + _field.getDeclaringClass().getName() + " in module " + _module.getName() + "\n" +
+      throw new IllegalStateException( "Unable to create a generic type for the field " + _field.getName() + " on " + _field.getDeclaringClass().getName() + "\n" +
                                        "Type : " + _field.getType() + ", Type.class " + _field.getType().getClass().getName() + " GenericType : " + _field.getType() + ", GenericType.class : " + _field.getType().getClass().getName() );
     }
     return type;
@@ -58,7 +56,7 @@ public class AsmFieldJavaClassField implements IJavaClassField {
 
   @Override
   public IJavaClassInfo getEnclosingClass() {
-    return JavaSourceUtil.getClassInfo( _field.getDeclaringClass(), _module );
+    return JavaSourceUtil.getClassInfo( _field.getDeclaringClass());
   }
 
   @Override

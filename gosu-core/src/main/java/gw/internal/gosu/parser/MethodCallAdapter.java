@@ -58,9 +58,7 @@ public class MethodCallAdapter implements IMethodCallHandler
     if( !bMethodOnThread )
     {
       previousClassLoader = Thread.currentThread().getContextClassLoader();
-      if(TypeSystem.getCurrentModule() != null) {
-        Thread.currentThread().setContextClassLoader( TypeSystem.getGosuClassLoader().getActualLoader() ); //_method.getDeclaringClass().getClassLoader() );
-      }
+      Thread.currentThread().setContextClassLoader( TypeSystem.getGosuClassLoader().getActualLoader() ); //_method.getDeclaringClass().getClassLoader() );
     }
     try
     {

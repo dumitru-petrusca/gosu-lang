@@ -14,6 +14,4 @@ public interface ITypeInfoResolver {
 
   IJavaClassType resolveImport(String relativeName);
 
-  IModule getModule();
-
 }

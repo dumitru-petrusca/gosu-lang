@@ -27,7 +27,7 @@ public class TestTypeLoader extends TypeLoaderBase {
   public static final String TEST_CLASS_PACKAGE = "testtypeloader";
 
   public TestTypeLoader() {
-    super( TypeSystem.getCurrentModule() );
+    super( );
   }
 
   @Override

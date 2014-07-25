@@ -28,7 +28,7 @@ public class SourceAnnotationFromJavaTest extends TestClass
     TypeSystemSetup typeSystemSetup = new TypeSystemSetup( execEnv );
     typeSystemSetup.initializeGosu();
     IModule mod = execEnv.getModule( "myModule" );
-    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( SampleClassWithAnnotations.class.getName(), mod );
+    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( SampleClassWithAnnotations.class.getName());
 
     _testMe( javaClassInfo );
   }

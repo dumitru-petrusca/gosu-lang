@@ -577,7 +577,7 @@ public class TypeLord
     }
     else if( type.isParameterizedType() )
     {
-      String strParams = getNameOfParams( type.getTypeParameters(), false, true, includeModules );
+      String strParams = getNameOfParams( type.getTypeParameters(), false, true);
       return getPureGenericType( type ).getName() + strParams;
     }
     else if( type instanceof TypeVariableType )
@@ -598,7 +598,7 @@ public class TypeLord
     }
     else if( type.isParameterizedType() )
     {
-      String strParams = getNameOfParams( type.getTypeParameters(), false, true, includeModules );
+      String strParams = getNameOfParams( type.getTypeParameters(), false, true);
       return getPureGenericType( type ).getName() + strParams;
     }
     else if( type instanceof TypeVariableType )
@@ -611,11 +611,7 @@ public class TypeLord
     return type.getName();
   }
 
-  public static String getNameOfParams( IType[] paramTypes, boolean bRelative, boolean bWithEnclosingType )
-  {
-    return getNameOfParams(paramTypes, bRelative, bWithEnclosingType, false);
-  }
-  public static String getNameOfParams( IType[] paramTypes, boolean bRelative, boolean bWithEnclosingType, boolean bIncludeModule )
+  public static String getNameOfParams(IType[] paramTypes, boolean bRelative, boolean bWithEnclosingType)
   {
     StringBuilder sb = new StringBuilder( "<" );
     for( int i = 0; i < paramTypes.length; i++ )
@@ -632,10 +628,6 @@ public class TypeLord
           TypeVariableType type = (TypeVariableType)paramType;
           if( type.getEnclosingType() != null )
           {
-            if( bIncludeModule && !(type.getEnclosingType() instanceof INonLoadableType) )
-            {
-              sb.append( type.getEnclosingType().getTypeLoader().getModule().getName() + "." );
-            }
             sb.append( type.getNameWithEnclosingType() );
           }
           else
@@ -646,20 +638,10 @@ public class TypeLord
         else if( bWithEnclosingType && paramType.isParameterizedType() )
         {
           sb.append( paramType.getGenericType().getName() );
-          sb.append( getNameOfParams( paramType.getTypeParameters(), bRelative, bWithEnclosingType, bIncludeModule ) );
+          sb.append( getNameOfParams( paramType.getTypeParameters(), bRelative, bWithEnclosingType) );
         }
         else
         {
-          if( bIncludeModule && !(paramType instanceof INonLoadableType) )
-          {
-            ITypeLoader typeLoader = paramType.getTypeLoader();
-            if (typeLoader != null) {
-              IModule oldModule = typeLoader.getModule();
-              if (oldModule != null) {
-                sb.append( oldModule.getName() + "." );
-              }
-            }
-          }
           sb.append( paramType.getName() );
         }
       }

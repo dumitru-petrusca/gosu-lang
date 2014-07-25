@@ -16,7 +16,6 @@ import gw.lang.reflect.Modifier;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.java.IAsmJavaClassInfo;
 import gw.lang.reflect.java.IJavaClassInfo;
-import gw.lang.reflect.module.IModule;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ public class AsmClass implements IAsmType, IGeneric {
     return PRIMITIVES.get( className );
   }
 
-  private Object _module;
   private int _version;
   private int _modifiers;
   private AsmType _type;
@@ -67,8 +65,7 @@ public class AsmClass implements IAsmType, IGeneric {
   private List<AsmAnnotation> _annotations;
 
 
-  AsmClass( Object module, byte[] classBytes ) {
-    _module = module;
+  AsmClass(byte[] classBytes) {
     ClassReader cr = new ClassReader( classBytes );
     cr.accept( new AsmClassVisitor(), ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES );
   }
@@ -271,7 +268,7 @@ public class AsmClass implements IAsmType, IGeneric {
       int iDollar = typeName.lastIndexOf( '$' );
       if( iDollar > 0 ) {
         String outerName = typeName.substring( 0, iDollar );
-        IJavaClassInfo classInfo = TypeSystem.getJavaClassInfo( outerName, (IModule)_module );
+        IJavaClassInfo classInfo = TypeSystem.getJavaClassInfo( outerName);
         if( classInfo != null ) {
           _enclosingType = AsmUtil.makeType( outerName );
           return (AsmClass)((IAsmJavaClassInfo)classInfo).getAsmType();

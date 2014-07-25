@@ -13,8 +13,8 @@ import java.util.Set;
 
 public abstract class SimpleTypeLoader extends TypeLoaderBase {
 
-  protected SimpleTypeLoader(IModule module) {
-    super(module);
+  protected SimpleTypeLoader() {
+    super();
   }
 
   public abstract Set<String> getExtensions();
@@ -26,7 +26,7 @@ public abstract class SimpleTypeLoader extends TypeLoaderBase {
 
   @Override
   public String[] getTypesForFile(IFile file) {
-    List<IDirectory> sourcePath = getModule().getSourcePath();
+    List<IDirectory> sourcePath = TypeSystem.getGlobalModule().getSourcePath();
     for (IDirectory src : sourcePath) {
       if (file.isDescendantOf(src)) {
         String fqn = src.relativePath(file);
@@ -44,7 +44,7 @@ public abstract class SimpleTypeLoader extends TypeLoaderBase {
 
   @Override
   public boolean handlesDirectory(IDirectory dir) {
-    List<IDirectory> sourcePath = getModule().getSourcePath();
+    List<IDirectory> sourcePath = TypeSystem.getGlobalModule().getSourcePath();
     for (IDirectory src : sourcePath) {
       if (dir.isDescendantOf(src)) {
         return true;
@@ -55,7 +55,7 @@ public abstract class SimpleTypeLoader extends TypeLoaderBase {
 
   @Override
   public String getNamespaceForDirectory(IDirectory dir) {
-    List<IDirectory> sourcePath = getModule().getSourcePath();
+    List<IDirectory> sourcePath = TypeSystem.getGlobalModule().getSourcePath();
     for (IDirectory src : sourcePath) {
       if (dir.isDescendantOf(src)) {
         return src.relativePath(dir).replace('/', '.');

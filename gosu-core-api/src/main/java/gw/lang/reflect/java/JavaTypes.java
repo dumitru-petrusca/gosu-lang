@@ -402,8 +402,8 @@ public class JavaTypes {
   // utilities
 
   private static IJavaType findTypeFromJre(Class c) {
-    IJavaType type = (IJavaType) TypeSystem.get(c, TypeSystem.getExecutionEnvironment().getJreModule());
-    IExecutionEnvironment execEnv = type.getTypeLoader().getModule().getExecutionEnvironment();
+    IJavaType type = (IJavaType) TypeSystem.get(c);
+    IExecutionEnvironment execEnv = TypeSystem.getGlobalModule().getExecutionEnvironment();
     if (execEnv.getProject().isDisposed()) {
       throw new IllegalStateException("Whoops.... the project associated with type, " + type.getName() + ", is stale. ExecEnv: " + execEnv.getProject());
     }
@@ -411,7 +411,7 @@ public class JavaTypes {
   }
 
   private static IJavaType findTypeFromProject(Class c) {
-    return (IJavaType) TypeSystem.get(c, TypeSystem.getGlobalModule());
+    return (IJavaType) TypeSystem.get(c);
   }
 
   private static IJavaType getCachedType( Class c, boolean bFromJre ) {

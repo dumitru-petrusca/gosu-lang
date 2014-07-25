@@ -1125,7 +1125,6 @@ public class XmlSchemaIndex<T> {
         Runnable runnable = new Runnable() {
           public void run() {
             IExecutionEnvironment env = TypeSystem.getExecutionEnvironment();
-            TypeSystem.pushModule(env.getGlobalModule());
             TypeSystem.lock();
             try {
               XmlSchemaIndex<?> schemaIndex = XmlSchemaResourceTypeLoaderBase.findSchemaForNamespace( getTypeLoader().getModule(), _packageName );
@@ -1141,7 +1140,6 @@ public class XmlSchemaIndex<T> {
             }
             finally {
               TypeSystem.unlock();
-              TypeSystem.popModule(env.getGlobalModule());
             }
           }
         };
@@ -2249,7 +2247,7 @@ public class XmlSchemaIndex<T> {
       return null;
     }
     String className = "gw.internal.schema." + name;
-    IJavaClassInfo clazz = TypeSystem.getJavaClassInfo(className, getTypeLoader().getModule());
+    IJavaClassInfo clazz = TypeSystem.getJavaClassInfo(className);
     if (clazz == null) {
       throw new RuntimeException( "Class " + className + " does not exist. Please generate it using xsd-codegen." );
     }

@@ -53,21 +53,16 @@ public class GosuClassTypeLoader extends SimpleTypeLoader
     return TypeSystem.getTypeLoader( GosuClassTypeLoader.class );
   }
 
-  public static GosuClassTypeLoader getDefaultClassLoader(IModule module)
-  {
-    return TypeSystem.getTypeLoader( GosuClassTypeLoader.class, module );
-  }
-
   public GosuClassTypeLoader( IGosuClassRepository repository )
   {
-    super( repository.getModule() );
+    super();
     _repository = repository;
     _enhancementIndex = GosuShop.createEnhancementIndex( this );
   }
 
   public GosuClassTypeLoader( IModule module, IGosuClassRepository repository )
   {
-    super( module );
+    super();
     _repository = repository;
     _enhancementIndex = GosuShop.createEnhancementIndex( this );
   }
@@ -273,21 +268,17 @@ public class GosuClassTypeLoader extends SimpleTypeLoader
         IType type = getBlockType( enclosingClassStr );
         if( type == null )
         {
-          type = TypeSystem.getByFullNameIfValid( enclosingClassStr.replace( '$', '.' ), getModule() );
+          type = TypeSystem.getByFullNameIfValid( enclosingClassStr.replace('$', '.') );
         }
 
         // this module check is to make sure that the block class is in the same module as the parent class
         // otherwise the Rule loader loads block classes!
-        if( type instanceof ICompilableType && type.getTypeLoader().getModule() == _module )
+        if( type instanceof ICompilableType )
         {
           classInternal = ((ICompilableType)type).getBlock( i );
         }
       }
-      catch( NumberFormatException e )
-      {
-        //ignore
-      }
-      catch( IndexOutOfBoundsException e )
+      catch( NumberFormatException | IndexOutOfBoundsException e )
       {
         //ignore
       }

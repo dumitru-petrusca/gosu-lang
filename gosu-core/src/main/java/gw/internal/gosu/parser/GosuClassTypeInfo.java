@@ -118,7 +118,7 @@ public class GosuClassTypeInfo extends BaseTypeInfo implements IGosuClassTypeInf
   }
 
   public boolean isDeprecated() {
-    List<IAnnotationInfo> annotations = getAnnotationsOfType(TypeSystem.get(gw.lang.Deprecated.class, TypeSystem.getGlobalModule()));
+    List<IAnnotationInfo> annotations = getAnnotationsOfType(TypeSystem.get(gw.lang.Deprecated.class));
     return (annotations != null) &&
            (annotations.size() > 0);
   }

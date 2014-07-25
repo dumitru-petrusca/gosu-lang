@@ -492,15 +492,7 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   private IType loadTypeAndCacheResult(String fullyQualifiedName, boolean skipJava)
   {
     Pair<IType, ITypeLoader> pair;
-    TypeSystem.pushModule( getModule() );
-    try
-    {
-      pair = loadType(fullyQualifiedName, skipJava);
-    }
-    finally
-    {
-      TypeSystem.popModule( getModule() );
-    }
+    pair = loadType(fullyQualifiedName, skipJava);
 
     IType type;
     if( pair != null )
@@ -710,7 +702,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   }
 
   public boolean refresh(IResource file, String typeName, RefreshKind refreshKind) {
-    TypeSystem.pushModule(getModule());
     TypeSystem.lock();
     try {
       if (file instanceof IFile) {
@@ -722,7 +713,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
       }
     } finally {
       TypeSystem.unlock();
-      TypeSystem.popModule(getModule());
     }
   }
 

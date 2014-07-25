@@ -10,7 +10,6 @@ import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.java.IJavaClassInfo;
 import gw.lang.reflect.java.IJavaClassType;
 import gw.lang.reflect.java.JavaTypes;
-import gw.lang.reflect.module.IModule;
 
 import java.util.List;
 
@@ -19,8 +18,8 @@ public class JavaSourceAnnotation extends JavaSourceType {
   /**
    * For top level.
    */
-  public JavaSourceAnnotation(ISourceFileHandle fileHandle, ClassTree typeDecl, List<? extends ImportTree> imports, IModule gosuModule) {
-    super(fileHandle, typeDecl, imports, gosuModule);
+  public JavaSourceAnnotation(ISourceFileHandle fileHandle, ClassTree typeDecl, List<? extends ImportTree> imports) {
+    super(fileHandle, typeDecl, imports);
   }
 
   /**

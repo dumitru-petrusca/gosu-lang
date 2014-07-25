@@ -19,11 +19,6 @@ public interface ITypeLoader extends IService
   public static final String[] NO_TYPES = new String[0];
 
   /**
-   * @return The module to which this type loader belongs.
-   */
-  IModule getModule();
-
-  /**
    * Gets a type based on a fully-qualified name.  This could either be the name of an entity,
    * like "entity.User", the name of a typekey, like "typekey.SystemPermission", or a class name, like
    * "java.lang.String".  Names can have [] appended to them to create arrays, and multi-dimensional arrays

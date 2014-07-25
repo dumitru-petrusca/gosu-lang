@@ -268,18 +268,4 @@ public abstract class TypeBase extends AbstractType implements IType
   public Set<IType> getCompoundTypeComponents() {
     return null;
   }
-
-  public IJavaType loadJavaType(String fullyQualifiedName) {
-    IModule module = getTypeLoader().getModule();
-    for (IModule m : module.getModuleTraversalList()) {
-      if (m != module) {
-        IDefaultTypeLoader typeLoader = m.getTypeLoaders(IDefaultTypeLoader.class).get(0);
-        IType type = typeLoader.getType(fullyQualifiedName);
-        if (type != null) {
-          return (IJavaType) type;
-        }
-      }
-    }
-    return null;
-  }
 }

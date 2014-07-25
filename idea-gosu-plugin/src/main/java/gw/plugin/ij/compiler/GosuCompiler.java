@@ -160,7 +160,7 @@ public class GosuCompiler implements TranslatingCompiler {
           List<String> types = TypeUtil.getTypesForFile(gosuModule, file);
           for (String qualifiedName : Ordering.natural().sortedCopy(types)) {
             if ("java".equals(extension)) {
-              final IJavaClassInfo type = TypeSystem.getJavaClassInfo(qualifiedName, gosuModule);
+              final IJavaClassInfo type = TypeSystem.getJavaClassInfo(qualifiedName);
               if (type != null) {
                 TypeFingerprint.extend(fp, type);
               } else {

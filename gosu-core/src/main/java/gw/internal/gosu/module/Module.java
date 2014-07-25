@@ -269,10 +269,10 @@ public class Module implements IModule
 
   protected void createStandardTypeLoaders()
   {
-    CommonServices.getTypeSystem().pushTypeLoader( this, new GosuClassTypeLoader( this, _fileRepository ) );
-    CommonServices.getTypeSystem().pushTypeLoader( this, new PropertiesTypeLoader( this ) );
+    CommonServices.getTypeSystem().pushTypeLoader(new GosuClassTypeLoader( this, _fileRepository ) );
+    CommonServices.getTypeSystem().pushTypeLoader(new PropertiesTypeLoader() );
     if( ILanguageLevel.Util.DYNAMICE_TYPE() ) {
-      CommonServices.getTypeSystem().pushTypeLoader( this, new DynamicTypeLoader( this ) );
+      CommonServices.getTypeSystem().pushTypeLoader(new DynamicTypeLoader() );
     }
   }
 
@@ -382,7 +382,7 @@ public class Module implements IModule
     }
     if( typeLoader != null )
     {
-      CommonServices.getTypeSystem().pushTypeLoader( this, typeLoader );
+      CommonServices.getTypeSystem().pushTypeLoader(typeLoader );
       CommonServices.getGosuInitializationHooks().afterTypeLoaderCreation();
     }
     else

@@ -56,9 +56,6 @@ public class TypeSystemSetup
     CommonServices.getKernel().redefineService_Privileged( IPlatformHelper.class, new TestPlatformHelper() );
 
     GosuInitialization.instance( _execEnv ).initializeMultipleModules( modules );
-
-    //## todo: now with support for multiple projects we should not push and leave pushed the uber module for a given project
-    TypeSystem.pushModule(_globalModule);
   }
 
   private List<IModule> defineModules( List<IDirectory> javaClassPath ) {

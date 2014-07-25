@@ -59,7 +59,7 @@ public class GosuTypes {
   public static IType getType(String fqn) {
     IType type = CACHE.get(fqn);
     if (type == null) {
-      type = TypeSystem.getByFullNameIfValid(fqn, TypeSystem.getGlobalModule());
+      type = TypeSystem.getByFullNameIfValid(fqn);
       if (type == null) {
         String path = fqn.replace('.', '/') + ".gs";
         byte[] content;

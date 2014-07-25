@@ -299,11 +299,6 @@ public class JavaArrayClassInfo extends AbstractJavaClassInfo {
   }
 
   @Override
-  public IModule getModule() {
-    return _component.getModule();
-  }
-
-  @Override
   public IJavaClassInfo getEnclosingClass() {
     return null;
   }

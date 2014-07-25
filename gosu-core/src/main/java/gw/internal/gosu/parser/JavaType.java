@@ -136,13 +136,13 @@ class JavaType extends AbstractType implements IJavaTypeInternal
     IJavaTypeInternal type;
     if( cls.isEnum() )
     {
-      JavaType rawType = new JavaEnumType( new ClassJavaClassInfo(cls, loader.getModule()), loader );
+      JavaType rawType = new JavaEnumType( new ClassJavaClassInfo(cls), loader );
       type = (IJavaTypeInternal)TypeSystem.getOrCreateTypeReference( rawType );
       rawType._typeRef = type;
     }
     else
     {
-      JavaType rawType = new JavaType( new ClassJavaClassInfo(cls, loader.getModule()), loader );
+      JavaType rawType = new JavaType( new ClassJavaClassInfo(cls), loader );
       IJavaTypeInternal extendedType = JavaTypeExtensions.maybeExtendType(rawType);
       type = (IJavaTypeInternal)TypeSystem.getOrCreateTypeReference( extendedType );
       rawType._typeRef = type;
@@ -227,7 +227,7 @@ class JavaType extends AbstractType implements IJavaTypeInternal
 
   JavaType( Class cls, DefaultTypeLoader loader )
   {
-    init(TypeSystem.getJavaClassInfo(cls, loader.getModule()), loader);
+    init(TypeSystem.getJavaClassInfo(cls), loader);
     _strName = computeQualifiedName();
   }
 
@@ -452,13 +452,6 @@ class JavaType extends AbstractType implements IJavaTypeInternal
 
   public ITypeInfo getTypeInfo()
   {
-    if (!getTypeLoader().getModule().equals(TypeSystem.getCurrentModule())) {
-      final IType reResolveByFullName = TypeSystem.getByFullNameIfValid(getName());
-      if (reResolveByFullName!=null && !equals(reResolveByFullName)) {
-        return reResolveByFullName.getTypeInfo();
-      }
-    }
-
     ITypeInfo typeInfo = _typeInfo;
     if( typeInfo == null || hasAncestorBeenUpdated() )
     {
@@ -793,7 +786,7 @@ class JavaType extends AbstractType implements IJavaTypeInternal
   {
     if( isParameterizedType() )
     {
-      return (IJavaTypeInternal)TypeSystem.get( _classInfo, getTypeLoader().getModule() );
+      return (IJavaTypeInternal)TypeSystem.get( _classInfo );
     }
     else if( isGenericType() )
     {
@@ -885,7 +878,7 @@ class JavaType extends AbstractType implements IJavaTypeInternal
       }
     }
     paramTypes = TypeSystem.boxPrimitiveTypeParams( paramTypes );
-    String strNameOfParams = TypeLord.getNameOfParams( paramTypes, false, true, true );
+    String strNameOfParams = TypeLord.getNameOfParams( paramTypes, false, true);
     IJavaTypeInternal parameterizedType = _parameterizationByParamsName.get( strNameOfParams );
     if( parameterizedType == null )
     {
@@ -1002,38 +995,23 @@ class JavaType extends AbstractType implements IJavaTypeInternal
         if( _arrayType == null )
         {
           IJavaTypeInternal thisRef = thisRef();
-          IModule module = getTypeLoader().getModule();
-          if( module != null )
-          {
-            TypeSystem.pushModule( getTypeLoader().getModule() );
-          }
-          try
-          {
-            boolean bParameterized = TypeLord.getCoreType( thisRef ).isParameterizedType();
-            if(_classInfo != null) {
-              IJavaClassInfo arrayClass = _classInfo.getArrayType();
-              if( bParameterized )
-              {
-                _arrayType = new JavaType( arrayClass, thisRef, _typeLoader ).thisRef();
-              }
-              else
-              {
-                _arrayType = create( arrayClass, _typeLoader );
-                _arrayType.setComponentType( thisRef );
-              }
-            } else {
-              if(bParameterized) {
-                _arrayType = new JavaType(_classInfo.getArrayType(), getTypeLoader(), getTypeParameters()).thisRef();
-              } else {
-                _arrayType = new JavaType(_classInfo.getArrayType(), getTypeLoader()).thisRef();
-              }
-            }
-          }
-          finally
-          {
-            if( module != null )
+          boolean bParameterized = TypeLord.getCoreType( thisRef ).isParameterizedType();
+          if(_classInfo != null) {
+            IJavaClassInfo arrayClass = _classInfo.getArrayType();
+            if( bParameterized )
             {
-              TypeSystem.popModule( module );
+              _arrayType = new JavaType( arrayClass, thisRef, _typeLoader ).thisRef();
+            }
+            else
+            {
+              _arrayType = create( arrayClass, _typeLoader );
+              _arrayType.setComponentType( thisRef );
+            }
+          } else {
+            if(bParameterized) {
+              _arrayType = new JavaType(_classInfo.getArrayType(), getTypeLoader(), getTypeParameters()).thisRef();
+            } else {
+              _arrayType = new JavaType(_classInfo.getArrayType(), getTypeLoader()).thisRef();
             }
           }
         }
@@ -1084,23 +1062,14 @@ class JavaType extends AbstractType implements IJavaTypeInternal
 
   public IType getComponentType()
   {
-    IModule module = getTypeLoader().getModule();
-    TypeSystem.pushModule( module );
-    try
-    {
-      if (isArray()) {
-        if (_componentType == null) {
-          IType type = TypeSystem.get(_classInfo.getComponentType());
-          _componentType = (IJavaTypeInternal) type;
-        }
-        return _componentType;
-      } else {
-        return null;
+    if (isArray()) {
+      if (_componentType == null) {
+        IType type = TypeSystem.get(_classInfo.getComponentType());
+        _componentType = (IJavaTypeInternal) type;
       }
-    }
-    finally
-    {
-      TypeSystem.popModule( module );
+      return _componentType;
+    } else {
+      return null;
     }
   }
   public void setComponentType( IJavaTypeInternal componentType )

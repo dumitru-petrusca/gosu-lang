@@ -60,7 +60,6 @@ import gw.lang.reflect.gs.IGosuEnhancement;
 import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.java.IJavaType;
 import gw.lang.reflect.java.JavaTypes;
-import gw.lang.reflect.module.IModule;
 import gw.util.GosuExceptionUtil;
 import gw.util.GosuStringUtil;
 import gw.util.concurrent.LockingLazyVar;
@@ -475,7 +474,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
     {
       markStatic();
     }
-    addInterface(TypeSystem.get(IEnumValue.class, TypeSystem.getGlobalModule()));
+    addInterface(TypeSystem.get(IEnumValue.class));
   }
 
   public List<String> getEnumConstants()
@@ -1076,7 +1075,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
   }
   protected ITypeRef getOrCreateTypeReference( IType type )
   {
-    return getTypeLoader().getModule().getModuleTypeLoader().getTypeRefFactory().create( type );
+    return TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().create( type );
   }
 
   public boolean isSubClass( IType gsSubType )
@@ -2133,7 +2132,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
       getEnclosingType().putClassMembers( loader, owner, table, gsContextClass, bStatic || isStatic() );
     }
 
-    putEnhancements( owner, table, gsContextClass, bStatic, loader.getModule(), getOrCreateTypeReference() );
+    putEnhancements( owner, table, gsContextClass, bStatic, getOrCreateTypeReference() );
 
     boolean bSuperClass = gsContextClass != getOrCreateTypeReference();
 
@@ -2162,18 +2161,15 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
         addJavaEnhancements( owner, table, gsContextClass, bStatic, (IJavaType)iface );
       }
     }
-    putEnhancements( owner, table, gsContextClass, bStatic, getTypeLoader().getModule(), type );
+    putEnhancements( owner, table, gsContextClass, bStatic, type );
   }
 
-  private void putEnhancements(GosuParser owner, ISymbolTable table, IGosuClassInternal gsContextClass, boolean bStatic, IModule module, IType type)
+  private void putEnhancements(GosuParser owner, ISymbolTable table, IGosuClassInternal gsContextClass, boolean bStatic, IType type)
   {
-    IModule[] moduleTraversalList = module.getModuleTraversalList();
-    for (IModule m : moduleTraversalList) {
-      GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader(m);
-      if( loader != null ) {
-        for( IGosuEnhancement enhancement : loader.getEnhancementIndex().getEnhancementsForType(type) ) {
-          ((IGosuEnhancementInternal)enhancement).putClassMembers( loader, owner, table, gsContextClass, bStatic );
-        }
+    GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader();
+    if( loader != null ) {
+      for( IGosuEnhancement enhancement : loader.getEnhancementIndex().getEnhancementsForType(type) ) {
+        ((IGosuEnhancementInternal)enhancement).putClassMembers( loader, owner, table, gsContextClass, bStatic );
       }
     }
   }

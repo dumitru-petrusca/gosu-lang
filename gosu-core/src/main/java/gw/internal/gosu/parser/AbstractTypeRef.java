@@ -34,7 +34,6 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
 {
   transient private String _typeName;
   transient volatile private IType _type;
-  transient private IModule _module;
   transient private ITypeLoader _loader;
   transient private String _pureGenericTypeName;
   transient private IType _componentType;
@@ -61,7 +60,6 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
   }
 
   private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
-    _module = TypeSystem.getGlobalModule();
     _typeName = (String) in.readObject();
     _bParameterized = in.readBoolean();
     String componentName = (String) in.readObject();
@@ -115,7 +113,6 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
       try
       {
         _type = type;
-        _module = type.getTypeLoader().getModule();
         _loader = type.getTypeLoader();
         _typeName = _type.getName();
         _bParameterized = _type.isParameterizedType();
@@ -159,7 +156,7 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
     if( bStale || _bStale )
     {
       // Do NOT reload any types if we are clearing cache
-      bStale = !getModule().getModuleTypeLoader().getTypeRefFactory().isClearing();
+      bStale = !TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().isClearing();
     }
     return bStale;
   }
@@ -169,18 +166,6 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
   }
   public void setReloadable(boolean bReloadable) {
     _bReloadable = bReloadable;
-  }
-
-  public IModule getModule() {
-    IModule envModule = _module.getExecutionEnvironment().getModule( _module.getName() );
-    if (_module != null && envModule != _module) {
-      throw new TypeResolveException("This is rather tragic. The module once existed, now it cannot be found." +
-                                     "\nProject: " + _module.getExecutionEnvironment().getProject().getNativeProject() +
-                                     "\nOld module: " + _module  +
-                                     "\nNew module: " + envModule +
-                                     "\nType: " + _typeName );
-    }
-    return envModule;
   }
 
   public ITypeLoader getTypeLoaderDirectly() {
@@ -366,45 +351,29 @@ public abstract class AbstractTypeRef implements Serializable, ITypeRef
       strType = "$" + strType.substring( 1 );
     }
 
-    IModule module = getModule();
     if( _type == null && _componentType != null )
     {
-      TypeSystem.pushModule(module);
-      try {
-        type = _componentType.getArrayType();
-      } finally {
-        TypeSystem.popModule(module);
-      }
+      type = _componentType.getArrayType();
     }
     if( (_type == null && _bParameterized) || (_type != null && _type.isParameterizedType()) )
     {
       if( _type == null )
       {
-        TypeSystem.pushModule(module);
-        try {
-          IType theType = TypeSystem.getByFullNameIfValid(_pureGenericTypeName);
-          if (theType == null) {
-            throw new TypeMayHaveBeenDeletedException("This is rather tragic. The generic type was once valid, now it cannot be found: " + _typeName, this);
-          }
-          type = theType.getParameterizedType(_typeParameters);
-        } finally {
-          TypeSystem.popModule(module);
+        IType theType = TypeSystem.getByFullNameIfValid(_pureGenericTypeName);
+        if (theType == null) {
+          throw new TypeMayHaveBeenDeletedException("This is rather tragic. The generic type was once valid, now it cannot be found: " + _typeName, this);
         }
+        type = theType.getParameterizedType(_typeParameters);
       }
       else
       {
-        TypeSystem.pushModule(module);
-        try {
-          type = TypeLord.getPureGenericType(_type).getParameterizedType( _type.getTypeParameters() );
-        } finally {
-          TypeSystem.popModule(module);
-        }
+        type = TypeLord.getPureGenericType(_type).getParameterizedType( _type.getTypeParameters() );
       }
     }
 
     if( type == null )
     {
-      type = TypeSystem.getByFullNameIfValid( strType, module );
+      type = TypeSystem.getByFullNameIfValid( strType );
     }
 
     if( type instanceof AbstractTypeRef )

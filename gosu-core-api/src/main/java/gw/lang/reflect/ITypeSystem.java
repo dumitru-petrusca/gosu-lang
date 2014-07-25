@@ -120,7 +120,7 @@ public interface ITypeSystem extends IService
   void refreshed(IResource file, String typeName, RefreshKind refreshKind);
   void shutdown();
 
-  String[] getTypesForFile(IModule module, IFile file);
+  String[] getTypesForFile(IFile file);
 
   int getRefreshChecksum();
   int getSingleRefreshChecksum();
@@ -174,7 +174,6 @@ public interface ITypeSystem extends IService
   Set<String> getNamespacesFromTypeNames( Set<? extends CharSequence> allTypeNames, Set<String> namespaces );
 
   void pushTypeLoader( ITypeLoader loader );
-  void pushTypeLoader( IModule module, ITypeLoader loader );
   void removeTypeLoader( Class<? extends ITypeLoader> loader );
 
   boolean areBeansEqual( Object o1, Object o2 );
@@ -192,7 +191,7 @@ public interface ITypeSystem extends IService
   void popSymTableCtx();
   ISymbolTable getSymTableCtx();
 
-  <T extends ITypeLoader> T getTypeLoader( Class<? extends T> loaderClass, IModule module );
+  <T extends ITypeLoader> T getTypeLoader(Class<? extends T> loaderClass);
 
   String getNameOfParams( IType[] paramTypes, boolean bRelative, boolean bWithEnclosingType );
 
@@ -220,8 +219,6 @@ public interface ITypeSystem extends IService
   IExecutionEnvironment getExecutionEnvironment();
   IExecutionEnvironment getExecutionEnvironment( IProject project );
 
-  IModule getCurrentModule();
-
   ITypeRef getOrCreateTypeReference( IType type );
 
   ITypeRef getTypeReference( IType type );
@@ -242,11 +239,7 @@ public interface ITypeSystem extends IService
 
   void addShutdownListener(TypeSystemShutdownListener listener);
 
-  void pushModule(IModule gosuModule);
-
-  void popModule(IModule gosuModule);
-
   IType replaceTypeVariableTypeParametersWithBoundingTypes( IType iType, IType type );
 
-  IJavaClassInfo getJavaClassInfo(Class jClass, IModule module);
+  IJavaClassInfo getJavaClassInfo(Class jClass);
 }

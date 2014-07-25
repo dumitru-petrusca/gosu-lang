@@ -68,7 +68,7 @@ public class JavaSourceClassTest extends TestClass {
     IModule mod = TypeSystem.getExecutionEnvironment().getModule( "myModule" );
 
     //Public_TopLevel_Class
-    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( Public_TopLevel_Class.class.getName(), mod );
+    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( Public_TopLevel_Class.class.getName());
     verifyMembersOnClass( Public_TopLevel_Class.class, javaClassInfo );
 
     // Public_TopLevel_Class.Public_Inner_Class

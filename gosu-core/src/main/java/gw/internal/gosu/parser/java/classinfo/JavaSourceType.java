@@ -49,11 +49,9 @@ import gw.lang.reflect.java.IJavaMethodDescriptor;
 import gw.lang.reflect.java.IJavaPropertyDescriptor;
 import gw.lang.reflect.java.ITypeInfoResolver;
 import gw.lang.reflect.java.JavaTypes;
-import gw.lang.reflect.module.IModule;
 import gw.util.GosuObjectUtil;
 
 import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import java.lang.annotation.Annotation;
 import java.nio.charset.Charset;
@@ -88,7 +86,6 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
 
   private static final Object CACHE_MISS = new Object() { public String toString() {return "cache miss";}};
 
-  protected IModule _gosuModule;
   protected String _fullyQualifiedName;
   protected String _namespace;
   protected String _simpleName;
@@ -113,11 +110,11 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
   private List<String> _staticImportList;
   private ClassTree _typeDecl;
 
-  public static IJavaClassInfo createTopLevel(ISourceFileHandle fileHandle, IModule gosuModule) {
+  public static IJavaClassInfo createTopLevel(ISourceFileHandle fileHandle) {
     List<CompilationUnitTree> trees = new ArrayList<CompilationUnitTree>();
     boolean err = parseJavaFile(fileHandle, trees);
     if(err) {
-      return new JavaSourceUnresolvedClass(fileHandle, gosuModule);
+      return new JavaSourceUnresolvedClass(fileHandle);
     }
 
     ClassTree def = getTopLevelDefinition(trees, fileHandle.getFileName());
@@ -127,21 +124,21 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
       final List<? extends ImportTree> imports = trees.get(0).getImports();
       switch(kind) {
         case CLASS:
-          result = new JavaSourceClass(fileHandle, def, imports, gosuModule);
+          result = new JavaSourceClass(fileHandle, def, imports);
           break;
         case INTERFACE:
-          result = new JavaSourceInterface(fileHandle, def, imports, gosuModule);
+          result = new JavaSourceInterface(fileHandle, def, imports);
           break;
         case ENUM:
-          result = new JavaSourceEnum(fileHandle, def, imports, gosuModule);
+          result = new JavaSourceEnum(fileHandle, def, imports);
           break;
         case ANNOTATION_TYPE:
-          result = new JavaSourceAnnotation(fileHandle,  def, imports, gosuModule);
+          result = new JavaSourceAnnotation(fileHandle,  def, imports);
           break;
       }
       return result;
     } else {
-      return new JavaSourceUnresolvedClass(fileHandle, gosuModule);
+      return new JavaSourceUnresolvedClass(fileHandle);
     }
   }
 
@@ -198,11 +195,10 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
   /**
    * For top level classes.
    */
-  protected JavaSourceType(ISourceFileHandle fileHandle, ClassTree typeDecl, List<? extends ImportTree> imports, IModule gosuModule) {
+  protected JavaSourceType(ISourceFileHandle fileHandle, ClassTree typeDecl, List<? extends ImportTree> imports) {
     _fileHandle = fileHandle;
     _namespace = fileHandle.getNamespace();
     _simpleName = fileHandle.getRelativeName();
-    _gosuModule = gosuModule;
     makeImportList(imports);
     _typeDecl = typeDecl;
     _cache = new HashMap<String, Object>();
@@ -213,7 +209,6 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
    */
   protected JavaSourceType(ClassTree typeDecl, JavaSourceType enclosingClass) {
     _enclosingClass = enclosingClass;
-    _gosuModule = enclosingClass.getModule();
     _cache = new HashMap<String, Object>();
     _namespace = enclosingClass.getNamespace();
     _typeDecl = typeDecl;
@@ -322,10 +317,6 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
     });
     _importList = importList;
     _staticImportList = staticImportList;
-  }
-
-  public IModule getModule() {
-    return _gosuModule;
   }
 
   @Override
@@ -986,7 +977,7 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
 
   private IJavaClassType resolveRootQualifiedType(String qname) {
     while (true) {
-      IJavaClassType rootType = JavaSourceUtil.getClassInfo(qname, _gosuModule);
+      IJavaClassType rootType = JavaSourceUtil.getClassInfo(qname);
       if (rootType != null) {
         return rootType;
       }
@@ -1023,7 +1014,7 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
     if (packageName.length() > 0) {
       relativeName = packageName + '.' + relativeName;
     }
-    return JavaSourceUtil.getClassInfo(relativeName, _gosuModule);
+    return JavaSourceUtil.getClassInfo(relativeName);
   }
 
   public IJavaClassType resolveImport(String relativeName) {
@@ -1033,12 +1024,12 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
     for (String importText : _importList) {
       int iStar = importText.lastIndexOf("*");
       if (iStar > 0) {
-        IJavaClassType type = JavaSourceUtil.getClassInfo(importText.substring(0, iStar) + relativeName, _gosuModule);
+        IJavaClassType type = JavaSourceUtil.getClassInfo(importText.substring(0, iStar) + relativeName);
         if (type != null) {
           return type;
         }
       } else if (importText.endsWith('.' + relativeName)) {
-        IJavaClassType type = JavaSourceUtil.getClassInfo(importText, _gosuModule);
+        IJavaClassType type = JavaSourceUtil.getClassInfo(importText);
         if (type != null) {
           return type;
         }
@@ -1093,7 +1084,7 @@ public abstract class JavaSourceType extends AbstractJavaClassInfo implements IJ
   @Override
   public ISourceFileHandle getSourceFileHandle() {
     if (_fileHandle == null) {
-      IDefaultTypeLoader loader = _enclosingClass.getModule().getTypeLoaders(IDefaultTypeLoader.class).get(0);
+      IDefaultTypeLoader loader = TypeSystem.getGlobalModule().getTypeLoaders(IDefaultTypeLoader.class).get(0);
       _fileHandle = loader.getSouceFileHandle(getName());
     }
     return _fileHandle;

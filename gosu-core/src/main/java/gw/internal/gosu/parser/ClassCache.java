@@ -12,7 +12,6 @@ import gw.lang.reflect.IInjectableClassLoader;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.TypeName;
 import gw.lang.reflect.module.IClassPath;
-import gw.lang.reflect.module.IModule;
 import gw.util.concurrent.LockingLazyVar;
 
 import java.io.IOException;
@@ -26,7 +25,6 @@ public class ClassCache {
   @SuppressWarnings({"unchecked"})
   private final Map<String, Class> _classMap = new HashMap<String, Class>();
   private Set<CharSequence> _packages = new HashSet<CharSequence>();
-  private IModule _module;
   private LockingLazyVar<ClassPath> _classPathCache;
   private LockingLazyVar<Set<String>> _allTypeNamesCache = new LockingLazyVar<Set<String>>() {
     @Override
@@ -41,14 +39,13 @@ public class ClassCache {
   };
   private boolean ignoreTheCache;
 
-  public ClassCache(final IModule module) {
-    _module = module;
+  public ClassCache() {
     ignoreTheCache = ExecutionMode.isRuntime();
     _classPathCache =
       new LockingLazyVar<ClassPath>() {
         protected ClassPath init() {
           return
-            new ClassPath( _module,
+            new ClassPath(
                     ExecutionMode.isRuntime() ?
                         IClassPath.ONLY_API_CLASSES : // FIXME-isd: for performance reasons, only select API classes
                         IClassPath.ALLOW_ALL_WITH_SUN_FILTER);
@@ -65,7 +62,7 @@ public class ClassCache {
     try {
       Class<?> cls;
       try {
-        cls = _module.getModuleClassLoader().loadClass(name.toString());
+        cls = TypeSystem.getGlobalModule().getModuleClassLoader().loadClass(name.toString());
       } catch (ClassNotFoundException cnfe) {
         return ClassNotFoundMarkerClass.class;
       }
@@ -98,8 +95,7 @@ public class ClassCache {
   public AsmClass loadAsmClass( String className ) {
     AsmClass primitiveClazz = AsmClass.findPrimitive( className );
     try {
-      IModule jreModule = _module.getExecutionEnvironment().getJreModule();
-      if( jreModule == _module && primitiveClazz != null ) {
+      if( primitiveClazz != null ) {
         return primitiveClazz;
       }
     }
@@ -118,7 +114,7 @@ public class ClassCache {
         IFile file = _classPathCache.get().get( className );
         if( file != null ) {
           try {
-            return AsmClassLoader.loadClass( _module, className, file.openInputStream() );
+            return AsmClassLoader.loadClass(className, file.openInputStream() );
           }
           catch( IOException e ) {
             throw new RuntimeException( e );
@@ -140,7 +136,7 @@ public class ClassCache {
 
   public Class loadClass(String className) {
     Class primitiveClazz = Primitives.get(className);
-    if (_module.getExecutionEnvironment().getJreModule() == _module && primitiveClazz != null) {
+    if (primitiveClazz != null) {
       return primitiveClazz;
     }
 
@@ -183,7 +179,7 @@ public class ClassCache {
   private boolean isPackage( StringBuilder s, int i ) {
     try {
       String maybePackage = s.substring( 0, i );
-      if( getPackageMethod().invoke( _module.getModuleClassLoader(), maybePackage ) != null ) {
+      if( getPackageMethod().invoke( TypeSystem.getGlobalModule().getModuleClassLoader(), maybePackage ) != null ) {
         return true;
       }
     }
@@ -283,7 +279,7 @@ public class ClassCache {
   }
 
   public void dispose() {
-    _module.disposeLoader();
+    TypeSystem.getGlobalModule().disposeLoader();
   }
 
   /**
@@ -292,13 +288,13 @@ public class ClassCache {
    * Note, this is a giant hack among many gianter hacks that keep the old test framework floating.
    */
   public void reassignClassLoader() {
-    ClassLoader loader = _module.getModuleClassLoader();
+    ClassLoader loader = TypeSystem.getGlobalModule().getModuleClassLoader();
     if( loader.getParent() instanceof IInjectableClassLoader ) {
       // Dispose the GosuPluginContainer "singleton" and create a new one
       ((IInjectableClassLoader)loader.getParent()).dispose();
       // Dispose the ModuleClassLoader and create new one, its parent will be the new GosuPluginContainer.
       // Note the ModuleClassLoader in the single module case does absolutely nothing as it has no classpath; it fully delegates to its parent.
-      _module.disposeLoader();
+      TypeSystem.getGlobalModule().disposeLoader();
     }
   }
 

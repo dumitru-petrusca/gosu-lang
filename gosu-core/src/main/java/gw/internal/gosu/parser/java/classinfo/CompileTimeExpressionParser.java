@@ -93,7 +93,7 @@ public class CompileTimeExpressionParser
 
   private static void pushStaticImports(ISymbolTable symbolTable, List<String> staticImports, IJavaClassInfo enclosingType) {
     for( String imp : staticImports ) {
-      IJavaClassInfo javaClassInfo = TypeSystem.getJavaClassInfo(imp, enclosingType.getModule());
+      IJavaClassInfo javaClassInfo = TypeSystem.getJavaClassInfo(imp);
       if (javaClassInfo != null) {
         for(IJavaClassField field : javaClassInfo.getFields() ) {
           symbolTable.putSymbol( new CompileTimeFieldSymbol( field ) );
@@ -102,7 +102,7 @@ public class CompileTimeExpressionParser
         int endIndex = imp.lastIndexOf('.');
         String typeName = imp.substring(0, endIndex);
         String fieldName = imp.substring(endIndex + 1);
-        javaClassInfo = TypeSystem.getJavaClassInfo(typeName, enclosingType.getModule());
+        javaClassInfo = TypeSystem.getJavaClassInfo(typeName);
         for(IJavaClassField field : javaClassInfo.getFields() ) {
           if (field.getName().equals(fieldName)) {
             symbolTable.putSymbol( new CompileTimeFieldSymbol( field ) );

@@ -185,10 +185,7 @@ public class Gosu implements IGosuLaunch
     }
 
     _classpath = classpath;
-    ClassLoader loader = TypeSystem.getCurrentModule() == null
-                         // Can be null if called before the exec environment is setup, so assume the future parent of the module loader is the plugin loader
-                         ? CommonServices.getEntityAccess().getPluginClassLoader()
-                         : TypeSystem.getGosuClassLoader().getActualLoader();
+    ClassLoader loader = TypeSystem.getGosuClassLoader().getActualLoader();
     if( loader instanceof URLClassLoader )
     {
       for( File entry : classpath )

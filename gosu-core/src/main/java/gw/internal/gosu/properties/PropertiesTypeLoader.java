@@ -10,7 +10,6 @@ import gw.lang.reflect.IType;
 import gw.lang.reflect.RefreshKind;
 import gw.lang.reflect.TypeLoaderBase;
 import gw.lang.reflect.TypeSystem;
-import gw.lang.reflect.module.IModule;
 import gw.util.concurrent.LockingLazyVar;
 
 import java.util.ArrayList;
@@ -42,15 +41,15 @@ public class PropertiesTypeLoader extends TypeLoaderBase {
     }
   };
 
-  public PropertiesTypeLoader(IModule module) {
-    super(module);
-    initSources(module);
+  public PropertiesTypeLoader() {
+    super();
+    initSources();
   }
 
-  private void initSources(IModule module) {
+  private void initSources() {
     _sources = Arrays.asList(
             SystemPropertiesPropertySet.SOURCE,
-            new PropertiesPropertySet.Source(module)
+            new PropertiesPropertySet.Source()
     );
   }
 
@@ -142,7 +141,7 @@ public class PropertiesTypeLoader extends TypeLoaderBase {
       }
     }
     if(!foundSource) {
-      initSources(_module);
+      initSources();
       _rootTypeNames.clear();
     }
     return types.toArray(new String[types.size()]);

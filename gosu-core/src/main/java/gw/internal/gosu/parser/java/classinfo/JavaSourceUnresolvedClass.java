@@ -30,14 +30,12 @@ import java.lang.annotation.Annotation;
 public class JavaSourceUnresolvedClass extends AbstractJavaClassInfo implements IJavaClassType, ITypeInfoResolver {
   private String _simpleName;
   private String _namespace;
-  private IModule _gosuModule;
   private ISourceFileHandle _fileHandle;
 
-  public JavaSourceUnresolvedClass( ISourceFileHandle fileHandle, IModule gosuModule ) {
+  public JavaSourceUnresolvedClass(ISourceFileHandle fileHandle) {
     _fileHandle = fileHandle;
     _simpleName = fileHandle.getRelativeName();
     _namespace = fileHandle.getNamespace();
-    _gosuModule = gosuModule;
   }
 
   @Override
@@ -298,11 +296,6 @@ public class JavaSourceUnresolvedClass extends AbstractJavaClassInfo implements 
   @Override
   public IJavaClassType resolveImport(String relativeName) {
     return null;  
-  }
-
-  @Override
-  public IModule getModule() {
-    return _gosuModule;
   }
 
   @Override

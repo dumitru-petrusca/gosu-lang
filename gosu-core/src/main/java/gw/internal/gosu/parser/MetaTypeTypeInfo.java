@@ -48,16 +48,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MetaTypeTypeInfo extends BaseFeatureInfo implements IRelativeTypeInfo
 {
   private FeatureManager _fm;
-  private Map<IModule, List<IMethodInfo>> _declaredMethods;
-  private Map<IModule, List<IPropertyInfo>> _declaredProperties;
+  private List<IMethodInfo> _declaredMethods;
+  private List<IPropertyInfo> _declaredProperties;
 
   /**
    */
   public MetaTypeTypeInfo( MetaType intrType )
   {
     super( intrType );
-    _declaredMethods = new ConcurrentHashMap<IModule, List<IMethodInfo>>();
-    _declaredProperties = new ConcurrentHashMap<IModule, List<IPropertyInfo>>();
     _fm = new FeatureManager( this, true );
   }
 
@@ -341,20 +339,19 @@ public class MetaTypeTypeInfo extends BaseFeatureInfo implements IRelativeTypeIn
 
   public List<? extends IPropertyInfo> getDeclaredProperties()
   {
-    IModule module = TypeSystem.getCurrentModule();
-    List<IPropertyInfo> declaredProperties = _declaredProperties.get( module );
+    List<IPropertyInfo> declaredProperties = _declaredProperties;
     if( declaredProperties == null )
     {      
       TypeSystem.lock();
       try
       {
-        declaredProperties = _declaredProperties.get( module );
+        declaredProperties = _declaredProperties;
         if( declaredProperties == null )
         {
           ITypeInfo typeTypeInfo = getOwnersType().getType().getTypeInfo();
           Map<CharSequence, IPropertyInfo> propertiesByName = mergeProperties( typeTypeInfo );
           declaredProperties = new ArrayList<IPropertyInfo>( propertiesByName.values() );
-          _declaredProperties.put( module, declaredProperties );
+          _declaredProperties = declaredProperties;
         }
       }
       finally
@@ -367,21 +364,20 @@ public class MetaTypeTypeInfo extends BaseFeatureInfo implements IRelativeTypeIn
   
   public List<? extends IMethodInfo> getDeclaredMethods()
   {
-    IModule module = TypeSystem.getCurrentModule();
-    List<IMethodInfo> declaredMethods = _declaredMethods.get( module );
+    List<IMethodInfo> declaredMethods = _declaredMethods;
     if( declaredMethods == null )
     {      
       TypeSystem.lock();
       try
       {
-        declaredMethods = _declaredMethods.get( module );
+        declaredMethods = _declaredMethods;
         if( declaredMethods == null )
         {
           ITypeInfo typeTypeInfo = getOwnersType().getType().getTypeInfo();
           MethodList methods = mergeMethods( typeTypeInfo );
           addForNameMethod( methods );
           declaredMethods = methods;
-          _declaredMethods.put( module, declaredMethods );
+          _declaredMethods = declaredMethods;
         }
       }
       finally

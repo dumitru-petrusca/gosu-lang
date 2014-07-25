@@ -101,17 +101,17 @@ public class FunctionStatementTransformer extends AbstractElementTransformer<Fun
     String generatedClassName = "_profiler." + strippedClassName + "_" + _numGeneratedMethods.getAndIncrement();
 
     // ProfilerFrame frame = gw.api.profiler.Profiler.push( ProfilerTag.GOSU_METHOD_WRAPPER )
-    IRExpression field = getField( IRPropertyFactory.createIRProperty( TypeSystem.getByFullName( "gw.api.profiler.ProfilerTag", TypeSystem.getGlobalModule() ).getTypeInfo().getProperty( "GOSU_METHOD_WRAPPER" ) ), null );
-    IRMethod m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.Profiler", TypeSystem.getGlobalModule() ),
-                                                "push", TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame", TypeSystem.getGlobalModule() ),
-                                                new IType[] {TypeSystem.getByFullName( "gw.api.profiler.ProfilerTag", TypeSystem.getGlobalModule() )},
+    IRExpression field = getField( IRPropertyFactory.createIRProperty( TypeSystem.getByFullName( "gw.api.profiler.ProfilerTag" ).getTypeInfo().getProperty( "GOSU_METHOD_WRAPPER" ) ), null );
+    IRMethod m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.Profiler" ),
+                                                "push", TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame" ),
+                                                new IType[] {TypeSystem.getByFullName( "gw.api.profiler.ProfilerTag" )},
                                                 IRelativeTypeInfo.Accessibility.PUBLIC, true );
     IRExpression push = callMethod( m, null, Arrays.asList( field ) );
     IRSymbol tempSymbol = _cc().makeAndIndexTempSymbol( push.getType() );
     IRAssignmentStatement initAssignment = buildAssignment( tempSymbol, push );
 
     // frame.setProperty( <generatedClassName>_<methodName> );
-    m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame", TypeSystem.getGlobalModule() ),
+    m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame" ),
                                         "setProperty", JavaTypes.pVOID(),
                                         new IType[] {JavaTypes.STRING()},
                                         IRelativeTypeInfo.Accessibility.PUBLIC, false );
@@ -120,9 +120,9 @@ public class FunctionStatementTransformer extends AbstractElementTransformer<Fun
     IRMethodCallStatement setPropStmt = new IRMethodCallStatement( setProp );
 
     // gw.api.profiler.Profiler.pop( frame )
-    m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.Profiler", TypeSystem.getGlobalModule() ),
+    m = IRMethodFactory.createIRMethod( TypeSystem.getByFullName( "gw.api.profiler.Profiler" ),
                                         "pop", JavaTypes.pVOID(),
-                                        new IType[] {TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame", TypeSystem.getGlobalModule() )},
+                                        new IType[] {TypeSystem.getByFullName( "gw.api.profiler.ProfilerFrame" )},
                                         IRelativeTypeInfo.Accessibility.PUBLIC, true );
     IRExpression pop = callMethod( m, null, Arrays.asList( (IRExpression)identifier( tempSymbol ) ) );
     IRMethodCallStatement popStmt = new IRMethodCallStatement( pop );

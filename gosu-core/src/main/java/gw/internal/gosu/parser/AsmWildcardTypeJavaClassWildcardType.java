@@ -12,8 +12,8 @@ import gw.lang.reflect.java.asm.AsmWildcardType;
 import gw.lang.reflect.module.IModule;
 
 public class AsmWildcardTypeJavaClassWildcardType extends AsmTypeJavaClassType implements IJavaClassWildcardType {
-  public AsmWildcardTypeJavaClassWildcardType( AsmWildcardType wildcardType, IModule module ) {
-    super( wildcardType, module );
+  public AsmWildcardTypeJavaClassWildcardType(AsmWildcardType wildcardType) {
+    super( wildcardType);
   }
 
   @Override
@@ -24,7 +24,7 @@ public class AsmWildcardTypeJavaClassWildcardType extends AsmTypeJavaClassType i
     if( bound == null ) {
       return JavaTypes.OBJECT().getBackingClassInfo();
     }
-    return AsmTypeJavaClassType.createType( bound, _module );
+    return AsmTypeJavaClassType.createType( bound);
   }
 
   @Override
@@ -35,10 +35,5 @@ public class AsmWildcardTypeJavaClassWildcardType extends AsmTypeJavaClassType i
   @Override
   public String getSimpleName() {
     return getType().getSimpleName();
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 }

@@ -73,7 +73,6 @@ public class GosucCompiler {
       // to unify how parse issues are reported.
       return false;
     }
-    IModule module = type.getTypeLoader().getModule();
     //TODO-dp in the Ferrite compiler everything is in the JRE/Default module
 /*
     if( module == TypeSystem.getJreModule() ) {
@@ -81,34 +80,27 @@ public class GosucCompiler {
       return false;
     }
 */
-    TypeSystem.pushModule( module );
-    try {
-      IGosuClass gsClass = (IGosuClass)type;
-      boolean bValid = gsClass.isValid();
-      final ParseResultsException parseException = gsClass.getParseResultsException();
-      if( parseException != null ) {
-        for( IParseIssue issue: parseException.getParseIssues() ) {
-          System.out.println( (issue instanceof ParseWarning ? "Warning: " : "Error: ") + issue.getConsoleMessage() );
-        }
+    IGosuClass gsClass = (IGosuClass)type;
+    boolean bValid = gsClass.isValid();
+    final ParseResultsException parseException = gsClass.getParseResultsException();
+    if( parseException != null ) {
+      for( IParseIssue issue: parseException.getParseIssues() ) {
+        System.out.println( (issue instanceof ParseWarning ? "Warning: " : "Error: ") + issue.getConsoleMessage() );
       }
+    }
 
-      if( bValid ) {
-        // Compile to bytecode (.class files) (and also copies source file)
-        makeClassFileForOut( (IGosuClass)type );
-      }
-      return true;
+    if( bValid ) {
+      // Compile to bytecode (.class files) (and also copies source file)
+      makeClassFileForOut( (IGosuClass)type );
     }
-    finally {
-      TypeSystem.popModule( module );
-    }
+    return true;
   }
 
   private File makeClassFileForOut(IGosuClass gsClass) {
-    IModule module = TypeSystem.getCurrentModule();
     final File[] classFile = new File[1];
-    IDirectory moduleOutputDirectory = module.getOutputPath();
+    IDirectory moduleOutputDirectory = TypeSystem.getGlobalModule().getOutputPath();
     if( moduleOutputDirectory == null ) {
-      throw new RuntimeException( "Can't make class file, no output path for module " + module.getName() );
+      throw new RuntimeException( "Can't make class file, no output path" );
     }
 
     final String outRelativePath = gsClass.getName().replace( '.', File.separatorChar ) + ".class";

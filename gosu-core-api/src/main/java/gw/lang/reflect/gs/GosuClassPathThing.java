@@ -135,10 +135,6 @@ public class GosuClassPathThing {
   public synchronized static boolean init() {
     if( addOurProtocolPackage() ) {
       if( Gosu.bootstrapGosuWhenInitiatedViaClassfile() ) {
-        // Assuming we are in runtime, we push the root module in the case where the process was started with java.exe and not gosu.cmd
-        // In other words a Gosu class can be loaded directly from classfile in a bare bones Java program where only the Gosu runtime is
-        // on the classpath and no module was pushed prior to loading.
-        TypeSystem.pushModule( TypeSystem.getGlobalModule() );
       }
     }
     addGosuClassProtocolToClasspath();

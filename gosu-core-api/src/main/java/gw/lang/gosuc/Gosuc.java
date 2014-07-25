@@ -314,20 +314,8 @@ public class Gosuc implements IGosuc {
     return paths;
   }
 
-  public List<IType> compile(String moduleName, List<String> types) {
-    IModule module = moduleName == null
-            ? TypeSystem.getGlobalModule()
-            : TypeSystem.getExecutionEnvironment().getModule(moduleName);
-    return compile(module, types);
-  }
-
-  public List<IType> compile(IModule module, List<String> types) {
-    TypeSystem.pushModule(module);
-    try {
-      return new GosucCompiler().compile(_project, types);
-    } finally {
-      TypeSystem.popModule(module);
-    }
+  public List<IType> compile(List<String> types) {
+    return new GosucCompiler().compile(_project, types);
   }
 
   // You can use this for testing by:
@@ -342,7 +330,7 @@ public class Gosuc implements IGosuc {
     String strFile = GosucArg.PROJECT.getValue();
     Gosuc gosuc = new Gosuc(strFile, maybeGetCustomParser());
     gosuc.initializeGosu();
-    gosuc.compile((String) null, Collections.singletonList("-all"));
+    gosuc.compile(Collections.singletonList("-all"));
   }
 
   private static ICustomParser maybeGetCustomParser() {

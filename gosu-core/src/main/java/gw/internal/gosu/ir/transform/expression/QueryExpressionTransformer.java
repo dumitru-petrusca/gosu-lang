@@ -59,7 +59,7 @@ public class QueryExpressionTransformer extends EvalBasedTransformer<QueryExpres
                                                                pushConstant( _expr().getColumn() ),
                                                                pushConstant( _expr().toString() )
                                                              ) );
-    return checkCast( TypeSystem.getByFullName( "gw.api.database.IQueryBeanResult", TypeSystem.getGlobalModule() ), compileAndRunEvalSource );
+    return checkCast( TypeSystem.getByFullName( "gw.api.database.IQueryBeanResult" ), compileAndRunEvalSource );
   }
 
   public static Object compileAndRunQuery( Object outer, Object[] capturedValues,

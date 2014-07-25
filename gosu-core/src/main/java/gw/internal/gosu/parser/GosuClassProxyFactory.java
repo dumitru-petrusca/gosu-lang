@@ -143,17 +143,11 @@ public class GosuClassProxyFactory
 
   private IGosuClass createJavaInterfaceProxy( final IJavaType type )
   {
-    final IModule module = type.getTypeLoader().getModule();
-    GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader( module );
+    GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader();
     return loader.makeNewClass(
         new LazyStringSourceFileHandle(type, new Callable<StringBuilder>() {
           public StringBuilder call() {
-            TypeSystem.pushModule( module );
-            try {
-              return genJavaInterfaceProxy(type);
-            } finally {
-              TypeSystem.popModule( module );
-            }
+            return genJavaInterfaceProxy(type);
           }
         }));
   }
@@ -167,20 +161,12 @@ public class GosuClassProxyFactory
       return (IGosuClass)compilingType;
     }
 
-    final IModule module = type.getTypeLoader().getModule();
-    return GosuClassTypeLoader.getDefaultClassLoader( module ).makeNewClass(
+    return GosuClassTypeLoader.getDefaultClassLoader().makeNewClass(
       new LazyStringSourceFileHandle( type, new Callable<StringBuilder>()
       {
         public StringBuilder call()
         {
-          TypeSystem.pushModule( module );
-          try {
-            return genJavaClassProxy( type );
-          } 
-          finally
-          {
-            TypeSystem.popModule( module );
-          }
+          return genJavaClassProxy( type );
         }
       } ) );
   }

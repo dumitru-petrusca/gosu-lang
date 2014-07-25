@@ -13,8 +13,8 @@ import java.lang.reflect.TypeVariable;
 public class TypeVariableJavaClassTypeVariable extends TypeJavaClassType implements IJavaClassTypeVariable {
   private TypeVariable _typeVariable;
 
-  public TypeVariableJavaClassTypeVariable(TypeVariable typeVariable, IModule module) {
-    super(typeVariable, module);
+  public TypeVariableJavaClassTypeVariable(TypeVariable typeVariable) {
+    super(typeVariable);
     _typeVariable = typeVariable;
   }
 
@@ -36,11 +36,6 @@ public class TypeVariableJavaClassTypeVariable extends TypeJavaClassType impleme
   @Override
   public IJavaClassType[] getBounds() {
     return new IJavaClassType[0];  //To change body of implemented methods use File | Settings | File Templates.
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 
   public String toString() {

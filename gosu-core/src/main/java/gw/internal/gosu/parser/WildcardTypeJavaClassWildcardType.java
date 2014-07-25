@@ -14,8 +14,8 @@ import java.lang.reflect.Type;
 public class WildcardTypeJavaClassWildcardType extends TypeJavaClassType implements IJavaClassWildcardType {
   private WildcardType _wildcardType;
 
-  public WildcardTypeJavaClassWildcardType(WildcardType wildcardType, IModule module) {
-    super(wildcardType, module);
+  public WildcardTypeJavaClassWildcardType(WildcardType wildcardType) {
+    super(wildcardType);
     _wildcardType = wildcardType;
   }
 
@@ -23,7 +23,7 @@ public class WildcardTypeJavaClassWildcardType extends TypeJavaClassType impleme
   public IJavaClassType getUpperBound() {
     // we only support one bound in Gosu
     Type rawType = _wildcardType.getUpperBounds()[0];
-    return TypeJavaClassType.createType(rawType, _module);
+    return TypeJavaClassType.createType(rawType);
   }
 
   @Override
@@ -34,10 +34,5 @@ public class WildcardTypeJavaClassWildcardType extends TypeJavaClassType impleme
   @Override
   public String getSimpleName() {
     return getName();
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 }

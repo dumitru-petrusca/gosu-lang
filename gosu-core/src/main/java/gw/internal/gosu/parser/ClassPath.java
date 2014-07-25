@@ -9,6 +9,7 @@ import gw.fs.IDirectory;
 import gw.fs.IFile;
 import gw.internal.gosu.module.fs.FileSystemImpl;
 import gw.lang.reflect.IDefaultTypeLoader;
+import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.TypeName;
 import gw.lang.reflect.module.IClassPath;
 import gw.lang.reflect.module.IFileSystem;
@@ -27,15 +28,13 @@ import java.util.Set;
 public class ClassPath implements IClassPath
 {
   private static final String CLASS_FILE_EXT = ".class";
-  private IModule _module;
   private ClassPathFilter _filter;
   private FqnCache<Object> _cache = new FqnCache<Object>();
   private IFileSystem _fs;
   private boolean _bStableFiles;
 
-  public ClassPath(IModule module, ClassPathFilter filter)
+  public ClassPath(ClassPathFilter filter)
   {
-    _module = module;
     _filter = filter;
 
     // Files are assumed stable outside an IDE
@@ -47,7 +46,7 @@ public class ClassPath implements IClassPath
 
   public ArrayList<IDirectory> getPaths()
   {
-    return new ArrayList<IDirectory>( _module.getJavaClassPath());
+    return new ArrayList<IDirectory>(TypeSystem.getGlobalModule().getJavaClassPath());
   }
 
   public boolean contains(String fqn) {
@@ -91,7 +90,7 @@ public class ClassPath implements IClassPath
 
   private void loadClasspathInfo()
   {
-    List<IDirectory> javaClassPath = _module.getJavaClassPath();
+    List<IDirectory> javaClassPath = TypeSystem.getGlobalModule().getJavaClassPath();
     IDirectory[] paths = javaClassPath.toArray(new IDirectory[javaClassPath.size()]);
     for (int i = paths.length - 1; i >= 0; i--) {
       IDirectory path = paths[i];
@@ -180,7 +179,7 @@ public class ClassPath implements IClassPath
   @Override
   public Set<TypeName> getTypeNames(String namespace) {
     FqnCacheNode<?> node = _cache.getNode(namespace);
-    IDefaultTypeLoader defaultTypeLoader = _module.getModuleTypeLoader().getDefaultTypeLoader();
+    IDefaultTypeLoader defaultTypeLoader = TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader();
     if (node != null) {
       Set<TypeName> names = new HashSet<TypeName>();
       for (FqnCacheNode<?> child : node.getChildren()) {
@@ -198,6 +197,6 @@ public class ClassPath implements IClassPath
 
   @Override
   public String toString() {
-    return _module.getName();
+    return TypeSystem.getGlobalModule().getName();
   }
 }

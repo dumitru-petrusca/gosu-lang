@@ -12,17 +12,14 @@ import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.BeanInfoUtil;
 import gw.lang.reflect.IScriptabilityModifier;
-import gw.lang.reflect.module.IModule;
 
 import java.beans.PropertyDescriptor;
 
 public class PropertyDescriptorJavaPropertyDescriptor implements IJavaPropertyDescriptor {
   private PropertyDescriptor _pd;
-  private IModule _module;
 
-  public PropertyDescriptorJavaPropertyDescriptor(PropertyDescriptor propertyDescriptor, IModule module) {
+  public PropertyDescriptorJavaPropertyDescriptor(PropertyDescriptor propertyDescriptor) {
     _pd = propertyDescriptor;
-    _module = module;
   }
 
   @Override
@@ -32,12 +29,12 @@ public class PropertyDescriptorJavaPropertyDescriptor implements IJavaPropertyDe
 
   @Override
   public IJavaClassMethod getReadMethod() {
-    return _pd.getReadMethod() == null ? null : new MethodJavaClassMethod(_pd.getReadMethod(), _module);
+    return _pd.getReadMethod() == null ? null : new MethodJavaClassMethod(_pd.getReadMethod());
   }
 
   @Override
   public IJavaClassMethod getWriteMethod() {
-    return _pd.getWriteMethod() == null ? null : new MethodJavaClassMethod(_pd.getWriteMethod(), _module);
+    return _pd.getWriteMethod() == null ? null : new MethodJavaClassMethod(_pd.getWriteMethod());
   }
 
   @Override
@@ -47,7 +44,7 @@ public class PropertyDescriptorJavaPropertyDescriptor implements IJavaPropertyDe
 
   @Override
   public IJavaClassInfo getPropertyClassInfo() {
-    return JavaSourceUtil.getClassInfo(_pd.getPropertyType(), _module);
+    return JavaSourceUtil.getClassInfo(_pd.getPropertyType());
   }
 
   @Override

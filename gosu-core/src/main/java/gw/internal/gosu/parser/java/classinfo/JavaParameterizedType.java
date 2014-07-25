@@ -83,11 +83,6 @@ public class JavaParameterizedType implements IJavaClassParameterizedType {
   }
 
   @Override
-  public IModule getModule() {
-    return _rawType.getModule();
-  }
-
-  @Override
   public String getNamespace() {
     return _rawType.getNamespace();
   }

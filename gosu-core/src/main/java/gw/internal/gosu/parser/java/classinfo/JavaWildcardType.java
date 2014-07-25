@@ -12,11 +12,9 @@ import gw.lang.reflect.module.IModule;
 
 public class JavaWildcardType implements IJavaClassWildcardType {
   private IJavaClassType _bound;
-  private IModule _module;
 
   public JavaWildcardType( IJavaClassType bound ) {
     _bound = bound;
-    _module = bound.getModule();
   }
 
   @Override
@@ -37,11 +35,6 @@ public class JavaWildcardType implements IJavaClassWildcardType {
   @Override
   public String getSimpleName() {
     return getName();
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 
   public String toString() {

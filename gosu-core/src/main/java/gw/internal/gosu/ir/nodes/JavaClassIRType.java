@@ -43,7 +43,7 @@ public class JavaClassIRType implements IJavaClassIRType {
   }
 
   public static IRType get( Class cls ) {
-    IJavaClassInfo clsInfo = TypeSystem.getJavaClassInfo(cls, TypeSystem.getGlobalModule());
+    IJavaClassInfo clsInfo = TypeSystem.getJavaClassInfo(cls);
     return get( clsInfo );
   }
 
@@ -229,7 +229,7 @@ public class JavaClassIRType implements IJavaClassIRType {
 
       return false;
     } else if (otherType instanceof SyntheticIRType) {
-      return _class.isAssignableFrom(TypeSystem.getJavaClassInfo(((SyntheticIRType) otherType).getSuperClass(), TypeSystem.getGlobalModule()));
+      return _class.isAssignableFrom(TypeSystem.getJavaClassInfo(((SyntheticIRType) otherType).getSuperClass()));
     } else {
       return false;
     }

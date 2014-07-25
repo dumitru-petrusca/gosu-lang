@@ -389,18 +389,6 @@ public class GosuShop
     return false;
   }
 
-  public static IModule getModule(IType type) {
-    IModule module = null;
-    while (module == null && type != null) {
-      if (type.getTypeLoader() == null) {
-        type = type.getEnclosingType();
-      } else {
-        module = type.getTypeLoader().getModule();
-      }
-    }
-    return module;
-  }
-
   public static IType getPureGenericType(IType type) {
     return CommonServices.getGosuIndustrialPark().getPureGenericType(type);
   }

@@ -31,7 +31,7 @@ public class LengthProperty extends JavaPropertyInfo
              {
                return Integer.TYPE;
              }
-           } , TypeSystem.getCurrentModule()));
+           } ));
     _accessor = LengthAccessor.INSTANCE;
 
   }

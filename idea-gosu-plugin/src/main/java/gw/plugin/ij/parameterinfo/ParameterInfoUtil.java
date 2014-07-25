@@ -369,7 +369,7 @@ public class ParameterInfoUtil {
     final VirtualFile virtualFile = containingPsiClass.getContainingFile().getVirtualFile();
     if (virtualFile instanceof VirtualFileWindow) {
       final VirtualFile delegate = ((VirtualFileWindow) virtualFile).getDelegate();
-      final String[] typesForFile = TypeSystem.getTypesForFile(TypeSystem.getGlobalModule(), FileUtil.toIFile(delegate));
+      final String[] typesForFile = TypeSystem.getTypesForFile(FileUtil.toIFile(delegate));
       final IType type = TypeSystem.getByFullNameIfValid(typesForFile[0]);
       return type;
     } else {

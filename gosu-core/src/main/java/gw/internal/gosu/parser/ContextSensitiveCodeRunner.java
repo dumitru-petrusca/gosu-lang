@@ -77,7 +77,7 @@ public class ContextSensitiveCodeRunner {
   }
   private static Object _runMeSomeCode( Object enclosingInstance, Object[] extSyms, String strText, final String strClassContext, String strContextElementClass, int iSourcePosition )
   {
-    IType type = TypeSystem.getByFullName( strClassContext, TypeSystem.getGlobalModule() );
+    IType type = TypeSystem.getByFullName( strClassContext );
     if( !(type instanceof IGosuClassInternal) ) {
       System.out.println( strClassContext + " is not a Gosu class" );
       return null;

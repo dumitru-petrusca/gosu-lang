@@ -10498,7 +10498,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
         if( extendsType instanceof IGosuClassInternal ) {
           IGosuClassInternal supertype = (IGosuClassInternal)extendsType;
           supertype.putClassMembers( this, _symTable, supertype, true );
-          List<? extends GosuClassTypeLoader> typeLoaders = TypeSystem.getCurrentModule().getTypeLoaders( GosuClassTypeLoader.class );
+          List<? extends GosuClassTypeLoader> typeLoaders = TypeSystem.getGlobalModule().getTypeLoaders(GosuClassTypeLoader.class);
           for( GosuClassTypeLoader typeLoader : typeLoaders ) {
             List<? extends IGosuEnhancement> enhancementsForType = typeLoader.getEnhancementIndex().getEnhancementsForType( supertype );
             for( IGosuEnhancement enhancement : enhancementsForType ) {
@@ -13251,13 +13251,13 @@ public final class GosuParser extends ParserBase implements IGosuParser
   {
     GosuClassTypeLoader classLoader;
     if (!ExecutionMode.isIDE()) {
-      classLoader = GosuClassTypeLoader.getDefaultClassLoader(TypeSystem.getGlobalModule());
+      classLoader = GosuClassTypeLoader.getDefaultClassLoader();
     } else {
       IFile file = sourceFile.getFile();
       IModule module = TypeSystem.getExecutionEnvironment().getModule(file);
       if (module == null) {
         // these are files outside of the typesystem (i.e. not in any source root)
-        classLoader = GosuClassTypeLoader.getDefaultClassLoader(TypeSystem.getGlobalModule());
+        classLoader = GosuClassTypeLoader.getDefaultClassLoader();
       } else {
         classLoader = module.getModuleTypeLoader().getTypeLoader(GosuClassTypeLoader.class);
       }

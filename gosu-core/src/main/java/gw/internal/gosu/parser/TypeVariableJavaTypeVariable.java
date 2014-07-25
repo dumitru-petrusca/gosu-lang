@@ -13,12 +13,10 @@ import java.lang.reflect.TypeVariable;
 
 public class TypeVariableJavaTypeVariable extends TypeJavaClassType implements IJavaClassTypeVariable {
   private TypeVariable _typeParameter;
-  private IModule _module;
 
-  public TypeVariableJavaTypeVariable(TypeVariable typeParameter, IModule module) {
-    super(typeParameter, module);
+  public TypeVariableJavaTypeVariable(TypeVariable typeParameter) {
+    super(typeParameter);
     _typeParameter = typeParameter;
-    _module = module;
   }
 
   @Override
@@ -41,7 +39,7 @@ public class TypeVariableJavaTypeVariable extends TypeJavaClassType implements I
     Type[] rawBounds = _typeParameter.getBounds();
     IJavaClassType[] bounds = new IJavaClassType[rawBounds.length];
     for (int i = 0; i < bounds.length; i++) {
-      bounds[i] = TypeJavaClassType.createType(rawBounds[i], _module);
+      bounds[i] = TypeJavaClassType.createType(rawBounds[i]);
     }
     return bounds;
   }

@@ -23,7 +23,5 @@ public interface IJavaClassType extends Serializable {
   String getName();
   String getSimpleName();
 
-  IModule getModule();
-
   String getNamespace();
 }

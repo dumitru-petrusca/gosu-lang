@@ -11,7 +11,6 @@ import gw.internal.gosu.parser.java.classinfo.JavaSourcePropertyDescriptor;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceUtil;
 import gw.lang.GosuShop;
 import gw.lang.SimplePropertyProcessing;
-import gw.lang.SimplePropertyProcessing;
 import gw.lang.javadoc.IClassDocNode;
 import gw.lang.reflect.EnumValuePlaceholder;
 import gw.lang.reflect.IAnnotationInfo;
@@ -66,20 +65,19 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
   private LocklessLazyVar<IType> _enclosingClass = new LocklessLazyVar<IType>() {
     protected IType init() {
       AsmType enclosingClass = _class.getEnclosingType();
-      return enclosingClass == null ? null : TypeSystem.getByFullName( enclosingClass.getName(), _module );
+      return enclosingClass == null ? null : TypeSystem.getByFullName( enclosingClass.getName() );
     }
   };
   private IEnumValue[] _enumConstants;
   private String _simpleName;
   private String _namespace;
 
-  public AsmClassJavaClassInfo( AsmClass cls, IModule module ) {
-    super( cls, module );
+  public AsmClassJavaClassInfo(AsmClass cls) {
+    super( cls);
     if( cls == null ) {
       throw new IllegalArgumentException( "Class cannot be null." );
     }
     _class = cls;
-    _module = module;
   }
 
   @Override
@@ -146,7 +144,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<IJavaClassMethod> methods = new ArrayList<IJavaClassMethod>( asmMethods.size() );
       for( AsmMethod asmMethod : asmMethods ) {
         if( !asmMethod.isConstructor() && !asmMethod.isSynthetic() ) {
-          methods.add( new AsmMethodJavaClassMethod( asmMethod, _module ) );
+          methods.add( new AsmMethodJavaClassMethod( asmMethod) );
         }
       }
       _declaredMethods = methods.toArray( new IJavaClassMethod[methods.size()] );
@@ -185,7 +183,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<AsmType> rawInterfaces = _class.getInterfaces();
       IJavaClassInfo[] interfaces = new IJavaClassInfo[rawInterfaces.size()];
       for( int i = 0; i < rawInterfaces.size(); i++ ) {
-        interfaces[i] = JavaSourceUtil.getClassInfo( rawInterfaces.get( i ).getName(), _module );
+        interfaces[i] = JavaSourceUtil.getClassInfo( rawInterfaces.get( i ).getName());
       }
       _interfaces = interfaces;
     }
@@ -195,7 +193,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
   @Override
   public IJavaClassInfo getSuperclass() {
     if( _superclass == null ) {
-      _superclass = _class.getSuperClass() == null ? NULL_TYPE : JavaSourceUtil.getClassInfo( _class.getSuperClass().getName(), _module );
+      _superclass = _class.getSuperClass() == null ? NULL_TYPE : JavaSourceUtil.getClassInfo( _class.getSuperClass().getName());
     }
     return _superclass == NULL_TYPE ? null : _superclass;
   }
@@ -205,7 +203,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<AsmType> rawTypeVariables = _class.getTypeParameters();
       IJavaClassTypeVariable[] typeVariables = new IJavaClassTypeVariable[rawTypeVariables.size()];
       for( int i = 0; i < rawTypeVariables.size(); i++ ) {
-        typeVariables[i] = new AsmTypeVariableJavaClassTypeVariable( rawTypeVariables.get( i ), _module );
+        typeVariables[i] = new AsmTypeVariableJavaClassTypeVariable( rawTypeVariables.get( i ));
       }
       _typeVariables = typeVariables;
     }
@@ -218,7 +216,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<AsmField> rawFields = _class.getDeclaredFields();
       IJavaClassField[] fields = new IJavaClassField[rawFields.size()];
       for( int i = 0; i < rawFields.size(); i++ ) {
-        fields[i] = new AsmFieldJavaClassField( rawFields.get( i ), _module );
+        fields[i] = new AsmFieldJavaClassField( rawFields.get( i ));
       }
       _declaredFields = fields;
     }
@@ -232,7 +230,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<IJavaClassConstructor> ctors = new ArrayList<IJavaClassConstructor>( asmMethods.size() );
       for( AsmMethod asmMethod : asmMethods ) {
         if( asmMethod.isConstructor() && !asmMethod.isSynthetic() ) {
-          ctors.add( new AsmConstructorJavaClassConstructor( asmMethod, _module ) );
+          ctors.add( new AsmConstructorJavaClassConstructor( asmMethod) );
         }
       }
       _declaredConstructors = ctors.toArray( new IJavaClassConstructor[ctors.size()] );
@@ -511,7 +509,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
   public IJavaClassInfo getEnclosingClass() {
     AsmType enclosingClass = _class.getEnclosingType();
     if( enclosingClass != null ) {
-      return TypeSystem.getJavaClassInfo( enclosingClass.getName(), _module );
+      return TypeSystem.getJavaClassInfo( enclosingClass.getName());
     }
     return null;
   }
@@ -542,7 +540,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       List<AsmType> asmIfaces = _class.getInterfaces();
       IJavaClassType[] ifaces = new IJavaClassType[asmIfaces.size()];
       for( int i = 0; i < asmIfaces.size(); i++ ) {
-        ifaces[i] = AsmTypeJavaClassType.createType( asmIfaces.get( i ), _module );
+        ifaces[i] = AsmTypeJavaClassType.createType( asmIfaces.get( i ));
       }
       _genericInterfaces = ifaces;
     }
@@ -551,7 +549,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
 
   @Override
   public IJavaClassType getGenericSuperclass() {
-    return AsmTypeJavaClassType.createType( _class.getSuperClass(), _module );
+    return AsmTypeJavaClassType.createType( _class.getSuperClass());
   }
 
   @Override
@@ -565,7 +563,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
       Map<String, AsmInnerClassType> innerClasses = _class.getInnerClasses();
       ArrayList<IJavaClassInfo> declaredClasses = new ArrayList<IJavaClassInfo>( innerClasses.size() );
       for( AsmInnerClassType innerClass : innerClasses.values() ) {
-        IJavaClassInfo declaredClassInfo = TypeSystem.getJavaClassInfo( innerClass.getName(), _module );
+        IJavaClassInfo declaredClassInfo = TypeSystem.getJavaClassInfo( innerClass.getName());
         declaredClasses.add( declaredClassInfo );
       }
       _declaredClasses = declaredClasses.toArray( new IJavaClassInfo[declaredClasses.size()] );
@@ -631,11 +629,6 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
   }
 
   @Override
-  public IModule getModule() {
-    return _module;
-  }
-
-  @Override
   public IJavaClassType resolveType( String relativeName, int ignoreFlags ) {
     return null;
   }
@@ -644,7 +637,7 @@ public class AsmClassJavaClassInfo extends AsmTypeJavaClassType implements IAsmJ
   public IJavaClassType resolveType( String relativeName, IJavaClassInfo whosAskin, int ignoreFlags ) {
     for( AsmInnerClassType innerClass : _class.getInnerClasses().values() ) {
       if( innerClass.getName().equals( getName() + "$" + relativeName ) ) {
-        return JavaSourceUtil.getClassInfo( innerClass.getName(), getJavaType().getTypeLoader().getModule() );
+        return JavaSourceUtil.getClassInfo( innerClass.getName());
       }
     }
     return null;

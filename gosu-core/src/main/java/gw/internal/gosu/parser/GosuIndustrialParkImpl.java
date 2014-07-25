@@ -261,7 +261,7 @@ public class GosuIndustrialParkImpl extends BaseService implements IGosuShop
 
   @Override
   public IClassPath createClassPath(IModule module, boolean includeAllClasses) {
-    return new ClassPath(module, includeAllClasses ? ClassPath.ALLOW_ALL_FILTER : ClassPath.ONLY_API_CLASSES);
+    return new ClassPath(includeAllClasses ? ClassPath.ALLOW_ALL_FILTER : ClassPath.ONLY_API_CLASSES);
   }
 
   @Override
@@ -270,7 +270,7 @@ public class GosuIndustrialParkImpl extends BaseService implements IGosuShop
   }
 
   public IJavaClassInfo createClassInfo(Class aClass, IModule module) {
-    return new ClassJavaClassInfo(aClass, module);
+    return new ClassJavaClassInfo(aClass);
   }
 
   @Override

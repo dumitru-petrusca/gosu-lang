@@ -12,6 +12,6 @@ import java.util.List;
 public interface IGosuc {
   void initializeGosu();
   void unitializeGosu();
-  List<IType> compile( String moduleName, List<String> typesToCompile );
-  List<IType> compile( IModule module, List<String> typesToCompile );
+
+  List<IType> compile(List<String> typesToCompile);
 }

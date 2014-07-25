@@ -776,8 +776,8 @@ public abstract class ParserBase implements IParserPart
               Res.MSG_TYPE_MISMATCH,
               rhsType.getDisplayName(),
               lhsType.getDisplayName(),
-              rhsType.getTypeLoader().getModule().getName(),
-              lhsType.getTypeLoader().getModule().getName());
+              "MODULE",
+              "MODULE");
       return retType;
     }
 
@@ -1878,18 +1878,9 @@ public abstract class ParserBase implements IParserPart
     getOwner().checkInstruction( true );
     if( !ErrorType.getInstance().equals( type ) && type.getTypeLoader() != null )
     {
-      IModule module = type.getTypeLoader().getModule();
-      TypeSystem.pushModule( module );
-      try
-      {
-        boolean bAnnotation = JavaTypes.IANNOTATION().isAssignableFrom( type ) ||
-                              JavaTypes.ANNOTATION().isAssignableFrom( type );
-        verify( e, bAnnotation || type instanceof IErrorType, Res.MSG_TYPE_NOT_ANNOTATION, type.getName() );
-      }
-      finally
-      {
-        TypeSystem.popModule( module );
-      }
+      boolean bAnnotation = JavaTypes.IANNOTATION().isAssignableFrom( type ) ||
+                            JavaTypes.ANNOTATION().isAssignableFrom( type );
+      verify( e, bAnnotation || type instanceof IErrorType, Res.MSG_TYPE_NOT_ANNOTATION, type.getName() );
     }
     GosuAnnotation annotationInfo = new GosuAnnotation( getGosuClass(), type, e, iOffset, end );
     if( e instanceof AnnotationExpression )

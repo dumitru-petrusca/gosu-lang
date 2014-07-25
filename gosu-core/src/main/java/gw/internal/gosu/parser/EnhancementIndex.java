@@ -338,7 +338,7 @@ public class EnhancementIndex implements IEnhancementIndex
     if (request.kind == RefreshKind.CREATION) {
       Set<String> enhancedTypes = indexEnhancements(request.types);
       for (String enhancedType : enhancedTypes) {
-        IType type = TypeSystem.getByFullNameIfValid(enhancedType, _loader.getModule());
+        IType type = TypeSystem.getByFullNameIfValid(enhancedType);
         if (type != null) {
           TypeSystem.refresh((ITypeRef)type);
         }

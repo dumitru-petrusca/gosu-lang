@@ -79,15 +79,8 @@ public class GosuClassesUrlConnection extends URLConnection {
     ClassLoader loader = TypeSystem.getGosuClassLoader().getActualLoader();
     TypeSystemLockHelper.getTypeSystemLockWithMonitor( loader );
     try {
-
-      IModule global = TypeSystem.getGlobalModule();
       IType type;
-      TypeSystem.pushModule(global);
-      try {
-        type = TypeSystem.getByFullNameIfValidNoJava( strType );
-      } finally {
-        TypeSystem.popModule(global);
-      }
+      type = TypeSystem.getByFullNameIfValidNoJava( strType );
       if( type instanceof ICompilableType ) {
         if( !isInSingleServingLoader( type.getEnclosingType() ) ) {
           _type = (ICompilableType)type;

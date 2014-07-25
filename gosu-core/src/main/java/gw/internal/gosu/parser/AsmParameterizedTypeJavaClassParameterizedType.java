@@ -14,8 +14,8 @@ import java.util.List;
 
 public class AsmParameterizedTypeJavaClassParameterizedType extends AsmTypeJavaClassType implements IJavaClassParameterizedType {
 
-  public AsmParameterizedTypeJavaClassParameterizedType( IAsmType parameterizedType, IModule module ) {
-    super(parameterizedType, module);
+  public AsmParameterizedTypeJavaClassParameterizedType(IAsmType parameterizedType) {
+    super(parameterizedType);
   }
 
   @Override
@@ -23,14 +23,14 @@ public class AsmParameterizedTypeJavaClassParameterizedType extends AsmTypeJavaC
     List<AsmType> rawTypes = getType().getTypeParameters();
     IJavaClassType[] types = new IJavaClassType[rawTypes.size()];
     for (int i = 0; i < rawTypes.size(); i++) {
-      types[i] = AsmTypeJavaClassType.createType( rawTypes.get( i ), _module );
+      types[i] = AsmTypeJavaClassType.createType( rawTypes.get( i ));
     }
     return types;
   }
 
   @Override
   public IJavaClassType getConcreteType() {
-    return AsmTypeJavaClassType.createType( getType().getRawType(), _module );
+    return AsmTypeJavaClassType.createType( getType().getRawType());
   }
 
   @Override

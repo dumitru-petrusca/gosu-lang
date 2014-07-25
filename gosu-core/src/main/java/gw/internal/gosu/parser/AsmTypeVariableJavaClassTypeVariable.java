@@ -9,14 +9,13 @@ import gw.lang.reflect.java.IJavaClassTypeVariable;
 import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.java.asm.AsmType;
 import gw.lang.reflect.java.asm.IAsmType;
-import gw.lang.reflect.module.IModule;
 
 import java.util.List;
 
 public class AsmTypeVariableJavaClassTypeVariable extends AsmTypeJavaClassType implements IJavaClassTypeVariable {
 
-  public AsmTypeVariableJavaClassTypeVariable( IAsmType typeVariable, IModule module ) {
-    super(typeVariable, module);
+  public AsmTypeVariableJavaClassTypeVariable(IAsmType typeVariable) {
+    super(typeVariable);
   }
 
   @Override
@@ -41,13 +40,8 @@ public class AsmTypeVariableJavaClassTypeVariable extends AsmTypeJavaClassType i
       return new IJavaClassType[] {JavaTypes.OBJECT().getBackingClassInfo()};
     }
     else {
-      return new IJavaClassType[] {createType( typeParameters.get( 0 ), getModule() )};
+      return new IJavaClassType[] {createType( typeParameters.get( 0 ))};
     }
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 
   public String toString() {

@@ -570,9 +570,8 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
     }
     else
     {
-      IModule module = getModule(genType);
-      IRExpression result = callStaticMethod( TypeSystem.class, "getByFullName", new Class[]{String.class, String.class},
-              Arrays.asList(pushConstant( genType.getName() ), module == null ? pushNull() : pushConstant( module.getName() ) ) );
+      IRExpression result = callStaticMethod( TypeSystem.class, "getByFullName", new Class[]{String.class},
+              Arrays.asList(pushConstant( genType.getName() ) ) );
 
       if( type.isParameterizedType() && !isRecursivelyParameterized( type ) )
       {
@@ -660,7 +659,7 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
           descriptor = descriptor.getComponentType();
           iDims++;
         }
-        paramTypes[i] = TypeSystem.getJavaClassInfo( descriptor.getName(), getModule( paramType ));
+        paramTypes[i] = TypeSystem.getJavaClassInfo( descriptor.getName());
         while( iDims-- > 0 ) {
           paramTypes[i] = paramTypes[i].getArrayType();
         }

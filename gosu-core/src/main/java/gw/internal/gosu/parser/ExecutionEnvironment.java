@@ -86,7 +86,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
              : THE_ONE;
     }
 
-    IModule mod = INSTANCES.size() > 0 ? TypeSystem.getCurrentModule() : null;
+    IModule mod = INSTANCES.size() > 0 ? TypeSystem.getGlobalModule() : null;
     if( mod != null )
     {
       ExecutionEnvironment execEnv = (ExecutionEnvironment)mod.getExecutionEnvironment();
@@ -207,12 +207,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
       _modules = (List<IModule>) modules;
 
       for (IModule module : modules) {
-        TypeSystem.pushModule(module);
-        try {
-          ((Module) module).initializeTypeLoaders();
-        } finally {
-          TypeSystem.popModule(module);
-        }
+        ((Module) module).initializeTypeLoaders();
       }
 
       CommonServices.getEntityAccess().init();
@@ -246,12 +241,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
     // noinspection unchecked
     _modules.add(module);
 
-    TypeSystem.pushModule(module);
-    try {
-      ((Module) module).initializeTypeLoaders();
-    } finally {
-      TypeSystem.popModule(module);
-    }
+    ((Module) module).initializeTypeLoaders();
   }
 
   public void initializeCompiler(GosucModule gosucModule) {

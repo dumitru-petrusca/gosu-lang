@@ -243,7 +243,7 @@ public abstract class TestClass extends TestCase implements ITestWithMetadata {
 
     if( type instanceof IJavaType && ((IHasJavaClass) getType()).getBackingClass() == null ) {
       // Handle case where we are getting IJavaClassInfo from source (getBackingClass() returns null)
-      ClassLoader cl = type.getTypeLoader().getModule().getModuleTypeLoader().getDefaultTypeLoader().getGosuClassLoader().getActualLoader();
+      ClassLoader cl = TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader().getGosuClassLoader().getActualLoader();
       Class<?> testClass = Class.forName( type.getName(), true, cl );
       runMethod = testClass.getMethod( name );
     }

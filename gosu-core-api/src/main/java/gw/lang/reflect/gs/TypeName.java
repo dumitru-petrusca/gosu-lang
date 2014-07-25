@@ -54,10 +54,6 @@ public class TypeName implements Comparable {
     return result;
   }
 
-  public IModule getModule() {
-    return loader.getModule();
-  }
-
   public static enum Kind {
     TYPE,
     NAMESPACE

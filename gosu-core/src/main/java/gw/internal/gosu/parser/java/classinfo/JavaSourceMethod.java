@@ -171,11 +171,6 @@ public class JavaSourceMethod implements IJavaClassMethod, ITypeInfoResolver {
     return null;
   }
 
-  @Override
-  public IModule getModule() {
-    return _containingClass.getModule();
-  }
-
   public String toString() {
     return getName() + "(...)";
   }

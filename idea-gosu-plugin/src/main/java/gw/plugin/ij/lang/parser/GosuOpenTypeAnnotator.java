@@ -51,7 +51,7 @@ public class GosuOpenTypeAnnotator implements Annotator, Condition<VirtualFile> 
         if (module != null) {
           TypeSystem.pushModule(module);
           try {
-            final String[] types = TypeSystem.getTypesForFile(module, FileUtil.toIFile(virtualFile));
+            final String[] types = TypeSystem.getTypesForFile(FileUtil.toIFile(virtualFile));
             for (String typeName : types) {
               IType type = TypeSystem.getByFullNameIfValid(typeName);
               if (type instanceof IProvidesCustomErrorInfo) {

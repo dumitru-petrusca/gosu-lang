@@ -6,6 +6,8 @@ package gw.lang.parser.exceptions;
 
 import gw.lang.parser.IExpression;
 import gw.lang.parser.expressions.IProgram;
+import gw.lang.parser.resources.Res;
+import gw.lang.parser.resources.Strings;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.parser.resources.ResourceKey;
 import gw.lang.parser.IParseIssue;

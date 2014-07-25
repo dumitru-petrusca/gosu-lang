@@ -58,7 +58,7 @@ public class IRMethodFromJavaMethodInfo implements IRMethod {
 
   @Override
   public IType getOwningIType() {
-    return TypeSystem.get(_method.getEnclosingClass(), TypeSystem.getGlobalModule());
+    return TypeSystem.get(_method.getEnclosingClass());
   }
 
   @Override

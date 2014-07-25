@@ -74,7 +74,7 @@ public class TypeUtil {
 
   @NotNull
   public static List<String> getTypesForFile(IModule module, VirtualFile file) {
-    return Arrays.asList(TypeSystem.getTypesForFile(module, FileUtil.toIFile(file)));
+    return Arrays.asList(TypeSystem.getTypesForFile(FileUtil.toIFile(file)));
   }
 
   @NotNull

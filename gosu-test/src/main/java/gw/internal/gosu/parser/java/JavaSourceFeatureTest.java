@@ -8,7 +8,6 @@ import gw.internal.gosu.parser.java.classinfo.CompileTimeExpressionParser;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceField;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceType;
 import gw.lang.parser.IExpression;
-import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.ClassType;
 import gw.lang.reflect.gs.StringSourceFileHandle;
 import gw.lang.reflect.java.IJavaClassField;
@@ -569,7 +568,7 @@ public class JavaSourceFeatureTest extends TestClass {
 
   public IJavaClassInfo createSourceType(String source) {
     StringSourceFileHandle handle = new StringSourceFileHandle("foo.TestClass", source, false, ClassType.JavaClass);
-    IJavaClassInfo type = JavaSourceType.createTopLevel(handle, TypeSystem.getCurrentModule());
+    IJavaClassInfo type = JavaSourceType.createTopLevel(handle);
     assertEquals("foo.TestClass", type.getName());
     assertEquals("foo", type.getNamespace());
     return type;

@@ -97,7 +97,6 @@ public class CompiledGosuClassSymbolTable extends ThreadSafeSymbolTable
   }
   public void pushCompileTimeSymbolTable( ICompilableType gsClass, ISymbolTable symTable )
   {
-    TypeSystem.pushModule( gsClass.getTypeLoader().getModule() );
     pushCompileTimeSymbolTable( symTable );
     if( getClassMap().containsKey( gsClass ) )
     {
@@ -120,7 +119,6 @@ public class CompiledGosuClassSymbolTable extends ThreadSafeSymbolTable
   public void popCompileTimeSymbolTable( ICompilableType gsClass )
   {
     popCompileTimeSymbolTable();
-    TypeSystem.popModule( gsClass.getTypeLoader().getModule() );
   }
 
   public void popCompileTimeSymbolTable()

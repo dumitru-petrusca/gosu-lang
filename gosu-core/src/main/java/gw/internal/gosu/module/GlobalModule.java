@@ -11,7 +11,6 @@ import gw.fs.IDirectory;
 import gw.internal.gosu.parser.FileSystemGosuClassRepository;
 import gw.internal.gosu.parser.ModuleTypeLoader;
 import gw.lang.reflect.ITypeLoader;
-import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.GosuClassTypeLoader;
 import gw.lang.reflect.gs.IFileSystemGosuClassRepository;
 import gw.lang.reflect.gs.IGosuClassRepository;
@@ -41,7 +40,7 @@ public class GlobalModule extends Module implements IGlobalModule
   @Override
   protected void createStandardTypeLoaders() {
     FileSystemGosuClassRepository repository = new FileSystemGosuClassRepository(this);
-    CommonServices.getTypeSystem().pushTypeLoader(this, new GosuClassTypeLoader(this, repository));
+    CommonServices.getTypeSystem().pushTypeLoader(new GosuClassTypeLoader(this, repository));
     createGlobalTypeloaders();
   }
 
@@ -55,42 +54,37 @@ public class GlobalModule extends Module implements IGlobalModule
     IFileSystemGosuClassRepository classRepository = new FileSystemGosuClassRepository(this);
     classRepository.setSourcePath(getAllSourcePaths());
 
-    TypeSystem.pushModule(this);
-    try {
-      if( globalLoaderTypes != null ) {
-        for (Class<? extends ITypeLoader> globalLoader : globalLoaderTypes) {
-          try {
-            ITypeLoader typeLoader = createTypeLoader(classRepository, this, globalLoader);
-            if (typeLoader != null) {
-              _moduleTypeLoader.pushTypeLoader(typeLoader);
-            } else {
-              throw new NullPointerException();
-            }
-          } catch (Throwable t) {
-            throw new RuntimeException("Cannot create type loader: " + globalLoader, t);
+    if( globalLoaderTypes != null ) {
+      for (Class<? extends ITypeLoader> globalLoader : globalLoaderTypes) {
+        try {
+          ITypeLoader typeLoader = createTypeLoader(classRepository, this, globalLoader);
+          if (typeLoader != null) {
+            _moduleTypeLoader.pushTypeLoader(typeLoader);
+          } else {
+            throw new NullPointerException();
           }
+        } catch (Throwable t) {
+          throw new RuntimeException("Cannot create type loader: " + globalLoader, t);
         }
       }
-
-      //TODO - remove this if/when we no longer support typeloaders in the registry.xml file
-      List<TypeLoaderSpec> typeLoaderList = Registry.instance().getAdditionalTypeLoaders();
-      for (TypeLoaderSpec typeLoaderSpec : typeLoaderList) {
-        ITypeLoader typeLoader = typeLoaderSpec.createTypeLoader(this.getExecutionEnvironment());
-        if (typeLoader != null) {
-          _moduleTypeLoader.pushTypeLoader(typeLoader);
-        }
-      }
-
-      // initialize loaders
-      List<ITypeLoader> loaders = _moduleTypeLoader.getTypeLoaders();
-      for (int i = loaders.size() - 1; i >= 0; i--) {
-        loaders.get(i).init();
-      }
-
-      CommonServices.getGosuInitializationHooks().afterTypeLoaderCreation();
-    } finally {
-      TypeSystem.popModule(this);
     }
+
+    //TODO - remove this if/when we no longer support typeloaders in the registry.xml file
+    List<TypeLoaderSpec> typeLoaderList = Registry.instance().getAdditionalTypeLoaders();
+    for (TypeLoaderSpec typeLoaderSpec : typeLoaderList) {
+      ITypeLoader typeLoader = typeLoaderSpec.createTypeLoader(this.getExecutionEnvironment());
+      if (typeLoader != null) {
+        _moduleTypeLoader.pushTypeLoader(typeLoader);
+      }
+    }
+
+    // initialize loaders
+    List<ITypeLoader> loaders = _moduleTypeLoader.getTypeLoaders();
+    for (int i = loaders.size() - 1; i >= 0; i--) {
+      loaders.get(i).init();
+    }
+
+    CommonServices.getGosuInitializationHooks().afterTypeLoaderCreation();
   }
 
   private IDirectory[] getAllSourcePaths() {

@@ -319,8 +319,7 @@ public class ErrorJavaClassInfo implements IJavaClassInfo {
     return null;
   }
 
-  @Override
-  public IModule getModule() {
+  private IModule getModule() {
     return TypeSystem.getGlobalModule();
   }
 

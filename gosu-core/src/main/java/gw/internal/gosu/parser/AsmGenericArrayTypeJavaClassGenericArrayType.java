@@ -11,13 +11,13 @@ import gw.lang.reflect.module.IModule;
 
 public class AsmGenericArrayTypeJavaClassGenericArrayType extends AsmTypeJavaClassType implements IJavaClassGenericArrayType {
 
-  public AsmGenericArrayTypeJavaClassGenericArrayType( IAsmType genericArrayType, IModule module ) {
-    super(genericArrayType, module);
+  public AsmGenericArrayTypeJavaClassGenericArrayType(IAsmType genericArrayType) {
+    super(genericArrayType);
   }
 
   @Override
   public IJavaClassType getGenericComponentType() {
-    return AsmTypeJavaClassType.createType( getType().getComponentType(), _module);
+    return AsmTypeJavaClassType.createType( getType().getComponentType());
   }
 
   @Override
@@ -28,10 +28,5 @@ public class AsmGenericArrayTypeJavaClassGenericArrayType extends AsmTypeJavaCla
   @Override
   public String getSimpleName() {
     return getType().getSimpleName();
-  }
-
-  @Override
-  public IModule getModule() {
-    return _module;
   }
 }

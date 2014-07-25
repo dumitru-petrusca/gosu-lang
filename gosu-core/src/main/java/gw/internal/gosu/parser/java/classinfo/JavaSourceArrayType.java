@@ -49,11 +49,6 @@ public class JavaSourceArrayType implements IJavaClassGenericArrayType {
   }
 
   @Override
-  public IModule getModule() {
-    return _componentType.getModule();
-  }
-
-  @Override
   public String getNamespace() {
     return _componentType.getNamespace();
   }

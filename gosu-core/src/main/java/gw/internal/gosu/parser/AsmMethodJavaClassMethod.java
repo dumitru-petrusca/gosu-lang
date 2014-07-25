@@ -30,11 +30,9 @@ import java.util.List;
 
 public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassBytecodeMethod {
   private AsmMethod _method;
-  private IModule _module;
 
-  public AsmMethodJavaClassMethod( AsmMethod method, IModule module ) {
+  public AsmMethodJavaClassMethod(AsmMethod method) {
     _method = method;
-    _module = module;
   }
 
   @Override
@@ -44,7 +42,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
 
   @Override
   public IJavaClassInfo getReturnClassInfo() {
-    return JavaSourceUtil.getClassInfo( _method.getReturnType().getNameWithArrayBrackets(), _module );
+    return JavaSourceUtil.getClassInfo( _method.getReturnType().getNameWithArrayBrackets());
   }
 
   @Override
@@ -54,7 +52,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
 
   @Override
   public IJavaClassInfo getEnclosingClass() {
-    return JavaSourceUtil.getClassInfo( _method.getDeclaringClass(), _module );
+    return JavaSourceUtil.getClassInfo( _method.getDeclaringClass());
   }
 
   @Override
@@ -62,7 +60,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
     List<AsmType> rawTypes = _method.getParameters();
     IJavaClassInfo[] types = new IJavaClassInfo[rawTypes.size()];
     for( int i = 0; i < rawTypes.size(); i++ ) {
-      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getNameWithArrayBrackets(), _module );
+      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getNameWithArrayBrackets());
     }
     return types;
   }
@@ -87,7 +85,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
     List<AsmType> rawTypes = _method.getExceptions();
     IJavaClassInfo[] types = new IJavaClassInfo[rawTypes.size()];
     for( int i = 0; i < rawTypes.size(); i++ ) {
-      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getNameWithArrayBrackets(), _module );
+      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getNameWithArrayBrackets());
     }
     return types;
   }
@@ -152,12 +150,12 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
   @Override
   public IGenericTypeVariable[] getTypeVariables( IJavaMethodInfo javaMethodInfo ) {
     List<AsmType> typeVars = _method.getMethodType().getTypeParameters();
-    IType declClass = TypeSystem.getByFullNameIfValid( _method.getDeclaringClass().getName(), _module );
+    IType declClass = TypeSystem.getByFullNameIfValid( _method.getDeclaringClass().getName() );
     TypeVarToTypeMap actualParamByVarName = TypeLord.mapTypeByVarName( declClass, declClass );
     FunctionType functionType = new FunctionType( javaMethodInfo, true );
     IJavaClassTypeVariable[] javaTypeVars = new IJavaClassTypeVariable[typeVars.size()];
     for( int i = 0; i < typeVars.size(); i++ ) {
-      javaTypeVars[i] = (IJavaClassTypeVariable)AsmTypeJavaClassType.createType( typeVars.get( i ), _module );
+      javaTypeVars[i] = (IJavaClassTypeVariable)AsmTypeJavaClassType.createType( typeVars.get( i ));
     }
     return GenericTypeVariable.convertTypeVars( functionType, javaTypeVars, actualParamByVarName );
   }
@@ -168,7 +166,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
     IJavaClassType[] types = new IJavaClassType[getParam.size()];
     for( int i = 0; i < getParam.size(); i++ ) {
       AsmType rawType = getParam.get( i );
-      IJavaClassType type = AsmTypeJavaClassType.createType( rawType, _module );
+      IJavaClassType type = AsmTypeJavaClassType.createType( rawType);
       types[i] = type;
     }
     return types;
@@ -176,7 +174,7 @@ public class AsmMethodJavaClassMethod implements IJavaClassMethod, IJavaClassByt
 
   @Override
   public IJavaClassType getGenericReturnType() {
-    return AsmTypeJavaClassType.createType( _method.getGenericReturnType(), _module );
+    return AsmTypeJavaClassType.createType( _method.getGenericReturnType());
   }
 
   @Override

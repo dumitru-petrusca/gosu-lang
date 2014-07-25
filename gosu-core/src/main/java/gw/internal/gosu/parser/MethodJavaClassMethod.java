@@ -12,7 +12,6 @@ import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.FunctionType;
 import gw.lang.reflect.gs.IGenericTypeVariable;
-import gw.internal.gosu.ir.transform.AbstractElementTransformer;
 import gw.lang.reflect.module.IModule;
 
 import java.lang.reflect.Method;
@@ -24,11 +23,9 @@ import java.util.Arrays;
 
 public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassBytecodeMethod {
   private Method _method;
-  private IModule _module;
 
-  public MethodJavaClassMethod(Method method, IModule module) {
+  public MethodJavaClassMethod(Method method) {
     _method = method;
-    _module = module;
   }
 
   @Override
@@ -38,7 +35,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
 
   @Override
   public IJavaClassInfo getReturnClassInfo() {
-    return JavaSourceUtil.getClassInfo( _method.getReturnType(), _module );
+    return JavaSourceUtil.getClassInfo( _method.getReturnType());
   }
 
   @Override
@@ -48,7 +45,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
 
   @Override
   public IJavaClassInfo getEnclosingClass() {
-    return JavaSourceUtil.getClassInfo( _method.getDeclaringClass(), _module );
+    return JavaSourceUtil.getClassInfo( _method.getDeclaringClass());
   }
 
   @Override
@@ -56,7 +53,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
     Class<?>[] rawTypes = _method.getParameterTypes();
     IJavaClassInfo[] types = new IJavaClassInfo[rawTypes.length];
     for (int i = 0; i < rawTypes.length; i++) {
-      types[i] = JavaSourceUtil.getClassInfo(rawTypes[i], _module);
+      types[i] = JavaSourceUtil.getClassInfo(rawTypes[i]);
     }
     return types;
   }
@@ -81,7 +78,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
     Class<?>[] rawTypes = _method.getExceptionTypes();
     IJavaClassInfo[] types = new IJavaClassInfo[rawTypes.length];
     for (int i = 0; i < rawTypes.length; i++) {
-      types[i] = JavaSourceUtil.getClassInfo(rawTypes[i], _module);
+      types[i] = JavaSourceUtil.getClassInfo(rawTypes[i]);
     }
     return types;
   }
@@ -141,7 +138,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
     IJavaClassType[] types = new IJavaClassType[rawTypes.length];
     for (int i = 0; i < rawTypes.length; i++) {
       Type rawType = rawTypes[i];
-      IJavaClassType type = TypeJavaClassType.createType(rawType, _module);
+      IJavaClassType type = TypeJavaClassType.createType(rawType);
       types[i] = type;
     }
     return types;
@@ -149,7 +146,7 @@ public class MethodJavaClassMethod implements IJavaClassMethod, IJavaClassByteco
 
   @Override
   public IJavaClassType getGenericReturnType() {
-    return TypeJavaClassType.createType(_method.getGenericReturnType(), _module);
+    return TypeJavaClassType.createType(_method.getGenericReturnType());
   }
 
   public Class[] getJavaParameterTypes() {

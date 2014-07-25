@@ -336,7 +336,7 @@ public class GosucProject implements IProject {
       }
       else {
         IFile file = CommonServices.getFileSystem().getIFile( f );
-        String[] typesForFile = TypeSystem.getTypesForFile( TypeSystem.getGlobalModule(), file );
+        String[] typesForFile = TypeSystem.getTypesForFile(file );
         if( typesForFile.length > 0 ) {
           for( String type: typesForFile ) {
             if( !type.startsWith( "default." ) ) {

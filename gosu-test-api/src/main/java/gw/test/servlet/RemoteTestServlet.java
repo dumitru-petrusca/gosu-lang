@@ -265,7 +265,7 @@ public class RemoteTestServlet extends HttpServlet {
   }
 
   private Class<?> getTestClass( String typeName, IType testType ) throws ClassNotFoundException {
-    return Class.forName( typeName, false, testType.getTypeLoader().getModule().getModuleTypeLoader().getDefaultTypeLoader().getGosuClassLoader().getActualLoader() );
+    return Class.forName( typeName, false, TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader().getGosuClassLoader().getActualLoader() );
   }
 
   private void sendRemoteTestResult(HttpServletResponse response, RemoteTestResult testResult) {

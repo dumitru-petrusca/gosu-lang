@@ -45,11 +45,6 @@ public class UnparseableSourceTypeVariable implements IJavaClassTypeVariable {
   }
 
   @Override
-  public IModule getModule() {
-    return _owner.getModule();
-  }
-
-  @Override
   public String getNamespace() {
     return null;  
   }

@@ -23,7 +23,7 @@ public interface IDefaultTypeLoader extends ITypeLoader
 
   IJavaClassInfo getJavaClassInfo(String fullyQualifiedName);
 
-  public IJavaClassInfo getJavaClassInfoForClassDirectly(Class clazz, IModule module);
+  public IJavaClassInfo getJavaClassInfoForClassDirectly(Class clazz);
 
   ISourceFileHandle getSouceFileHandle(String qualifiedName);
 

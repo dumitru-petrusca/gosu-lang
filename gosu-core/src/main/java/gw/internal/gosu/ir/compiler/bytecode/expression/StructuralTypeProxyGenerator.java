@@ -21,7 +21,6 @@ import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.IGosuEnhancement;
 import gw.lang.reflect.gs.StringSourceFileHandle;
 import gw.lang.reflect.java.JavaTypes;
-import gw.lang.reflect.module.IModule;
 
 import java.util.concurrent.Callable;
 
@@ -37,21 +36,14 @@ public class StructuralTypeProxyGenerator {
 
   public static Class makeProxy( String iface, Class<?> rootClass, final String name, final boolean bStaticImpl ) {
 
-    final IType type = TypeLord.getPureGenericType( TypeSystem.get( rootClass ) );
-    final IType ifaceType = TypeLord.getPureGenericType( TypeSystem.getByFullName( iface ) );
-    final IModule module = ifaceType.getTypeLoader().getModule();
-    GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader( module );
+    final IType type = TypeLord.getPureGenericType( TypeSystem.get(rootClass) );
+    final IType ifaceType = TypeLord.getPureGenericType(TypeSystem.getByFullName(iface));
+    GosuClassTypeLoader loader = GosuClassTypeLoader.getDefaultClassLoader();
     final StructuralTypeProxyGenerator gen = new StructuralTypeProxyGenerator( bStaticImpl );
     IGosuClass gsProxy = loader.makeNewClass(
       new LazyStringSourceFileHandle( gen.getNamespace( ifaceType ), name, new Callable<StringBuilder>() {
         public StringBuilder call() {
-          TypeSystem.pushModule( module );
-          try {
-            return gen.generateProxy( ifaceType, type, name );
-          }
-          finally {
-            TypeSystem.popModule( module );
-          }
+          return gen.generateProxy( ifaceType, type, name );
         }
       } ) );
     return gsProxy.getBackingClass();

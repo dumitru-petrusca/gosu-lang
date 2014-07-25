@@ -77,8 +77,6 @@ public interface IParsedElement
 
   String getFunctionName();
 
-  IModule getModule();
-
   IParsedElement findRootParsedElement();
 
   IParsedElement findAncestorParsedElementByType( Class... parsedElementClasses );

@@ -68,10 +68,9 @@ public class GosuCompiler implements IGosuCompiler {
 
   private IType getType(File file) {
     IFile ifile = FileFactory.instance().getIFile(file);
-    IModule module = TypeSystem.getGlobalModule();
-    String[] typesForFile = TypeSystem.getTypesForFile(module, ifile);
+    String[] typesForFile = TypeSystem.getTypesForFile(ifile);
     if (typesForFile.length != 0) {
-      return TypeSystem.getByFullNameIfValid(typesForFile[0], module);
+      return TypeSystem.getByFullNameIfValid(typesForFile[0]);
     }
     return null;
   }

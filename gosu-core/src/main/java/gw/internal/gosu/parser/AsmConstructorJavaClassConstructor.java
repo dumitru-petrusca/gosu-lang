@@ -25,11 +25,9 @@ import java.util.List;
 
 public class AsmConstructorJavaClassConstructor implements IJavaClassConstructor, IJavaClassBytecodeConstructor {
   private AsmMethod _ctor;
-  private IModule _module;
 
-  public AsmConstructorJavaClassConstructor( AsmMethod ctor, IModule module ) {
+  public AsmConstructorJavaClassConstructor(AsmMethod ctor) {
     _ctor = ctor;
-    _module = module;
   }
 
   @Override
@@ -37,7 +35,7 @@ public class AsmConstructorJavaClassConstructor implements IJavaClassConstructor
     List<AsmType> rawTypes = _ctor.getExceptions();
     IJavaClassInfo[] types = new IJavaClassInfo[rawTypes.size()];
     for( int i = 0; i < rawTypes.size(); i++ ) {
-      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getRawType().getName(), _module );
+      types[i] = JavaSourceUtil.getClassInfo( rawTypes.get( i ).getRawType().getName());
     }
     return types;
   }
@@ -61,7 +59,7 @@ public class AsmConstructorJavaClassConstructor implements IJavaClassConstructor
     List<AsmType> rawTypes = _ctor.getGenericParameters();
     IJavaClassType[] types = new IJavaClassType[rawTypes.size()];
     for( int i = 0; i < rawTypes.size(); i++ ) {
-      types[i] = AsmTypeJavaClassType.createType( rawTypes.get( i ), _module );
+      types[i] = AsmTypeJavaClassType.createType( rawTypes.get( i ));
     }
     return types;
   }
@@ -71,7 +69,7 @@ public class AsmConstructorJavaClassConstructor implements IJavaClassConstructor
     List<AsmType> rawParamTypes = _ctor.getParameters();
     IJavaClassInfo[] paramTypes = new IJavaClassInfo[rawParamTypes.size()];
     for( int i = 0; i < rawParamTypes.size(); i++ ) {
-      paramTypes[i] = JavaSourceUtil.getClassInfo( rawParamTypes.get( i ).getRawType().getNameWithArrayBrackets(), _module );
+      paramTypes[i] = JavaSourceUtil.getClassInfo( rawParamTypes.get( i ).getRawType().getNameWithArrayBrackets());
     }
     return paramTypes;
   }
@@ -108,6 +106,6 @@ public class AsmConstructorJavaClassConstructor implements IJavaClassConstructor
 
   @Override
   public IJavaClassInfo getEnclosingClass() {
-    return JavaSourceUtil.getClassInfo( _ctor.getDeclaringClass(), _module );
+    return JavaSourceUtil.getClassInfo( _ctor.getDeclaringClass());
   }
 }

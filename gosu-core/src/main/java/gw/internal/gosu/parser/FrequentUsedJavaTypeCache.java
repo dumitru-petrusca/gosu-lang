@@ -95,16 +95,10 @@ public class FrequentUsedJavaTypeCache {
     classes.add(RuntimeException.class);
     classes.add(Enum.class);    
 
-    IModule root = _execEnv.getGlobalModule();
-    TypeSystem.pushModule(root);
-    try {
-      for (Class<?> c : classes) {
-        IJavaType type = (IJavaType) TypeSystem.get(c);
-        _typesByClass.put(c, type);
-        _typesByName.put(c.getName(), type);
-      }
-    } finally {
-      TypeSystem.popModule(root);
+    for (Class<?> c : classes) {
+      IJavaType type = (IJavaType) TypeSystem.get(c);
+      _typesByClass.put(c, type);
+      _typesByName.put(c.getName(), type);
     }
   }
   

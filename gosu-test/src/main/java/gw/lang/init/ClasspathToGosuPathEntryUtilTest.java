@@ -36,7 +36,7 @@ public class ClasspathToGosuPathEntryUtilTest extends TestClass {
   }
 
   public void testConvertClasspathToGosuPathEntriesIncludesDirectoryWithNoModuleFile() {
-    List<? extends IDirectory> list = TypeSystem.getCurrentModule().getRoots();
+    List<? extends IDirectory> list = TypeSystem.getGlobalModule().getRoots();
     for (IDirectory l : list) {
       System.out.println(l);
     }

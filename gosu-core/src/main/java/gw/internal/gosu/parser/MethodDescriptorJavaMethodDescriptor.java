@@ -6,27 +6,21 @@ package gw.internal.gosu.parser;
 
 import gw.lang.reflect.java.IJavaMethodDescriptor;
 import gw.lang.reflect.java.IJavaClassMethod;
-import gw.lang.reflect.java.IJavaParameterDescriptor;
 import gw.lang.reflect.IScriptabilityModifier;
-import gw.lang.reflect.BeanInfoUtil;
 import gw.lang.reflect.module.IModule;
 
-import java.beans.MethodDescriptor;
-import java.beans.ParameterDescriptor;
 import java.lang.reflect.Method;
 
 public class MethodDescriptorJavaMethodDescriptor implements IJavaMethodDescriptor {
   private GWMethodDescriptor _md;
   private Method _method;
-  private IModule _module;
 
-  public MethodDescriptorJavaMethodDescriptor(GWMethodDescriptor md, IModule module) {
+  public MethodDescriptorJavaMethodDescriptor(GWMethodDescriptor md) {
     _md = md;
     _method = md.getMethod();
     if( _method == null ) {
       throw new IllegalStateException( "MethodDescriptor without method." );
     }
-    _module = module;
   }
 
   private MethodJavaClassMethod javaMethod;
@@ -34,7 +28,7 @@ public class MethodDescriptorJavaMethodDescriptor implements IJavaMethodDescript
   @Override
   public IJavaClassMethod getMethod() {
     if (javaMethod == null) {
-      javaMethod = new MethodJavaClassMethod(_method, _module);
+      javaMethod = new MethodJavaClassMethod(_method);
     }
     return javaMethod;
   }

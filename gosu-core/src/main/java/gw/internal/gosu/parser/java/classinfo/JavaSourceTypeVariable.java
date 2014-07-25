@@ -71,11 +71,6 @@ public class JavaSourceTypeVariable implements IJavaClassTypeVariable {
   }
 
   @Override
-  public IModule getModule() {
-    return _owner.getModule();
-  }
-
-  @Override
   public IType getActualType(TypeVarToTypeMap typeMap) {
     return typeMap.getByString(getName());
   }

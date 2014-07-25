@@ -37,7 +37,7 @@ public class ChangedTypesRefresher {
 
   public void initWatching() {
     _directoryWatcher = new DirectoryWatcher();
-    List<? extends IDirectory> sourceEntries = TypeSystem.getCurrentModule().getSourcePath();
+    List<? extends IDirectory> sourceEntries = TypeSystem.getGlobalModule().getSourcePath();
     for (IDirectory sourceEntry : sourceEntries) {
       // Ignore /classes directories and jar files
       if (!sourceEntry.getPath().getName().equals("classes") && !sourceEntry.getPath().getName().endsWith(".jar") && sourceEntry.isJavaFile()) {
@@ -69,7 +69,7 @@ public class ChangedTypesRefresher {
           // references to it.  So only worry about modifications.
           if (changeType == FileEvent.MODIFY) {
             IFile changedFile = CommonServices.getFileSystem().getIFile(changedFilePath.toFile());
-            for (IDirectory possibleSourceDir : TypeSystem.getCurrentModule().getSourcePath()) {
+            for (IDirectory possibleSourceDir : TypeSystem.getGlobalModule().getSourcePath()) {
               if (changedFile.isDescendantOf(possibleSourceDir)) {
                 String relativeFilePath = possibleSourceDir.getPath().relativePath(changedFile.getPath(), "/");
                 String typeName = relativeFilePath.replace('/', '.');

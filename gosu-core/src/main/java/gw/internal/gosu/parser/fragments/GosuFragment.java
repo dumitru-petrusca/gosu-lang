@@ -14,7 +14,6 @@ import gw.internal.gosu.parser.ICompilableTypeInternal;
 import gw.internal.gosu.parser.IGosuAnnotation;
 import gw.internal.gosu.parser.IGosuClassInternal;
 import gw.internal.gosu.parser.statements.ClassStatement;
-import gw.internal.gosu.parser.statements.StatementList;
 import gw.internal.gosu.parser.statements.VarStatement;
 import gw.lang.parser.IBlockClass;
 import gw.lang.parser.ICapturedSymbol;
@@ -562,7 +561,7 @@ public class GosuFragment extends AbstractType implements IGosuFragment, ICompil
   private IJavaClassInfo defineClass() {
     try {
       Class aClass = GosuClassLoader.instance().defineClass(this, true); //getRelativeName().startsWith( FRAGMENT_NAME_PREFIX ) );
-      return new ClassJavaClassInfo(aClass, getTypeLoader().getModule());
+      return new ClassJavaClassInfo(aClass);
     } catch (ClassNotFoundException e) {
       throw new RuntimeException( e );
     }

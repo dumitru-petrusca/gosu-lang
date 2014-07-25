@@ -66,17 +66,16 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
   private LocklessLazyVar<IType> _enclosingClass = new LocklessLazyVar<IType>() {
     protected IType init() {
       Class enclosingClass = _class.getEnclosingClass();
-      return enclosingClass == null ? null : TypeSystem.get(enclosingClass, _module);
+      return enclosingClass == null ? null : TypeSystem.get(enclosingClass);
     }
   };
 
-  public ClassJavaClassInfo(Class cls, IModule module) {
-    super(cls, module);
+  public ClassJavaClassInfo(Class cls) {
+    super(cls);
     if (cls == null) {
       throw new IllegalArgumentException("Class cannot be null.");
     }
     _class = cls;
-    _module = module;
   }
 
   @Override
@@ -121,7 +120,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
         }
       }
     }
-    return new MethodJavaClassMethod(_class.getMethod(methodName, javaParamTypes), _module);
+    return new MethodJavaClassMethod(_class.getMethod(methodName, javaParamTypes));
   }
 
   public IJavaClassMethod getDeclaredMethod(String methodName, IJavaClassInfo... paramTypes) throws NoSuchMethodException {
@@ -134,7 +133,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
         throw new IllegalStateException("Class info for " + getName() + " is concrete, but class info for method parameter " + paramType.getName() + " is not (it's a " + paramType.getClass() + "), so can't get method by signature");
       }
     }
-    return new MethodJavaClassMethod(_class.getMethod(methodName, javaParamTypes), _module);
+    return new MethodJavaClassMethod(_class.getMethod(methodName, javaParamTypes));
   }
 
   @Override
@@ -143,7 +142,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       Method[] rawMethods = NewIntrospector.getDeclaredMethods(_class);
       IJavaClassMethod[] methods = new IJavaClassMethod[rawMethods.length];
       for (int i = 0; i < rawMethods.length; i++) {
-        methods[i] = new MethodJavaClassMethod(rawMethods[i], _module);
+        methods[i] = new MethodJavaClassMethod(rawMethods[i]);
       }
       _declaredMethods = methods;
     }
@@ -162,7 +161,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
 
   @Override
   public IType getJavaType() {
-    return TypeSystem.get(_class, _module);
+    return TypeSystem.get(_class);
   }
 
   @Override
@@ -171,7 +170,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       Class[] rawInterfaces = _class.getInterfaces();
       IJavaClassInfo[] interfaces = new IJavaClassInfo[rawInterfaces.length];
       for (int i = 0; i < rawInterfaces.length; i++) {
-        interfaces[i] = JavaSourceUtil.getClassInfo(rawInterfaces[i], _module);
+        interfaces[i] = JavaSourceUtil.getClassInfo(rawInterfaces[i]);
       }
       _interfaces = interfaces;
     }
@@ -181,7 +180,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
   @Override
   public IJavaClassInfo getSuperclass() {
     if (_superclass == null) {
-      _superclass = _class.getSuperclass() == null ? NULL_TYPE : JavaSourceUtil.getClassInfo(_class.getSuperclass(), _module);
+      _superclass = _class.getSuperclass() == null ? NULL_TYPE : JavaSourceUtil.getClassInfo(_class.getSuperclass());
     }
     return _superclass == NULL_TYPE ? null : _superclass;
   }
@@ -191,7 +190,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       TypeVariable[] rawTypeVariables = _class.getTypeParameters();
       IJavaClassTypeVariable[] typeVariables = new IJavaClassTypeVariable[rawTypeVariables.length];
       for (int i = 0; i < rawTypeVariables.length; i++) {
-        typeVariables[i] = new TypeVariableJavaTypeVariable(rawTypeVariables[i], _module);
+        typeVariables[i] = new TypeVariableJavaTypeVariable(rawTypeVariables[i]);
       }
       _typeVariables = typeVariables;
     }
@@ -204,7 +203,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       Field[] rawFields = _class.getDeclaredFields();
       IJavaClassField[] fields = new IJavaClassField[rawFields.length];
       for (int i = 0; i < rawFields.length; i++) {
-        fields[i] = new FieldJavaClassField(rawFields[i], _module);
+        fields[i] = new FieldJavaClassField(rawFields[i]);
       }
       _declaredFields = fields;
     }
@@ -218,7 +217,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       List<IJavaClassConstructor> ctors = new ArrayList<IJavaClassConstructor>(rawCtors.length);
       for (Constructor<?> rawCtor : rawCtors) {
         if (!rawCtor.isSynthetic()) {
-          ctors.add(new ConstructorJavaClassConstructor(rawCtor, _module));
+          ctors.add(new ConstructorJavaClassConstructor(rawCtor));
         }
       }
       _declaredConstructors = ctors.toArray(new IJavaClassConstructor[ctors.size()]);
@@ -236,7 +235,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
         throw new IllegalStateException("Class info for " + getName() + " is concrete, but class info for method parameter " + paramType.getName() + " is not (it's a " + paramType.getClass() + "), so can't get method by signature");
       }
     }
-    return new ConstructorJavaClassConstructor(_class.getConstructor( javaParamTypes ), _module);
+    return new ConstructorJavaClassConstructor(_class.getConstructor( javaParamTypes ));
   }
 
   @Override
@@ -279,7 +278,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       PropertyDescriptor[] rawPropDesc = _beanInfo.get().getPropertyDescriptors();
       IJavaPropertyDescriptor[] propDesc = new IJavaPropertyDescriptor[rawPropDesc.length];
       for (int i = 0; i < rawPropDesc.length; i++) {
-        propDesc[i] = new PropertyDescriptorJavaPropertyDescriptor(rawPropDesc[i], _module);
+        propDesc[i] = new PropertyDescriptorJavaPropertyDescriptor(rawPropDesc[i]);
       }
       _propertyDescriptors = propDesc;
     }
@@ -292,7 +291,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       GWMethodDescriptor[] rawMDs = _beanInfo.get().getGWMethodDescriptors();
       IJavaMethodDescriptor[] mds = new IJavaMethodDescriptor[rawMDs.length];
       for (int i = 0; i < rawMDs.length; i++) {
-        mds[i] = new MethodDescriptorJavaMethodDescriptor(rawMDs[i], _module);
+        mds[i] = new MethodDescriptorJavaMethodDescriptor(rawMDs[i]);
       }
       _methodDescriptors = mds;
     }
@@ -337,7 +336,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       Field[] rawFields = _class.getFields();
       IJavaClassField[] fields = new IJavaClassField[rawFields.length];
       for (int i = 0; i < rawFields.length; i++) {
-        fields[i] = new FieldJavaClassField(rawFields[i], _module);
+        fields[i] = new FieldJavaClassField(rawFields[i]);
       }
       _fields = fields;
     }
@@ -350,7 +349,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
 
   @Override
   public IJavaClassInfo getComponentType() {
-    return JavaSourceUtil.getClassInfo(_class.getComponentType(), _module);
+    return JavaSourceUtil.getClassInfo(_class.getComponentType());
   }
 
   @Override
@@ -377,7 +376,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
   public IJavaClassInfo getEnclosingClass() {
     Class enclosingClass = _class.getEnclosingClass();
     if (enclosingClass != null) {
-      return TypeSystem.getJavaClassInfo(enclosingClass, _module);
+      return TypeSystem.getJavaClassInfo(enclosingClass);
     }
     return null;
   }
@@ -404,7 +403,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       Type[] rawIfaces = _class.getGenericInterfaces();
       IJavaClassType[] ifaces = new IJavaClassType[rawIfaces.length];
       for (int i = 0; i < rawIfaces.length; i++) {
-        ifaces[i] = TypeJavaClassType.createType(rawIfaces[i], _module);
+        ifaces[i] = TypeJavaClassType.createType(rawIfaces[i]);
       }
       _genericInterfaces = ifaces;
     }
@@ -413,13 +412,13 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
 
   @Override
   public IJavaClassType getGenericSuperclass() {
-    return TypeJavaClassType.createType(_class.getGenericSuperclass(), _module);
+    return TypeJavaClassType.createType(_class.getGenericSuperclass());
   }
 
   @Override
   public IJavaClassInfo getArrayType() {
-    DefaultTypeLoader defaultTypeLoader = (DefaultTypeLoader)_module.getModuleTypeLoader().getDefaultTypeLoader();
-    return defaultTypeLoader.getJavaClassInfo( Array.newInstance(_class, 0).getClass(), _module );
+    DefaultTypeLoader defaultTypeLoader = (DefaultTypeLoader)TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader();
+    return defaultTypeLoader.getJavaClassInfo( Array.newInstance(_class, 0).getClass());
   }
 
   @Override
@@ -429,8 +428,8 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
       ArrayList<IJavaClassInfo> declaredClasses = new ArrayList<IJavaClassInfo>(rawClasses.length);
       for (int i = 0; i < rawClasses.length; i++) {
         if (!rawClasses[i].isAnonymousClass()) {
-          DefaultTypeLoader defaultTypeLoader = (DefaultTypeLoader)_module.getModuleTypeLoader().getDefaultTypeLoader();
-          IJavaClassInfo declaredClassInfo = defaultTypeLoader.getJavaClassInfo( rawClasses[i], _module );
+          DefaultTypeLoader defaultTypeLoader = (DefaultTypeLoader)TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader();
+          IJavaClassInfo declaredClassInfo = defaultTypeLoader.getJavaClassInfo( rawClasses[i]);
           declaredClasses.add( declaredClassInfo );
         }
       }
@@ -488,11 +487,6 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
     return _fileHandle;
   }
 
-  @Override
-  public IModule getModule() {
-    return _module;
-  }
-
   public boolean isTypeGosuClassInstance() {
     return IGosuObject.class.isAssignableFrom(_class) &&
         TypeSystem.getByFullNameIfValid(_class.getName().replace('$', '.')) instanceof IGosuClass;
@@ -508,7 +502,7 @@ public class ClassJavaClassInfo extends TypeJavaClassType implements IClassJavaC
     Class backingClass = getBackingClass();
     for (Class innerClass : backingClass.getDeclaredClasses()) {
       if (innerClass.getName().equals(getName() + "$" + relativeName)) {
-        return JavaSourceUtil.getClassInfo(innerClass, getJavaType().getTypeLoader().getModule());
+        return JavaSourceUtil.getClassInfo(innerClass);
       }
     }
     return null;
