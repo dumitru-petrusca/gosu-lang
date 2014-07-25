@@ -45,4 +45,9 @@ public class DefaultSingleModule extends GlobalModule
   protected void createExtensionTypeLoaders() {
     createExtenxioTypeloadersImpl( );
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return o == this;
+  }
 }

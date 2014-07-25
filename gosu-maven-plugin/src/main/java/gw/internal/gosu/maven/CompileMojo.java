@@ -41,9 +41,11 @@ public class CompileMojo extends AbstractCompileMojo {
   }
 
   @Override
-  protected List<File> getClassPath() {
-    File output = new File(mavenProject.getBuild().getOutputDirectory());
-    return Collections.singletonList(output);
+  protected List<String> getClassPath() {
+    List<String> classPath = super.getClassPath();
+    String outputDirectory = mavenProject.getBuild().getOutputDirectory();
+    classPath.add(outputDirectory);
+    return classPath;
   }
 
   protected List<String> getJreClassPath() {

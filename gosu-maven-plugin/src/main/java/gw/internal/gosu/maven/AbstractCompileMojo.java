@@ -77,7 +77,7 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
       for (File root : getSources()) {
         sources.add(root.getAbsolutePath());
       }
-      List<String> classpath = getClasspath();
+      List<String> classpath = getClassPath();
 
       SoutCompilerDriver driver = new SoutCompilerDriver();
       GosuCompiler compiler = new GosuCompiler(driver);
@@ -164,7 +164,7 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
     return true;
   }
 
-  private List<String> getClasspath() {
+  protected List<String> getClassPath() {
     List<String> classpath = Lists.newArrayList();
 
     // Let's get all JARs from the bootstrap classloader.
@@ -200,8 +200,6 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
   protected abstract File getOutputFolder();
 
   protected abstract List<File> getSources();
-
-  protected abstract List<File> getClassPath();
 
   protected List<String> getJreClassPath() {
     return Collections.emptyList();
