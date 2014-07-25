@@ -44,7 +44,6 @@
     </dependency>
   </dependencies>
 
-<!--
   <build>
     <testSourceDirectory>src/test/gosu</testSourceDirectory>
     <plugins>
@@ -62,6 +61,5 @@
       </plugin>
     </plugins>
   </build>
--->
 
 </project>
