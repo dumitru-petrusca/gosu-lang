@@ -25,6 +25,7 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>../gosu-core-api/src/main/gosu</sourceDirectory>
     <plugins>
       <!-- Pre-compile all gosu enhancements, etc -->
       <plugin>
@@ -38,7 +39,7 @@
             </goals>
             <phase>compile</phase>
             <configuration>
-              <moduleName>_jre_module_</moduleName> <!-- Precompile JRE module -->
+              <roots><root>../gosu-core-api/</root></roots>
             </configuration>
           </execution>
         </executions>
