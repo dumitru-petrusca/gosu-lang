@@ -257,11 +257,6 @@ public class NamespaceType extends AbstractType implements INamespaceType
     if (_children == null) {
       Set<TypeName> allNames = new HashSet<TypeName>();
       allNames.addAll(TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeNames(_strFqNamespace));
-      for (IModule module : _module.getModuleTraversalList()) {
-        if (module != TypeSystem.getGlobalModule()) {
-          allNames.addAll(module.getModuleTypeLoader().getTypeNames(_strFqNamespace));
-        }
-      }
       _children = allNames;
     }
     return _children;

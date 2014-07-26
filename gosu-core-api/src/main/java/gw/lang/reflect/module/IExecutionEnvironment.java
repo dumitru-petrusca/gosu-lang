@@ -17,8 +17,6 @@ public interface IExecutionEnvironment
   public final static String GLOBAL_MODULE_NAME = "_globalModule";
   public final static String DEFAULT_SINGLE_MODULE_NAME = "_default_";
 
-  IProject getProject();
-  List<? extends IModule> getModules();
   IModule createJreModule( );
   void addModule(IModule module);
   void removeModule(IModule module);
@@ -31,6 +29,4 @@ public interface IExecutionEnvironment
   IModule getJreModule();
 
   TypeSystemState getState();
-
-  boolean isShadowingMode();
 }

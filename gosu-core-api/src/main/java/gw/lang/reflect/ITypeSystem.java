@@ -7,8 +7,6 @@ package gw.lang.reflect;
 import gw.config.IService;
 import gw.fs.IFile;
 import gw.fs.IResource;
-import gw.lang.gosuc.ICustomParser;
-import gw.lang.gosuc.IGosuc;
 import gw.lang.parser.ISymbolTable;
 import gw.lang.parser.ITypeUsesMap;
 import gw.lang.parser.TypeVarToTypeMap;
@@ -19,7 +17,6 @@ import gw.lang.reflect.java.IJavaClassInfo;
 import gw.lang.reflect.java.IJavaType;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
-import gw.lang.reflect.module.IProject;
 
 import java.util.List;
 import java.util.Set;
@@ -217,7 +214,6 @@ public interface ITypeSystem extends IService
   IType getBoxType(IType primitiveType);
 
   IExecutionEnvironment getExecutionEnvironment();
-  IExecutionEnvironment getExecutionEnvironment( IProject project );
 
   ITypeRef getOrCreateTypeReference( IType type );
 

@@ -47,7 +47,6 @@ import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IJreModule;
 import gw.lang.reflect.module.IModule;
-import gw.lang.reflect.module.IProject;
 import gw.lang.reflect.module.ITypeLoaderStack;
 import gw.util.GosuExceptionUtil;
 import gw.util.IdentitySet;
@@ -139,13 +138,8 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
   }
 
   public List<ITypeLoader> getAllTypeLoaders() {
-    List<ITypeLoader> loaders = new ArrayList<ITypeLoader>();
-    IModule[] moduleTraversalList = getExecutionEnv().getGlobalModule().getModuleTraversalList();
-    for (IModule module : moduleTraversalList) {
-      loaders.addAll(module.getModuleTypeLoader().getTypeLoaderStack());
-    }
-    return loaders;
-  }
+    return TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeLoaderStack();
+ }
 
   public void pushTypeLoader(ITypeLoader typeLoader)
   {
@@ -1214,10 +1208,6 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   public IExecutionEnvironment getExecutionEnvironment() {
     return ExecutionEnvironment.instance();
-  }
-
-  public IExecutionEnvironment getExecutionEnvironment( IProject project ) {
-    return ExecutionEnvironment.instance(project);
   }
 
   @Override

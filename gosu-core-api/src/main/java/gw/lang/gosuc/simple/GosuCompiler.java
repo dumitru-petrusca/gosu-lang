@@ -6,7 +6,6 @@ import gw.config.IPlatformHelper;
 import gw.fs.FileFactory;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
-import gw.lang.gosuc.GosucDependency;
 import gw.lang.gosuc.GosucModule;
 import gw.lang.init.GosuInitialization;
 import gw.lang.parser.IParseIssue;
@@ -17,7 +16,6 @@ import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.module.IExecutionEnvironment;
-import gw.lang.reflect.module.IModule;
 import gw.util.concurrent.LocklessLazyVar;
 
 import java.io.*;
@@ -201,7 +199,7 @@ public class GosuCompiler implements IGosuCompiler {
     _gosuInitialization = GosuInitialization.instance(execEnv);
     GosucModule gosucModule = new GosucModule(
         IExecutionEnvironment.DEFAULT_SINGLE_MODULE_NAME, contentRoots, sourceFolders, classpath,
-        outputPath, Collections.<GosucDependency>emptyList(), Collections.<String>emptyList());
+        outputPath, Collections.<String>emptyList());
     _gosuInitialization.initializeCompiler(gosucModule);
 
     return System.currentTimeMillis() - start;

@@ -95,8 +95,6 @@ public interface IModule
    */
   <T extends ITypeLoader> List<? extends T> getTypeLoaders(Class<T> typeLoaderClass);
 
-  IModule[] getModuleTraversalList();
-
   IFileSystemGosuClassRepository getFileRepository();
 
   String pathRelativeToRoot(IResource resource);

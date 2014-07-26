@@ -37,7 +37,6 @@ import gw.lang.reflect.interval.LongInterval;
 import gw.lang.reflect.interval.NumberInterval;
 import gw.lang.reflect.interval.SequenceableInterval;
 import gw.lang.reflect.module.IExecutionEnvironment;
-import gw.lang.reflect.module.IProject;
 
 import javax.xml.namespace.QName;
 import java.lang.annotation.Annotation;
@@ -60,7 +59,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 
 public class JavaTypes {
-  private static final Map<IProject, Map<Class, IJavaType>> CACHE = new WeakHashMap<IProject, Map<Class, IJavaType>>();
+  private static final Map<Class, IJavaType> CACHE = new ConcurrentHashMap<Class, IJavaType>();
 
   static {
     TypeSystem.addShutdownListener(new TypeSystemShutdownListener() {
@@ -403,10 +402,6 @@ public class JavaTypes {
 
   private static IJavaType findTypeFromJre(Class c) {
     IJavaType type = (IJavaType) TypeSystem.get(c);
-    IExecutionEnvironment execEnv = TypeSystem.getGlobalModule().getExecutionEnvironment();
-    if (execEnv.getProject().isDisposed()) {
-      throw new IllegalStateException("Whoops.... the project associated with type, " + type.getName() + ", is stale. ExecEnv: " + execEnv.getProject());
-    }
     return type;
   }
 
@@ -415,7 +410,7 @@ public class JavaTypes {
   }
 
   private static IJavaType getCachedType( Class c, boolean bFromJre ) {
-    Map<Class, IJavaType> cache = getCACHE();
+    Map<Class, IJavaType> cache = CACHE;
     IJavaType type = cache.get( c );
     if( type == null ) {
       TypeSystem.lock();
@@ -441,22 +436,6 @@ public class JavaTypes {
     return type;
   }
 
-  private static Map<Class, IJavaType> getCACHE() {
-    IExecutionEnvironment execEnv = TypeSystem.getExecutionEnvironment();
-    IProject project = execEnv.getProject();
-    Map<Class, IJavaType> cache = CACHE.get( project );
-    if( cache == null ) {
-      synchronized( CACHE ) {
-        cache = CACHE.get( project );
-        if( cache == null ) {
-          cache = new ConcurrentHashMap<Class, IJavaType>();
-          CACHE.put( project, cache );
-        }
-      }
-    }
-    return cache;
-  }
-
   public static IJavaType getJreType(final Class<?> c) {
     return getCachedType( c, true );
   }
@@ -470,6 +449,6 @@ public class JavaTypes {
   }
 
   public static void flushCache() {
-    getCACHE().clear();
+    CACHE.clear();
   }
 }

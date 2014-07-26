@@ -61,9 +61,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   private WeakFqnCache<IType> _typesByName;
   private Map<String, IType> _namespaceTypesByName; // A case-Sensitive map of names to namespace types
 
-  //## todo: remove this pos
-  private Map<String, IType> _typesByCaseInsensitiveName; // A case-Insensitive map of names to intrinsic types
-
   private ITypeRefFactory _typeRefFactory;
 
   public ModuleTypeLoader( IModule module, List<ITypeLoader> loaderStack )
@@ -89,7 +86,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
     _loadersByPrefix = new HashMap<String, ITypeLoader>();
     _typesByName = new WeakFqnCache<IType>();
     _namespaceTypesByName = new HashMap<String, IType>();
-    _typesByCaseInsensitiveName = new HashMap<String, IType>();
   }
 
   public ModuleTypeLoader( IModule module, DefaultTypeLoader defaultTypeLoader)
@@ -165,7 +161,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
     try
     {
       removeMissesAndErrorsFromMainCache();
-      removeMissesAndErrors( _typesByCaseInsensitiveName.values() );
       removeMissesAndErrors( _namespaceTypesByName.values() );
     }
     finally
@@ -206,7 +201,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   {
     _typesByName.clear();
     _namespaceTypesByName.clear();
-    _typesByCaseInsensitiveName.clear();
   }
 
   public void removeTypeLoader( Class<? extends ITypeLoader> loaderType )
@@ -395,15 +389,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
         // Look it up again, to make sure no concurrent write has happened
         foundType = findInCache( fqnNoArrays );
 
-        // If still null, check in the case-insensitive map and add it to the case-sensitive version if necessary
-        if( foundType == null )
-        {
-          foundType = findInCaseInsenstiveCache( fqnNoArrays );
-          if( foundType != null )
-          {
-            _typesByName.add( fqnNoArrays, foundType );
-          }
-        }
         // If it's not found, then go ahead and try to load it from the type loader stacks
         if( foundType == null )
         {
@@ -445,17 +430,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
       foundType = null;
     }
     if (TypeSystem.isDeleted(foundType)) {
-      foundType = null;
-    }
-    return foundType;
-  }
-
-  private IType findInCaseInsenstiveCache( String fqnNoArrays )
-  {
-    IType foundType = _typesByCaseInsensitiveName.get( fqnNoArrays );
-    if( foundType instanceof ITypeRef && ((ITypeRef)foundType)._shouldReload() )
-    {
-      // The proxied type is stale, force it to reload
       foundType = null;
     }
     return foundType;
@@ -546,7 +520,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
 
   private void clearFromCaches( String fullyQualifiedTypeName ) {
     _typesByName.remove(fullyQualifiedTypeName);
-    _typesByCaseInsensitiveName.remove( fullyQualifiedTypeName );
     if(fullyQualifiedTypeName.endsWith(IClassPath.PLACEHOLDER_FOR_PACKAGE)) {
       _namespaceTypesByName.remove(fullyQualifiedTypeName.substring(0, fullyQualifiedTypeName.length() - IClassPath.PLACEHOLDER_FOR_PACKAGE.length() - 1));
     }
@@ -649,11 +622,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
         return oldType;
       }
       _typesByName.add( name, type );
-      ITypeLoader typeLoader = pair.getSecond();
-      if( typeLoader != null && !typeLoader.isCaseSensitive() )
-      {
-        _typesByCaseInsensitiveName.put( name, type);
-      }
     }
     return pair != null ? pair.getFirst() : null;
   }
@@ -778,10 +746,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   }
 
   public IType getCachedType(String fqn) {
-    IType foundType = findInCache( fqn );
-    if (foundType == null) {
-      foundType = findInCaseInsenstiveCache(fqn);
-    }
-    return foundType;
+    return findInCache( fqn );
   }
 }

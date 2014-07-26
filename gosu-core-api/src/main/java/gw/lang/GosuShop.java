@@ -7,8 +7,6 @@ package gw.lang;
 import gw.config.CommonServices;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
-import gw.lang.gosuc.ICustomParser;
-import gw.lang.gosuc.IGosuc;
 import gw.lang.init.GosuPathEntry;
 import gw.lang.ir.IRClassCompiler;
 import gw.lang.ir.IRTypeResolver;

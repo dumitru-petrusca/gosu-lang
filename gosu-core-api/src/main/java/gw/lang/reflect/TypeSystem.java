@@ -29,7 +29,6 @@ import gw.lang.reflect.java.IJavaType;
 import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
-import gw.lang.reflect.module.IProject;
 import gw.util.IFeatureFilter;
 import gw.util.perf.InvocationCounter;
 
@@ -564,11 +563,6 @@ public class TypeSystem
   public static IExecutionEnvironment getExecutionEnvironment()
   {
     return CommonServices.getTypeSystem().getExecutionEnvironment();
-  }
-
-  public static IExecutionEnvironment getExecutionEnvironment( IProject project )
-  {
-    return CommonServices.getTypeSystem().getExecutionEnvironment(project);
   }
 
   /**

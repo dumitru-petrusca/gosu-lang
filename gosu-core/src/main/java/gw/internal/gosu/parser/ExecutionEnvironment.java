@@ -33,7 +33,6 @@ import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.module.Dependency;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
-import gw.lang.reflect.module.IProject;
 import gw.util.GosuExceptionUtil;
 import gw.util.ILogger;
 
@@ -44,21 +43,16 @@ import java.net.URLDecoder;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.WeakHashMap;
 
 public class ExecutionEnvironment implements IExecutionEnvironment
 {
-  private static final IProject DEFAULT_PROJECT = new DefaultSingleModuleRuntimeProject();
-  private static final Map<Object, ExecutionEnvironment> INSTANCES = new WeakHashMap<Object, ExecutionEnvironment>();
-  private static ExecutionEnvironment THE_ONE;
+  private static ExecutionEnvironment THE_ONE = new ExecutionEnvironment();
   public static final String CLASS_REDEFINER_THREAD = "Gosu class redefiner";
 
   /**
@@ -70,7 +64,6 @@ public class ExecutionEnvironment implements IExecutionEnvironment
           "javax.servlet.http.HttpServletRequest"
   );
 
-  private IProject _project;
   private List<IModule> _modules;
   private IModule _defaultModule;
   private IModule _jreModule;
@@ -79,76 +72,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
 
   public static ExecutionEnvironment instance()
   {
-    if( INSTANCES.size() == 1 )
-    {
-      return THE_ONE == null
-             ? THE_ONE = INSTANCES.values().iterator().next()
-             : THE_ONE;
-    }
-
-    IModule mod = INSTANCES.size() > 0 ? TypeSystem.getGlobalModule() : null;
-    if( mod != null )
-    {
-      ExecutionEnvironment execEnv = (ExecutionEnvironment)mod.getExecutionEnvironment();
-      if( execEnv == null )
-      {
-        throw new IllegalStateException( "Module, " + mod.getName() + ", has a null execution environment. This is bad." );
-      }
-      return execEnv;
-    }
-
-    if( INSTANCES.size() > 0 )
-    {
-      // Return first non-default project
-      // Yes, this is a guess, but we need to guess for the case where we're running tests
-      // and loading classes in lots of threads where the current module is not pushed
-      for( ExecutionEnvironment execEnv: INSTANCES.values() )
-      {
-        if( execEnv.getProject() != DEFAULT_PROJECT &&
-            !execEnv.getProject().isDisposed() )
-        {
-          return execEnv;
-        }
-      }
-    }
-
-    return instance( DEFAULT_PROJECT );
-  }
-  public static ExecutionEnvironment instance( IProject project )
-  {
-    if( project == null )
-    {
-      throw new IllegalStateException( "Project must not be null" );
-    }
-
-    if( project instanceof IExecutionEnvironment )
-    {
-      throw new RuntimeException( "Passed in ExecutionEnvironment as project" );
-    }
-
-    ExecutionEnvironment execEnv = INSTANCES.get( project );
-    if( execEnv == null )
-    {
-      INSTANCES.put( project, execEnv = new ExecutionEnvironment( project ) );
-    }
-
-    return execEnv;
-  }
-
-  public static Collection<? extends IExecutionEnvironment> getAll()
-  {
-    return INSTANCES.values();
-  }
-
-  private ExecutionEnvironment( IProject project )
-  {
-    _project = project;
-    _modules = new ArrayList<IModule>();
-  }
-
-  public IProject getProject()
-  {
-    return _project;
+    return THE_ONE;
   }
 
   public List<? extends IModule> getModules() {
@@ -404,46 +328,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
     for (IModule module : _modules) {
       module.getModuleTypeLoader().shutdown();
     }
-    INSTANCES.clear();
-    THE_ONE = null;
-  }
-
-  private static class DefaultSingleModuleRuntimeProject implements IProject
-  {
-    @Override
-    public String getName()
-    {
-      return getClass().getSimpleName();
-    }
-
-    @Override
-    public Object getNativeProject()
-    {
-      return this;
-    }
-
-    @Override
-    public boolean isDisposed()
-    {
-      return false;
-    }
-
-    @Override
-    public String toString()
-    {
-      return "Default Single Runtime Execution Environment";
-    }
-
-    @Override
-    public boolean isHeadless()
-    {
-      return false;
-    }
-
-    @Override
-    public boolean isShadowMode() {
-      return false;
-    }
+    THE_ONE = new ExecutionEnvironment();
   }
 
   /**
@@ -615,10 +500,6 @@ public class ExecutionEnvironment implements IExecutionEnvironment
       }
     }
     return new ArrayList<IDirectory>( expanded );
-  }
-  @Override
-  public boolean isShadowingMode() {
-    return _project.isShadowMode();
   }
 
   /**
