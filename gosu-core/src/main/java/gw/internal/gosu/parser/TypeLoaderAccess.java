@@ -148,9 +148,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   public void removeTypeLoader( final Class<? extends ITypeLoader> loaderType )
   {
-    for (IModule module : getExecutionEnv().getModules()) {
-      ((ModuleTypeLoader)module.getModuleTypeLoader()).removeTypeLoader(loaderType);
-    }
+      ((ModuleTypeLoader)TypeSystem.getGlobalModule().getModuleTypeLoader()).removeTypeLoader(loaderType);
   }
 
   private List<ITypeLoaderListener> getListeners() {
@@ -331,9 +329,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   public void clearErrorTypes()
   {
-    for (IModule module : getExecutionEnv().getModules()) {
-      ((ModuleTypeLoader) module.getModuleTypeLoader()).clearErrorTypes();
-    }
+    ((ModuleTypeLoader) TypeSystem.getGlobalModule().getModuleTypeLoader()).clearErrorTypes();
   }
 
   public void refresh( final boolean clearCachedTypes )
@@ -349,9 +345,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
       ++_iRefreshChecksum;
       ++_iSingleRefreshChecksum;
 
-      for (IModule module : getExecutionEnv().getModules()) {
-        module.getModuleTypeLoader().refreshed();
-      }
+      TypeSystem.getGlobalModule().getModuleTypeLoader().refreshed();
 
       CommonServices.getPlatformHelper().refresh(null);
 
@@ -359,9 +353,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
       if( clearCachedTypes )
       {
-        for (IModule module : getExecutionEnv().getModules()) {
-          module.getModuleTypeLoader().getTypeRefFactory().clearCaches();
-        }
+        TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().clearCaches();
         MetaType.clearCaches();
       }
 
@@ -382,9 +374,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     {
       ExecutionEnvironment executionEnv = getExecutionEnv();
 
-      for (IModule module : executionEnv.getModules()) {
-        module.getModuleTypeLoader().shutdown();
-      }
+      TypeSystem.getGlobalModule().getModuleTypeLoader().shutdown();
 
       for (TypeSystemShutdownListener shutdownListener : _shutdownListeners) {
         shutdownListener.shutdown();
@@ -596,9 +586,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     TypeSystem.lock();
     try
     {
-      for (IModule module : getExecutionEnv().getModules()) {
-        module.getModuleTypeLoader().refreshed();
-      }
+      TypeSystem.getGlobalModule().getModuleTypeLoader().refreshed();
       for( ITypeLoaderListener listener : getListeners())
       {
         listener.refreshed();
@@ -672,7 +660,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     //!!
     //!! Ensure we use the execution environment in conext -- we handle multiple exec environments now
     //!!
-    IModule jreModule = ExecutionEnvironment.instance().getJreModule();
+    IModule jreModule = ExecutionEnvironment.instance().getGlobalModule();
     return (DefaultTypeLoader) jreModule.getModuleTypeLoader().getDefaultTypeLoader();
   }
 
@@ -732,7 +720,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     // a JavaType for it. This won't happen in the editor (Eclipse), because a proxy class only exists at runtime;
     // therefore, using the DefaultTypeLoader here should be fine.
     if (Proxy.isProxyClass(javaClass)) {
-      return JavaType.get(javaClass, (DefaultTypeLoader) TypeSystem.getJreModule().getModuleTypeLoader().getDefaultTypeLoader());
+      return JavaType.get(javaClass, (DefaultTypeLoader) TypeSystem.getGlobalModule().getModuleTypeLoader().getDefaultTypeLoader());
     }
 
     return type;
@@ -928,7 +916,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   @Override
   public void refreshed(IResource file, String typeName, RefreshKind refreshKind) {
-    IModule module = ExecutionEnvironment.instance().getModule(file);
+    IModule module = ExecutionEnvironment.instance().getGlobalModule();
     // The module will be null for files that are not part of any source root
     if (module != null) {
       ((ITypeLoaderStackInternal) module.getModuleTypeLoader()).refresh(file, typeName, refreshKind);

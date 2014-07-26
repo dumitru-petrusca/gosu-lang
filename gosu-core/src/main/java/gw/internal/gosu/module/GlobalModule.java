@@ -88,25 +88,7 @@ public class GlobalModule extends Module implements IGlobalModule
   }
 
   private IDirectory[] getAllSourcePaths() {
-    List<IDirectory> srcs = new ArrayList<IDirectory>();
-    for (IModule m : getModuleTraversalList()) {
-      srcs.addAll(m.getSourcePath());
-    }
-    return srcs.toArray(new IDirectory[srcs.size()]);
-  }
-
-  /**
-   * In global module, all dependencies should be traversed, even non-exported.
-   */
-  @Override
-  protected void traverse(final IModule theModule, List<IModule> traversalList) {
-    traversalList.add(theModule);
-    for (Dependency dependency : theModule.getDependencies()) {
-      IModule dependencyModule = dependency.getModule();
-      if (!traversalList.contains(dependencyModule)) {
-        traverse(dependencyModule, traversalList);
-      }
-    }
+    return getSourcePath().toArray(new IDirectory[0]);
   }
 
   protected static ITypeLoader createTypeLoader(

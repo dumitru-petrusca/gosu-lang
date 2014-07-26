@@ -58,7 +58,7 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   private Map<String, ITypeLoader> _loadersByPrefix;
 
   // Type system caches
-  private WeakFqnCache<IType> _typesByName;
+  private Map<String, IType> _typesByName;
   private Map<String, IType> _namespaceTypesByName; // A case-Sensitive map of names to namespace types
 
   private ITypeRefFactory _typeRefFactory;
@@ -84,7 +84,7 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   private void initMaps() {
     _globalStack = new ArrayList<ITypeLoader>();
     _loadersByPrefix = new HashMap<String, ITypeLoader>();
-    _typesByName = new WeakFqnCache<IType>();
+    _typesByName = new HashMap<>();
     _namespaceTypesByName = new HashMap<String, IType>();
   }
 
@@ -170,18 +170,14 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
   }
 
   private void removeMissesAndErrorsFromMainCache() {
-    _typesByName.visitNodeDepthFirst(new Predicate<FqnCacheNode>() {
-      public boolean evaluate(FqnCacheNode node) {
-        WeakReference<IType> ref = (WeakReference<IType>) node.getUserData();
-        if (ref != null) {
-          IType type = ref.get();
-          if (type == CACHE_MISS || type instanceof ErrorType) {
-            node.delete();
-          }
-        }
-        return true;
+    Iterator<Map.Entry<String, IType>> it = _typesByName.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<String, IType> entry = it.next();
+      IType type = entry.getValue();
+      if (type == CACHE_MISS || type instanceof ErrorType) {
+        it.remove();
       }
-    });
+    }
   }
 
   private void removeMissesAndErrors( Collection<IType> types ) {
@@ -621,7 +617,7 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
       {
         return oldType;
       }
-      _typesByName.add( name, type );
+      _typesByName.put( name, type );
     }
     return pair != null ? pair.getFirst() : null;
   }

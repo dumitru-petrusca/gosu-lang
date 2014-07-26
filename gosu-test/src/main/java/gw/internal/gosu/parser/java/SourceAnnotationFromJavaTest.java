@@ -22,16 +22,16 @@ import java.lang.reflect.Method;
  */
 public class SourceAnnotationFromJavaTest extends TestClass
 {
-  public void testEntryPoint() throws Exception {
-    ExecutionEnvironment execEnv = (ExecutionEnvironment)TypeSystem.getExecutionEnvironment();
-    execEnv.uninitializeMultipleModules();
-    TypeSystemSetup typeSystemSetup = new TypeSystemSetup( execEnv );
-    typeSystemSetup.initializeGosu();
-    IModule mod = execEnv.getModule( "myModule" );
-    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( SampleClassWithAnnotations.class.getName());
-
-    _testMe( javaClassInfo );
-  }
+//  public void testEntryPoint() throws Exception {
+//    ExecutionEnvironment execEnv = (ExecutionEnvironment)TypeSystem.getExecutionEnvironment();
+//    execEnv.uninitializeMultipleModules();
+//    TypeSystemSetup typeSystemSetup = new TypeSystemSetup( execEnv );
+//    typeSystemSetup.initializeGosu();
+//    IModule mod = execEnv.getModule( "myModule" );
+//    JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( SampleClassWithAnnotations.class.getName());
+//
+//    _testMe( javaClassInfo );
+//  }
 
   /**
    * This test checks that all the Java annotations in the accompanying SampleClassWithAnnotations class

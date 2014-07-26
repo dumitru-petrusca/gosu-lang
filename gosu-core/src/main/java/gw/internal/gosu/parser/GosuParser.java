@@ -13249,19 +13249,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
 
   public IGosuClassInternal parseClass( String strQualifiedClassName, ISourceFileHandle sourceFile, boolean bThrowOnWarnings, boolean bFullyCompile ) throws ParseResultsException
   {
-    GosuClassTypeLoader classLoader;
-    if (!ExecutionMode.isIDE()) {
-      classLoader = GosuClassTypeLoader.getDefaultClassLoader();
-    } else {
-      IFile file = sourceFile.getFile();
-      IModule module = TypeSystem.getExecutionEnvironment().getModule(file);
-      if (module == null) {
-        // these are files outside of the typesystem (i.e. not in any source root)
-        classLoader = GosuClassTypeLoader.getDefaultClassLoader();
-      } else {
-        classLoader = module.getModuleTypeLoader().getTypeLoader(GosuClassTypeLoader.class);
-      }
-    }
+    GosuClassTypeLoader classLoader = GosuClassTypeLoader.getDefaultClassLoader();
     IGosuClassInternal gsClass = (IGosuClassInternal)classLoader.makeNewClass(sourceFile, _symTable);
     gsClass.setEditorParser(this);
     gsClass.setCreateEditorParser(isEditorParser());

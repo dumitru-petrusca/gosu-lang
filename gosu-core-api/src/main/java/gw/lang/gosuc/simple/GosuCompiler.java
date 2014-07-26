@@ -7,6 +7,7 @@ import gw.fs.FileFactory;
 import gw.fs.IDirectory;
 import gw.fs.IFile;
 import gw.lang.gosuc.GosucModule;
+import gw.lang.gosuc.GosucUtil;
 import gw.lang.init.GosuInitialization;
 import gw.lang.parser.IParseIssue;
 import gw.lang.parser.exceptions.ParseResultsException;
@@ -25,6 +26,8 @@ import java.util.*;
 import static gw.lang.gosuc.simple.ICompilerDriver.*;
 
 public class GosuCompiler implements IGosuCompiler {
+  private String _outputPath;
+
   private final LocklessLazyVar<IType> doNotVerifyResourceType = new LocklessLazyVar<IType>() {
     protected IType init() {
       return TypeSystem.getByFullNameIfValid("gw.testharness.DoNotVerifyResource");
@@ -78,7 +81,7 @@ public class GosuCompiler implements IGosuCompiler {
   }
 
   private void createOutputFiles(IGosuClass gsClass) {
-    IDirectory moduleOutputDirectory = TypeSystem.getGlobalModule().getOutputPath();
+    IDirectory moduleOutputDirectory = GosucUtil.getDirectoryForPath(_outputPath);
     if (moduleOutputDirectory == null) {
       throw new RuntimeException("Can't make class file, no output path defined.");
     }
@@ -199,8 +202,9 @@ public class GosuCompiler implements IGosuCompiler {
     _gosuInitialization = GosuInitialization.instance(execEnv);
     GosucModule gosucModule = new GosucModule(
         IExecutionEnvironment.DEFAULT_SINGLE_MODULE_NAME, contentRoots, sourceFolders, classpath,
-        outputPath, Collections.<String>emptyList());
+        Collections.<String>emptyList());
     _gosuInitialization.initializeCompiler(gosucModule);
+    _outputPath = outputPath;
 
     return System.currentTimeMillis() - start;
   }

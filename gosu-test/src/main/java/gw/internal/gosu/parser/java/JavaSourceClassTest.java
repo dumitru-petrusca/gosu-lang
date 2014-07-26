@@ -65,7 +65,7 @@ In this example the name java.util.Date must denote a type, so we first use the 
 public class JavaSourceClassTest extends TestClass {
 
   public void testSimple() throws Exception {
-    IModule mod = TypeSystem.getExecutionEnvironment().getModule( "myModule" );
+//    IModule mod = TypeSystem.getExecutionEnvironment().getModule( "myModule" );
 
     //Public_TopLevel_Class
     JavaSourceType javaClassInfo = (JavaSourceType)TypeSystem.getJavaClassInfo( Public_TopLevel_Class.class.getName());

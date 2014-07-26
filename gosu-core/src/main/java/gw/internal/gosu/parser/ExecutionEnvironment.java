@@ -5,13 +5,9 @@
 package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
-import gw.config.ExecutionMode;
 import gw.fs.IDirectory;
-import gw.fs.IResource;
 import gw.internal.gosu.module.DefaultSingleModule;
 import gw.internal.gosu.module.GlobalModule;
-import gw.internal.gosu.module.JreModule;
-import gw.internal.gosu.module.Module;
 import gw.lang.cli.SystemExitIgnoredException;
 import gw.lang.gosuc.GosucModule;
 import gw.lang.gosuc.GosucUtil;
@@ -30,7 +26,6 @@ import gw.lang.reflect.gs.BytecodeOptions;
 import gw.lang.reflect.gs.GosuClassPathThing;
 import gw.lang.reflect.gs.GosuClassTypeLoader;
 import gw.lang.reflect.java.JavaTypes;
-import gw.lang.reflect.module.Dependency;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
 import gw.util.GosuExceptionUtil;
@@ -64,19 +59,12 @@ public class ExecutionEnvironment implements IExecutionEnvironment
           "javax.servlet.http.HttpServletRequest"
   );
 
-  private List<IModule> _modules;
   private IModule _defaultModule;
-  private IModule _jreModule;
-  private IModule _rootModule;
   private TypeSystemState _state = TypeSystemState.STOPPED;
 
   public static ExecutionEnvironment instance()
   {
     return THE_ONE;
-  }
-
-  public List<? extends IModule> getModules() {
-    return _modules;
   }
 
   public void initializeDefaultSingleModule( List<? extends GosuPathEntry> pathEntries ) {
@@ -93,9 +81,6 @@ public class ExecutionEnvironment implements IExecutionEnvironment
       singleModule.configurePaths(createDefaultClassPath(), allSources);
       singleModule.setRoots(allRoots);
       _defaultModule = singleModule;
-      _modules = new ArrayList<IModule>(Collections.singletonList(singleModule));
-
-//      pushModule(singleModule); // Push and leave pushed (in this thread)
       singleModule.initializeTypeLoaders();
       CommonServices.getEntityAccess().init();
 
@@ -115,57 +100,10 @@ public class ExecutionEnvironment implements IExecutionEnvironment
         m.setRoots(Collections.<IDirectory>emptyList());
         m.configurePaths(Collections.<IDirectory>emptyList(), Collections.<IDirectory>emptyList());
       }
-      _modules.clear();
-
-    } finally {
-      _state = TypeSystemState.STOPPED;
-    }
-  }
-
-  public void initializeMultipleModules(List<? extends IModule> modules) {
-    _state = TypeSystemState.STARTING;
-    try {
-      // noinspection unchecked
       _defaultModule = null;
-      _rootModule = null;
-      _modules = (List<IModule>) modules;
-
-      for (IModule module : modules) {
-        ((Module) module).initializeTypeLoaders();
-      }
-
-      CommonServices.getEntityAccess().init();
-
-      FrequentUsedJavaTypeCache.instance( this ).init();
-    } finally {
-      _state = TypeSystemState.STARTED;
-    }
-  }
-
-  public void uninitializeMultipleModules() {
-    _state = TypeSystemState.STOPPING;
-    try {
-      TypeSystem.shutdown( this);
-
-      for (IModule module : _modules) {
-        ((Module) module).getModuleTypeLoader().uninitializeTypeLoaders();
-      }
-
-      _jreModule = null;
-      _rootModule = null;
-
-      _modules.clear();
     } finally {
       _state = TypeSystemState.STOPPED;
     }
-  }
-
-  public void addModule(IModule module) {
-    checkForDuplicates(module.getName());
-    // noinspection unchecked
-    _modules.add(module);
-
-    ((Module) module).initializeTypeLoaders();
   }
 
   public void initializeCompiler(GosucModule gosucModule) {
@@ -174,11 +112,9 @@ public class ExecutionEnvironment implements IExecutionEnvironment
       DefaultPlatformHelper.DISABLE_COMPILE_TIME_ANNOTATION = true;
 
       DefaultSingleModule module = new DefaultSingleModule( this, gosucModule.getName() );
-      module.setNativeModule(gosucModule);
       module.setRoots(GosucUtil.toDirectories(gosucModule.getContentRoots()));
       module.configurePaths(GosucUtil.toDirectories(gosucModule.getClasspath()), GosucUtil.toDirectories(gosucModule.getAllSourceRoots()));
       _defaultModule = module;
-      _modules = new ArrayList<IModule>(Collections.singletonList(module));
 
       module.initializeTypeLoaders();
       CommonServices.getEntityAccess().init();
@@ -202,132 +138,22 @@ public class ExecutionEnvironment implements IExecutionEnvironment
         GosuClassPathThing.cleanup();
       }
 
-      _jreModule = null;
+      _defaultModule = null;
     } finally {
       _state = TypeSystemState.STOPPED;
     }
   }
 
-  void checkForDuplicates(String moduleName) {
-    for (IModule m : getModules()) {
-      if (m.getName().equals(moduleName)) {
-        throw new RuntimeException("Module " + moduleName + " allready exists.");
-      }
-    }
-  }
-
-  public void removeModule(IModule module) {
-    _modules.remove(module);
-  }
-
-  public IModule getModule(String strModuleName) {
-    for (IModule m : _modules) {
-      if (m.getName().equals(strModuleName)) {
-        return m;
-      }
-    }
-    if( !ExecutionMode.isIDE() && GLOBAL_MODULE_NAME.equals( strModuleName ) ) {
-      return getGlobalModule();
-    }
-    return null;
-  }
-
-  public IModule getModule( IResource file ) {
-    List<? extends IModule> modules = getModules();
-    if (modules.size() == 1) {
-      return modules.get(0); // single module
-    }
-
-    for ( IModule module : modules) {
-      if (module != _rootModule) {
-        if (isInModule(module, file)) {
-          return module;
-        }
-      }
-    }
-
-    if (isInModule(_rootModule, file)) {
-      return _rootModule;
-    }
-
-    return null;
-  }
-
-  private boolean isInModule(IModule module, IResource file) {
-    for (IDirectory src : module.getSourcePath()) {
-      if (file.equals(src) || file.isDescendantOf(src)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public IModule getModule( URL url ) {
-    return getModule( CommonServices.getFileSystem().getIFile( url ) );
-  }
-
-  @Override
-  public IModule createJreModule( )
-  {
-    _jreModule = new JreModule( this );
-    return _jreModule;
-  }
-
-  /**
-   * @return The module responsible for resolving JRE core classes e.g.,
-   *         java.lang.* etc. Note in default single module environment this is
-   *         the single module, otherwise this is the module create by calling createJreModule().
-   *         This method will never return null but it will throw an NPE if the JRE module is null.
-   */
-  public IModule getJreModule() {
-    if (_jreModule == null) {
-      if (!ExecutionMode.isIDE()) {
-        _jreModule = getGlobalModule();
-      } else {
-        throw new RuntimeException("The JRE module was not created. Please create it before trying to get it.");
-      }
-    }
-    return _jreModule;
-  }
-
   public IModule getGlobalModule() {
-    if (_rootModule == null) {
-      String moduleName = System.getProperty("GW_ROOT_MODULE");
-      if (moduleName != null) {
-        _rootModule = getModule(moduleName);
-        if (_rootModule == null) {
-          throw new RuntimeException("The specified root module '" + moduleName +"' does not exist.");
-        }
-      } else {
-        _rootModule = findRootModule();
-      }
-    }
-    return _rootModule;
-  }
-
-  public IModule findRootModule() {
-    List<IModule> moduleRoots = new ArrayList<IModule>(_modules);
-    for (IModule module : _modules) {
-      for (Dependency d : module.getDependencies()) {
-        moduleRoots.remove(d.getModule());
-      }
-    }
-    return moduleRoots.size() > 0 ? moduleRoots.get(0) : null;
+    return _defaultModule;
   }
 
   public TypeSystemState getState() {
     return _state;
   }
 
-  public void renameModule(IModule module, String newName) {
-    ((ExecutionEnvironment)module.getExecutionEnvironment()).checkForDuplicates(newName);
-    ((Module) module).setName(newName);
-  }
-
   public void shutdown() {
-    for (IModule module : _modules) {
-      module.getModuleTypeLoader().shutdown();
-    }
+    _defaultModule.getModuleTypeLoader().shutdown();
     THE_ONE = new ExecutionEnvironment();
   }
 

@@ -23,8 +23,6 @@ public interface IModule
 
   IExecutionEnvironment getExecutionEnvironment();
 
-  IDirectory getOutputPath();
-
   /**
    * @return A unique name relative to all other modules in a given execution 
    *   environment.
@@ -36,18 +34,6 @@ public interface IModule
   List<IDirectory> getRoots();
 
   void setRoots(List<IDirectory> roots);
-
-  /**
-   * @return A list of dependencies for this module. The list may contain both 
-   *   libraries and other modules. The dependency graph must not have cycles. 
-   */
-  List<Dependency> getDependencies();
-
-  void setDependencies(List<Dependency> newDeps);
-
-  void addDependency( Dependency dependency );
-
-  void removeDependency( Dependency d );
 
   ITypeLoaderStack getModuleTypeLoader();
 
@@ -75,15 +61,6 @@ public interface IModule
    * @param classpath
    */
   void configurePaths(List<IDirectory> classpath, List<IDirectory> sourcePaths);
-
-  /**
-   * @return The module/project from the execution environment that corresponds
-   *   with this logical module. For example, in Eclipse the native module is of 
-   *   type IJavaProject.
-   */
-  Object getNativeModule();
-
-  void setNativeModule( INativeModule nativeModule );
 
   /**
    * Returns typeloaders of the given class that are local to this module as well as such

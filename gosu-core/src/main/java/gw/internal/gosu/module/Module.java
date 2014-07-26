@@ -24,7 +24,6 @@ import gw.lang.reflect.gs.IGosuClassRepository;
 import gw.lang.reflect.module.Dependency;
 import gw.lang.reflect.module.IExecutionEnvironment;
 import gw.lang.reflect.module.IModule;
-import gw.lang.reflect.module.INativeModule;
 import gw.util.Extensions;
 import gw.util.GosuExceptionUtil;
 import gw.util.concurrent.LocklessLazyVar;
@@ -46,20 +45,12 @@ public class Module implements IModule
   private final IExecutionEnvironment _execEnv;
   private String _strName;
 
-  private List<Dependency> _dependencies = new ArrayList<Dependency>();
-  private LocklessLazyVar<IModule[]> _traversalList = new LocklessLazyVar<IModule[]>() {
-    @Override
-    protected IModule[] init() {
-      return buildTraversalList();
-    }
-  };
   private ModuleTypeLoader _modTypeLoader;
 
   // Paths
   private List<IDirectory> _roots = new ArrayList<IDirectory>();
   protected List<IDirectory> _classpath = new ArrayList<IDirectory>();
 
-  private INativeModule _nativeModule;
   private ClassLoader _moduleClassLoader;
   private ClassLoader _extensionsClassLoader;
 
@@ -82,12 +73,6 @@ public class Module implements IModule
   }
 
   @Override
-  public void setDependencies(List<Dependency> newDeps) {
-    _dependencies = new ArrayList<Dependency>(newDeps);
-    _traversalList.clear();
-  }
-
-  @Override
   public List<IDirectory> getRoots() {
     return _roots;
   }
@@ -95,25 +80,6 @@ public class Module implements IModule
   @Override
   public void setRoots(List<IDirectory> roots) {
     _roots = new ArrayList<IDirectory>(roots);
-  }
-
-  @Override
-  public List<Dependency> getDependencies()
-  {
-    return _dependencies;
-  }
-
-  @Override
-  public void addDependency( Dependency d )
-  {
-    _dependencies.add(d);
-    _traversalList.clear();
-  }
-
-  public void removeDependency( Dependency d )
-  {
-    _dependencies.remove(d);
-    _traversalList.clear();
   }
 
   @Override
@@ -168,12 +134,6 @@ public class Module implements IModule
     }
   }
 
-  @Override
-  public IDirectory getOutputPath()
-  {
-    return _nativeModule.getOutputPath();
-  }
-
   public ModuleTypeLoader getModuleTypeLoader()
   {
     return _modTypeLoader;
@@ -214,18 +174,6 @@ public class Module implements IModule
     return _strName;
   }
 
-  @Override
-  public Object getNativeModule()
-  {
-    return _nativeModule != null ? _nativeModule.getNativeModule() : null;
-  }
-
-  @Override
-  public void setNativeModule( INativeModule nativeModule )
-  {
-    _nativeModule = nativeModule;
-  }
-
   public void initializeTypeLoaders() {
     maybeCreateModuleTypeLoader();
     createStandardTypeLoaders();
@@ -259,10 +207,8 @@ public class Module implements IModule
 
   private Set<String> getExtensionTypeloaderNames() {
     Set<String> set = new HashSet<String>();
-    for (IModule m : getModuleTraversalList()) {
-      for (IDirectory dir : m.getJavaClassPath()) {
-        Extensions.getExtensions(set, dir, "Gosu-Typeloaders");
-      }
+    for (IDirectory dir : getJavaClassPath()) {
+      Extensions.getExtensions(set, dir, "Gosu-Typeloaders");
     }
     return set;
   }
@@ -280,40 +226,6 @@ public class Module implements IModule
     if (getModuleTypeLoader() == null) {
       ModuleTypeLoader tla = new ModuleTypeLoader( this, new DefaultTypeLoader(this) );
       setModuleTypeLoader(tla);
-    }
-  }
-
-  public final IModule[] getModuleTraversalList() {
-    return _traversalList.get();
-  }
-
-  private IModule[] buildTraversalList() {
-    // create default traversal list
-    List<IModule> traversalList = new ArrayList<IModule>();
-    traverse(this, traversalList);
-    // make sure that the jre module is last
-    IModule jreModule = getExecutionEnvironment().getJreModule();
-    if (traversalList.remove(jreModule)) {
-      traversalList.add(jreModule);
-    }
-    IModule globalModule = getExecutionEnvironment().getGlobalModule();
-    if (this != globalModule) {
-      traversalList.add(0, globalModule);
-    }
-    return traversalList.toArray(new IModule[traversalList.size()]);
-  }
-
-
-  protected void traverse(final IModule theModule, List<IModule> traversalList) {
-    traversalList.add(theModule);
-    for (Dependency dependency : theModule.getDependencies()) {
-      IModule dependencyModule = dependency.getModule();
-
-      // traverse all direct dependency and indirect exported dependencies
-      if (!traversalList.contains(dependencyModule) &&
-              (dependency.isExported() || theModule == this)) {
-        traverse(dependencyModule, traversalList);
-      }
     }
   }
 
@@ -405,13 +317,11 @@ public class Module implements IModule
 
   private URL[] getExtensionURLs() {
     List<URL> urls = new ArrayList<URL>();
-    for (IModule m : getModuleTraversalList()) {
-      for (IDirectory path : m.getJavaClassPath()) {
-        try {
-          urls.add(path.toURI().toURL());
-        } catch (MalformedURLException e) {
-          //ignore
-        }
+    for (IDirectory path : getJavaClassPath()) {
+      try {
+        urls.add(path.toURI().toURL());
+      } catch (MalformedURLException e) {
+        //ignore
       }
     }
     return urls.toArray(new URL[urls.size()]);

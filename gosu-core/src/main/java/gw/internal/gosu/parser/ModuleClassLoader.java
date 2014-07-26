@@ -74,9 +74,7 @@ public class ModuleClassLoader extends URLClassLoader implements IModuleClassLoa
     }
 
     // JRE module delegates to plugin classloader, all other modules delegate to JRE module first.
-    ClassLoader parent = (module == environment.getJreModule()) ?
-            CommonServices.getEntityAccess().getPluginClassLoader() :
-            null; //environment.getJreModule().getModuleClassLoader();
+    ClassLoader parent = CommonServices.getEntityAccess().getPluginClassLoader();
 
     return new ModuleClassLoader(urls.toArray(new URL[urls.size()]), parent);
   }

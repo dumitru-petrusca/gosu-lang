@@ -108,7 +108,7 @@ public abstract class AbstractPlatformHelper extends BaseService implements IPla
     // for the file existence check if we don't have to, and hasChild() will usually work off the cached sub-files
     // of a given directory
     if (file != null && file.getParent().hasChildFile(file.getName()) && isConfigFile(file)) {
-      final IModule module = TypeSystem.getExecutionEnvironment().getModule(file);
+      final IModule module = TypeSystem.getExecutionEnvironment().getGlobalModule();
       if (module != null) {
         for (IDirectory dir : module.getSourcePath()) {
           if ("config".equals(dir.getName()) && file.isDescendantOf(dir)) {

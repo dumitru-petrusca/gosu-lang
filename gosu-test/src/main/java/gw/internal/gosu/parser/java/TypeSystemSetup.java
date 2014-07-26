@@ -41,51 +41,51 @@ public class TypeSystemSetup
     _execEnv = execEnv;
   }
 
-  public void initializeGosu() {
-    // make sure IJavaType is initialized, because if another thread tries
-    // to initialize it without the typesystem lock, we'll deadlock
-    Class c = IJavaType.class;
-    c = IGosuParser.class;
-
-    List<IDirectory> javaClassPath = _execEnv.getGlobalModule().getJavaClassPath();
-    GosuInitialization.instance( _execEnv ).uninitializeRuntime();
-    CommonServices.getFileSystem().setCachingMode( IFileSystem.CachingMode.FUZZY_TIMESTAMPS );
-    FileFactory.instance().setDefaultPhysicalFileSystem( FileFactory.instance().getRootPhysicalFileSystem() );
-    List<IModule> modules = defineModules( javaClassPath );
-
-    CommonServices.getKernel().redefineService_Privileged( IPlatformHelper.class, new TestPlatformHelper() );
-
-    GosuInitialization.instance( _execEnv ).initializeMultipleModules( modules );
-  }
-
-  private List<IModule> defineModules( List<IDirectory> javaClassPath ) {
-    _execEnv.createJreModule( );
-    IModule jreModule = _execEnv.getJreModule();
-    jreModule.configurePaths(javaClassPath, Collections.<IDirectory>emptyList());
-
-    _globalModule = GosuShop.createGlobalModule(_execEnv);
-    _globalModule.configurePaths(Collections.<IDirectory>emptyList(), Collections.<IDirectory>emptyList());
-    _globalModule.addDependency(new Dependency(jreModule, false));
-
-    List<IModule> allModules = new ArrayList<IModule>();
-    IModule module = defineModule();
-    if( module != null ) {
-      allModules.add( module );
-    }
-
-    addImplicitJreModuleDependency(allModules);
-    allModules.add(_globalModule);
-    return allModules;
-  }
-
-  private void addImplicitJreModuleDependency( List<IModule> modules ) {
-    IJreModule jreModule = (IJreModule)_execEnv.getJreModule();
-    for( IModule module : modules ) {
-      module.addDependency( new Dependency( jreModule, false ) );
-    }
-    modules.add( jreModule );
-  }
-
+//  public void initializeGosu() {
+//    // make sure IJavaType is initialized, because if another thread tries
+//    // to initialize it without the typesystem lock, we'll deadlock
+//    Class c = IJavaType.class;
+//    c = IGosuParser.class;
+//
+//    List<IDirectory> javaClassPath = _execEnv.getGlobalModule().getJavaClassPath();
+//    GosuInitialization.instance( _execEnv ).uninitializeRuntime();
+//    CommonServices.getFileSystem().setCachingMode( IFileSystem.CachingMode.FUZZY_TIMESTAMPS );
+//    FileFactory.instance().setDefaultPhysicalFileSystem( FileFactory.instance().getRootPhysicalFileSystem() );
+//    List<IModule> modules = defineModules( javaClassPath );
+//
+//    CommonServices.getKernel().redefineService_Privileged( IPlatformHelper.class, new TestPlatformHelper() );
+//
+//    GosuInitialization.instance( _execEnv ).initializeMultipleModules( modules );
+//  }
+//
+//  private List<IModule> defineModules( List<IDirectory> javaClassPath ) {
+//    _execEnv.createJreModule( );
+//    IModule jreModule = _execEnv.getJreModule();
+//    jreModule.configurePaths(javaClassPath, Collections.<IDirectory>emptyList());
+//
+//    _globalModule = GosuShop.createGlobalModule(_execEnv);
+//    _globalModule.configurePaths(Collections.<IDirectory>emptyList(), Collections.<IDirectory>emptyList());
+//    _globalModule.addDependency(new Dependency(jreModule, false));
+//
+//    List<IModule> allModules = new ArrayList<IModule>();
+//    IModule module = defineModule();
+//    if( module != null ) {
+//      allModules.add( module );
+//    }
+//
+//    addImplicitJreModuleDependency(allModules);
+//    allModules.add(_globalModule);
+//    return allModules;
+//  }
+//
+//  private void addImplicitJreModuleDependency( List<IModule> modules ) {
+//    IJreModule jreModule = (IJreModule)_execEnv.getJreModule();
+//    for( IModule module : modules ) {
+//      module.addDependency( new Dependency( jreModule, false ) );
+//    }
+//    modules.add( jreModule );
+//  }
+//
   public IModule defineModule() {
     IModule gosuModule = GosuShop.createModule( _execEnv, "myModule" );
 
@@ -119,7 +119,7 @@ public class TypeSystemSetup
 //    gosuModule.setOutputPath(CommonServices.getFileSystem().getIDirectory(outputPath));
 
 //    gosuModule.setNativeModule(new IJNativeModule(ijModule));
-    _globalModule.addDependency(new Dependency(gosuModule, false));
+//    _globalModule.addDependency(new Dependency(gosuModule, false));
     return gosuModule;
   }
 }
