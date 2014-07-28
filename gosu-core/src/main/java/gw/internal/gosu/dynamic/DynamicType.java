@@ -4,11 +4,9 @@
 
 package gw.internal.gosu.dynamic;
 
-import gw.lang.reflect.IPlaceholder;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeInfo;
 import gw.lang.reflect.ITypeLoader;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.TypeBase;
 import gw.lang.reflect.TypeSystem;
 import gw.util.concurrent.LockingLazyVar;
@@ -23,7 +21,7 @@ public class DynamicType extends TypeBase implements IDynamicType
 
   private DynamicTypeLoader _typeLoader;
   private LockingLazyVar<DynamicTypeInfo> _typeInfo;
-  private ITypeRef _typeRef;
+  private IType _typeRef;
 
 
   public DynamicType( DynamicTypeLoader typeLoader )
@@ -104,7 +102,7 @@ public class DynamicType extends TypeBase implements IDynamicType
     return !type.isPrimitive();
   }
 
-  ITypeRef getOrCreateTypeReference()
+  IType getOrCreateTypeReference()
   {
     if( _typeRef == null )
     {

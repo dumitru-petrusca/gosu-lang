@@ -106,7 +106,7 @@ public interface ITypeSystem extends IService
 
   IType getByFullNameIfValidNoJava( String fullyQualifiedName );
 
-  void refresh(ITypeRef typeRef);
+  void refresh(IType typeRef);
 
   void refresh( boolean bRefreshCaches );
   void refresh(IModule module);
@@ -215,9 +215,9 @@ public interface ITypeSystem extends IService
 
   IExecutionEnvironment getExecutionEnvironment();
 
-  ITypeRef getOrCreateTypeReference( IType type );
+  IType getOrCreateTypeReference( IType type );
 
-  ITypeRef getTypeReference( IType type );
+  IType getTypeReference( IType type );
 
   IType getTypeFromObject( Object obj );
 

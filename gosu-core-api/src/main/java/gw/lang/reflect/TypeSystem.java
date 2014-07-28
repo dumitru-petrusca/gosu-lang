@@ -42,7 +42,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @UnstableAPI
 public class TypeSystem
 {
-  private static final Lock GLOBAL_LOCK = new ReentrantLock();
+  //private static final Lock GLOBAL_LOCK = new ReentrantLock();
   public static InvocationCounter tyeRequestCounter = new InvocationCounter(false);
   public static InvocationCounter tyeLoadingCounter = new InvocationCounter(false);
 
@@ -194,23 +194,23 @@ public class TypeSystem
   /**
    * Acquires the global type-system lock
    */
-  public static void lock()
+  public final static void lock()
   {
-    GLOBAL_LOCK.lock();
+    //GLOBAL_LOCK.lock();
   }
 
   /**
    * Releases the global type-system lock
    */
-  public static void unlock()
+  public final static void unlock()
   {
-    GLOBAL_LOCK.unlock();
+    //GLOBAL_LOCK.unlock();
   }
 
-  public static Lock getGlobalLock()
-  {
-    return GLOBAL_LOCK;
-  }
+//  public static Lock getGlobalLock()
+//  {
+//    return GLOBAL_LOCK;
+//  }
 
   public static IType getComponentType( IType valueType )
   {
@@ -576,7 +576,7 @@ public class TypeSystem
    * @param type A raw or proxied type.
    * @return If the type is already a reference, returns the type as-is, otherwise creates and returns a new type ref.
    */
-  public static ITypeRef getOrCreateTypeReference( IType type )
+  public static IType getOrCreateTypeReference( IType type )
   {
     return CommonServices.getTypeSystem().getOrCreateTypeReference(type);
   }
@@ -594,7 +594,7 @@ public class TypeSystem
    * @param type A raw or proxied type.
    * @return returns the already created type reference or throws if the ref does not exist
    */
-  public static ITypeRef getTypeReference( IType type )
+  public static IType getTypeReference( IType type )
   {
     return CommonServices.getTypeSystem().getTypeReference(type);
   }
@@ -730,7 +730,7 @@ public class TypeSystem
   /**
    * Refresh just the specified type i.e., a gosu editor calls this on changes
    */
-  public static void refresh(ITypeRef typeRef)
+  public static void refresh(IType typeRef)
   {
     CommonServices.getTypeSystem().refresh(typeRef);
   }
@@ -769,13 +769,7 @@ public class TypeSystem
   }
 
   public static boolean isDeleted(IType type) {
-    if (type instanceof IErrorType) {
-      // must return false, an error type does not mean deleted
-      return false;
-    }
-
-    // a type that's not proxied is never deleted
-    return type instanceof ITypeRef && ((ITypeRef)type).isDeleted();
+    return false;
   }
 
   public static IType replaceTypeVariableTypeParametersWithBoundingTypes( IType type, IType enclosingType ) {

@@ -21,6 +21,7 @@ import gw.util.concurrent.LocklessLazyVar;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.*;
 
 import static gw.lang.gosuc.simple.ICompilerDriver.*;

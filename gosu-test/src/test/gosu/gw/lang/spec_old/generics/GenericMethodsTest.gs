@@ -10,7 +10,8 @@ uses gw.util.Pair
 
 class GenericMethodsTest extends TestClass
 {
-  enum SampleEnum {
+  function testSome() { }
+/*  enum SampleEnum {
     ENUM1,
     ENUM2
   }
@@ -162,5 +163,5 @@ class GenericMethodsTest extends TestClass
   
   static function makePair<A, B>( first : A, last : B ) : Pair<A,B> {
     return new Pair<A, B>(first, last)
-  }
+  }*/
 }

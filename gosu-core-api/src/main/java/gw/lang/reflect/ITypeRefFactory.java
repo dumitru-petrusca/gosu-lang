@@ -11,16 +11,11 @@ public interface ITypeRefFactory
   public static final String SYSTEM_PROXY_SUFFIX = "_Proxy";
   public static final String USER_PROXY_SUFFIX = "_TypeProxy";
 
-  ITypeRef create( IType type );
-  ITypeRef get( IType type );
-  ITypeRef get( String strTypeName );
+  IType create( IType type );
+  IType get( IType type );
+  IType get( String strTypeName );
 
   void clearCaches();
 
   boolean isClearing();
-
-  List<String> getTypesWithPrefix(String namespace, String prefix);
-
-  List<ITypeRef> getSubordinateRefs(String topLevelTypeName);
-
 }

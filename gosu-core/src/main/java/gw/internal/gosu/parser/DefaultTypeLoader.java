@@ -202,9 +202,6 @@ public class DefaultTypeLoader extends SimpleTypeLoader implements IExtendedType
     }
 
     if (object instanceof IGosuObject) {
-      if (object instanceof AbstractTypeRef) {
-        object = ((AbstractTypeRef) object)._getType();
-      }
       return ((IGosuObject) object).getIntrinsicType();
     }
 

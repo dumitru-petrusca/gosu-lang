@@ -48,7 +48,8 @@ import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IParameterInfo;
 import gw.lang.reflect.IRelativeTypeInfo;
 import gw.lang.reflect.IType;
-import gw.lang.reflect.ITypeRef;
+import gw.lang.reflect.IType;
+import gw.lang.reflect.IType;
 import gw.lang.reflect.Modifier;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.ClassType;
@@ -121,7 +122,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
   transient private boolean _bInitializing;
   transient private List<IGosuClass> _blocks;
   transient private LockingLazyVar<Boolean> _valid;
-  transient private ITypeRef _typeRef;
+  transient private IType _typeRef;
   transient private List<ITypeVariableDefinition> _typeVarDefs;
   transient private GenericTypeVariable[] _genTypeVar;
   transient private GosuParser _parser;
@@ -1065,7 +1066,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
     return ProxyUtil.isProxy( this );
   }
 
-  protected ITypeRef getOrCreateTypeReference()
+  protected IType getOrCreateTypeReference()
   {
     if( _typeRef == null )
     {
@@ -1073,7 +1074,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
     }
     return _typeRef;
   }
-  protected ITypeRef getOrCreateTypeReference( IType type )
+  protected IType getOrCreateTypeReference( IType type )
   {
     return TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().create( type );
   }
@@ -1468,7 +1469,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
 
       if( getEnclosingType() != null )
       {
-        //## todo: does this handle the case where an inner gosu class is embedded in a synthetic type (is that possible?)
+      //## todfalse o: does this handle the case wheren inner gosu classs embedded in a synthetic type (is that possible?)
         getEnclosingType().compileDefinitionsIfNeeded( bForce );
         return;
       }
@@ -1549,7 +1550,7 @@ public class GosuClass extends AbstractType implements IGosuClassInternal
   }
 
   private boolean isTypeRefreshedOutsideOfLock() {
-    return getOrCreateTypeReference().isTypeRefreshedOutsideOfLock( this );
+    return false;//getOrCreateTypeReference().isTypeRefreshedOutsideOfLock( this );
   }
 
   private void postAnalyze()

@@ -15,7 +15,6 @@ import gw.lang.parser.expressions.ITypeVariableDefinition;
 import gw.lang.reflect.RefreshKind;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.IFunctionType;
-import gw.lang.reflect.ITypeRef;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -159,10 +158,10 @@ public final class EvalExpression extends Expression implements IEvalExpression
             return true;
           }
 
-          ITypeRef type = (ITypeRef)program;
-          // Directly invalidate so as not to wreak havoc on type system at runtime.
-          // Also avoids huge perf penalty.
-          type._setStale(RefreshKind.MODIFICATION);
+//          ITypeRef type = (ITypeRef)program;
+//          // Directly invalidate so as not to wreak havoc on type system at runtime.
+//          // Also avoids huge perf penalty.
+//          type._setStale(RefreshKind.MODIFICATION);
 
           //!!! NEVER! refresh types at runtime EVER!
           //IModule module = type.getTypeLoader().getModule();

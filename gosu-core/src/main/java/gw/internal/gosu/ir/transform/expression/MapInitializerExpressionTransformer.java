@@ -64,21 +64,21 @@ public class MapInitializerExpressionTransformer extends AbstractElementTransfor
   private Class getMapType()
   {
     Class mapType = Map.class;
-    IParsedElement parent = getParsedElement().getParent();
-    if( parent instanceof NewExpression )
-    {
-      IType newType = ((NewExpression)parent).getType();
-      IJavaClassInfo classInfo = IRTypeResolver.getJavaBackedClass(newType);
-      Class javaBackedClass = classInfo != null ? classInfo.getBackingClass() : null;
-      if( classInfo != null && javaBackedClass != null )
-      {
-        mapType = javaBackedClass;
-      }
-      else if( JavaTypes.getJreType(AbstractMap.class).isAssignableFrom( newType ) )
-      {
-        mapType = AbstractMap.class;
-      }
-    }
+//    IParsedElement parent = getParsedElement().getParent();
+//    if( parent instanceof NewExpression )
+//    {
+//      IType newType = ((NewExpression)parent).getType();
+//      IJavaClassInfo classInfo = IRTypeResolver.getJavaBackedClass(newType);
+//      Class javaBackedClass = classInfo != null ? classInfo.getBackingClass() : null;
+//      if( classInfo != null && javaBackedClass != null )
+//      {
+//        mapType = javaBackedClass;
+//      }
+//      else if( JavaTypes.getJreType(AbstractMap.class).isAssignableFrom( newType ) )
+//      {
+//        mapType = AbstractMap.class;
+//      }
+//    }
     return mapType;
   }
 }

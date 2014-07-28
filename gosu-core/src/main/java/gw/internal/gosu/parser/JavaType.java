@@ -12,7 +12,7 @@ import gw.lang.reflect.AbstractType;
 import gw.lang.reflect.IErrorType;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeInfo;
-import gw.lang.reflect.ITypeRef;
+import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.ClassType;
 import gw.lang.reflect.gs.IGosuClass;
@@ -107,13 +107,13 @@ class JavaType extends AbstractType implements IJavaTypeInternal
   {
     IJavaType type = TYPES_BY_CLASS.get( cls );
 
-    if( type == null || ((ITypeRef)type)._shouldReload() )
+    if( type == null /*|| ((IType)type)._shouldReload()*/ )
     {
       TypeSystem.lock();
       try
       {
         type = TYPES_BY_CLASS.get( cls );
-        if( type == null || ((ITypeRef)type)._shouldReload() )
+        if( type == null /*|| ((IType)type)._shouldReload()*/ )
         {
           type = define( cls, loader );
         }
@@ -974,7 +974,7 @@ class JavaType extends AbstractType implements IJavaTypeInternal
   private IJavaTypeInternal thisRef()
   {
     if (_typeRef == null) {
-      ITypeRef ref = TypeSystem.getOrCreateTypeReference(this);
+      IType ref = TypeSystem.getOrCreateTypeReference(this);
       try {
         _typeRef = (IJavaTypeInternal) ref;
       } catch(ClassCastException e) {

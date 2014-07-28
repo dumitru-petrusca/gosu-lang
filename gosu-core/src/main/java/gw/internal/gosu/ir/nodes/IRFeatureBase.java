@@ -160,8 +160,8 @@ public class IRFeatureBase {
 
   public static boolean isExternalEntityJavaType( IFeatureInfo fi )
   {
-    return fi.getOwnersType() instanceof IJavaType &&
+    return false; /*fi.getOwnersType() instanceof IJavaType &&
            ((IJavaType)fi.getOwnersType()).getBackingClass() != null &&
-           CommonServices.getEntityAccess().isExternal( ((IJavaType)fi.getOwnersType()).getBackingClass() );
+           CommonServices.getEntityAccess().isExternal( ((IJavaType)fi.getOwnersType()).getBackingClass() );*/
   }
 }

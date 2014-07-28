@@ -12,14 +12,14 @@ public abstract class LockingLazyVar<T>
 {
   protected final static Object NULL = new Object();
   private volatile T _val = null;
-  private final Lock _lock;
+  //private final Lock _lock;
 
   /**
    * Constructs a LockingLazyVar that will use itself as the object of synchronization.
    */
   public LockingLazyVar()
   {
-    _lock = TypeSystem.getGlobalLock();
+    //_lock = TypeSystem.getGlobalLock();
   }
 
   /**
@@ -27,7 +27,7 @@ public abstract class LockingLazyVar<T>
    */
   protected LockingLazyVar(Lock lock)
   {
-    _lock = lock;
+    //_lock = lock;
   }
 
   /**
@@ -41,9 +41,9 @@ public abstract class LockingLazyVar<T>
     }
     if( result == null )
     {
-      _lock.lock();
-      try{
-
+//      _lock.lock();
+//      try{
+//
         result = _val;
         if(result == NULL) {
           return null;
@@ -60,9 +60,9 @@ public abstract class LockingLazyVar<T>
             _val = result;
           }
         }
-      } finally {
-        _lock.unlock();
-      }
+//      } finally {
+//        _lock.unlock();
+//      }
     }
     return result;
   }
@@ -76,14 +76,14 @@ public abstract class LockingLazyVar<T>
   public final T clear()
   {
     T hold;
-    _lock.lock();
-    try
-    {
+//    _lock.lock();
+//    try
+//    {
       hold = _val;
       _val = null;
-    } finally {
-      _lock.unlock();
-    }
+//    } finally {
+//      _lock.unlock();
+//    }
     return hold;
   }
 
@@ -92,18 +92,18 @@ public abstract class LockingLazyVar<T>
     _val = null;
   }
 
-  protected void initDirectly( T val )
-  {
-    _lock.lock();
-    try
-    {
-      _val = val;
-    }
-    finally
-    {
-      _lock.unlock();
-    }
-  }
+//  protected void initDirectly( T val )
+//  {
+//    _lock.lock();
+//    try
+//    {
+//      _val = val;
+//    }
+//    finally
+//    {
+//      _lock.unlock();
+//    }
+//  }
 
   public boolean isLoaded() {
     return _val != null;

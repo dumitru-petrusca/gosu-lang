@@ -13,7 +13,6 @@ import gw.lang.reflect.IMethodInfo;
 import gw.lang.reflect.IParameterInfo;
 import gw.lang.reflect.IPropertyInfo;
 import gw.lang.reflect.IType;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.RefreshKind;
 import gw.lang.reflect.RefreshRequest;
 import gw.lang.reflect.TypeSystem;
@@ -340,7 +339,7 @@ public class EnhancementIndex implements IEnhancementIndex
       for (String enhancedType : enhancedTypes) {
         IType type = TypeSystem.getByFullNameIfValid(enhancedType);
         if (type != null) {
-          TypeSystem.refresh((ITypeRef)type);
+          TypeSystem.refresh(type);
         }
       }
     } else if (request.kind == RefreshKind.DELETION) {

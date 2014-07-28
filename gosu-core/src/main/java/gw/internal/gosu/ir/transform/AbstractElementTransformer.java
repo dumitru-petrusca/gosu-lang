@@ -480,17 +480,18 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
         (!type.isArray() || !TypeLord.getCoreType( type ).isParameterizedType()) &&
         Modifier.isPublic( TypeLord.getCoreType( type ).getModifiers() ) )
     {
-      Class backingClass = ((IJavaType)type).getBackingClass();
-      if( backingClass != null )
-      {
-        ClassLoader cl = backingClass.getClassLoader();
-        if( cl == null || cl == ClassLoader.getSystemClassLoader() )
-        {
+      IJavaClassInfo info = ((IJavaType) type).getBackingClassInfo();
+//      Class backingClass = ((IJavaType)type).getBackingClass();
+//      if( backingClass != null )
+//      {
+//        ClassLoader cl = backingClass.getClassLoader();
+//        if( cl == null || cl == ClassLoader.getSystemClassLoader() )
+//        {
           // Push the class constant (better performing than resolving by name)
           return callStaticMethod( TypeSystem.class, "get", new Class[] {Class.class},
-                                   exprList( pushConstant( backingClass ) ) );
-        }
-      }
+                                   exprList( pushConstant( info ) ) );
+//        }
+//      }
     }
 
     if (type.isArray())

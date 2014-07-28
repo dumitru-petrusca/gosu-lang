@@ -14,7 +14,6 @@ import gw.lang.reflect.IMetaType;
 import gw.lang.reflect.INamespaceType;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeLoader;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.ITypeRefFactory;
 import gw.lang.reflect.IUninitializableTypeLoader;
 import gw.lang.reflect.RefreshKind;
@@ -25,16 +24,11 @@ import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.IGosuClassRepository;
 import gw.lang.reflect.gs.IGosuObject;
 import gw.lang.reflect.gs.TypeName;
-import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.module.IClassPath;
 import gw.lang.reflect.module.IModule;
 import gw.util.GosuClassUtil;
 import gw.util.Pair;
-import gw.util.Predicate;
-import gw.util.cache.FqnCacheNode;
-import gw.util.cache.WeakFqnCache;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -418,12 +412,6 @@ public class ModuleTypeLoader implements ITypeLoaderStackInternal {
     if( foundType == null )
     {
       foundType = _typeRefFactory.get(fqnNoArrays);
-    }
-    if( foundType instanceof ITypeRef && ((ITypeRef)foundType)._shouldReload() )
-    {
-      // The proxied type is stale, force it to reload
-      clearFromCaches(  fqnNoArrays );
-      foundType = null;
     }
     if (TypeSystem.isDeleted(foundType)) {
       foundType = null;

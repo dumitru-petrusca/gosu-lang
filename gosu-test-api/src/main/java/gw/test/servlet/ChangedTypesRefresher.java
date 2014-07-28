@@ -12,7 +12,6 @@ import gw.fs.watcher.DirectoryWatcher;
 import gw.fs.watcher.DirectoryWatcher.FileEvent;
 import gw.lang.UnstableAPI;
 import gw.lang.reflect.IType;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.IGosuClass;
 
@@ -172,7 +171,7 @@ public class ChangedTypesRefresher {
     for (String typeName : types) {
       try {
         IType type = TypeSystem.getByFullName(typeName);
-        TypeSystem.refresh((ITypeRef) type);
+        TypeSystem.refresh(type);
       } catch (Exception e) {
         System.out.println("Error refreshing " + typeName);
         e.printStackTrace();

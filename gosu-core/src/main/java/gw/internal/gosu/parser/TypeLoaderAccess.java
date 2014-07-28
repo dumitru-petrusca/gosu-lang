@@ -27,7 +27,6 @@ import gw.lang.reflect.IPlaceholder;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeLoader;
 import gw.lang.reflect.ITypeLoaderListener;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.ITypeRefFactory;
 import gw.lang.reflect.ITypeSystem;
 import gw.lang.reflect.ITypeVariableType;
@@ -173,10 +172,10 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     return listeners;
   }
 
-  public ITypeRef getTypeReference(final IType type)
+  public IType getTypeReference(final IType type)
   {
     ITypeLoader typeLoader = type.getTypeLoader();
-    ITypeRef ref = TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().get(type);
+    IType ref = TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().get(type);
     if( ref == null )
     {
       throw new NoReferenceFoundException( type );
@@ -184,7 +183,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     return ref;
   }
 
-  public ITypeRef getOrCreateTypeReference(final IType type)
+  public IType getOrCreateTypeReference(final IType type)
   {
     ITypeLoader typeLoader = type.getTypeLoader();
     return TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory().create(type);
@@ -391,125 +390,126 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
   }
 
   public void refreshTypes(final RefreshRequest request) {
-    TypeRefFactory typeRefFactory = (TypeRefFactory) TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory();
-    TypeSystem.lock();
-    try {
-      ++_iSingleRefreshChecksum;
-
-      CommonServices.getMemoryMonitor().reclaimMemory(request);
-
-      // Step 1: Find all top-level types that need to be refreshed
-      Set<IType> typesToRefresh = new HashSet<IType>(10);
-      for (String typeName : request.types) {
-        IType type = typeRefFactory.get(typeName);
-
-        if (type != null) {
-          typesToRefresh.add(type);
-
-          if (!((AbstractTypeRef) type).isStale()) {
-            ITypeRef topLevelType = getTopLevelType(type);
-            if (topLevelType != null) {
-              typesToRefresh.add(topLevelType);
-            }
-            if (type instanceof IGosuEnhancement) {
-              // add the current enhanced type
-              IGosuEnhancement enhancement = (IGosuEnhancement) type;
-              IType enhancedType = enhancement.getEnhancedType();
-              if (enhancedType != null && !(enhancedType instanceof INonLoadableType) && !TypeSystem.isDeleted(enhancedType)) {
-                ITypeRef topLevelType1 = getTopLevelType(enhancedType);
-                if (topLevelType != null) {
-                  typesToRefresh.add(topLevelType1);
-                }
-              }
-            }
-            // add the old enhanced type
-            ITypeLoaderStack moduleTypeLoader = TypeSystem.getGlobalModule().getModuleTypeLoader();
-            GosuClassTypeLoader gosuClassTypeLoader = moduleTypeLoader.getTypeLoader(GosuClassTypeLoader.class);
-            String orphanedEnhancementName = gosuClassTypeLoader.getEnhancementIndex().getOrphanedEnhancement(type.getName());
-            if (orphanedEnhancementName != null) {
-              IType orphanedEnhancement = typeRefFactory.get(orphanedEnhancementName);
-              if (orphanedEnhancement instanceof AbstractTypeRef && !((AbstractTypeRef) orphanedEnhancement).isStale()) {
-                typesToRefresh.add(orphanedEnhancement);
-              }
-            }
-          }
-        }
-      }
-
-      // Step 2: Find all subordinate types that need to be refreshed
-      IdentitySet<ITypeRef> typesToMakeStaleSet = new IdentitySet<ITypeRef>(typesToRefresh.size() * 2);
-      for (IType type : typesToRefresh) {
-        typesToMakeStaleSet.add((ITypeRef) type);
-        addGosuProxyClass(typesToMakeStaleSet, type);
-        List<ITypeRef> subordinateRefs = typeRefFactory.getSubordinateRefs(type.getName());
-        for (ITypeRef typeRef : subordinateRefs) {
-          typesToMakeStaleSet.add(typeRef);
-          addGosuProxyClass(typesToMakeStaleSet, typeRef);
-        }
-      }
-
-      // Step 3: Some stuff
-      Iterator<ITypeRef> iterator = typesToMakeStaleSet.iterator();
-      while (iterator.hasNext()) {
-        IType typeToRefresh = iterator.next();
-        if (typeToRefresh instanceof IGosuClassInternal && !((AbstractTypeRef) typeToRefresh).isStale()) {
-          IGosuClassInternal gsClass = (IGosuClassInternal) typeToRefresh;
-          ((IGosuClassInternal) gsClass.dontEverCallThis()).unloadBackingClass();
-        }
-      }
-
-      // Step 4: Sort all the types
-      ITypeRef[] typesToMakeStaleArray = typesToMakeStaleSet.toArray(new ITypeRef[typesToMakeStaleSet.size()]);
-      Arrays.sort(typesToMakeStaleArray,
-          new Comparator<IType>() {
-            public int compare(IType t1, IType t2) {
-              return computeSortIndex((AbstractTypeRef) t2) - computeSortIndex((AbstractTypeRef) t1);
-            }
-
-            private int computeSortIndex(AbstractTypeRef ref) {
-              return ref != null ? ref._getIndexForSortingFast(ref._getTypeName()) : 10000;
-            }
-          }
-      );
-
-      Map<ITypeLoader, Set<String>> typeLoaderToTypeMap = new HashMap<ITypeLoader, Set<String>>();
-      typeLoaderToTypeMap.put(request.typeLoader, new HashSet<String>(Arrays.asList(request.types)));
-
-      for (ITypeRef type : typesToMakeStaleSet) {
-        ITypeLoader typeLoader = type.getTypeLoaderDirectly();
-        Set<String> typeRefs = typeLoaderToTypeMap.get(typeLoader);
-        if (typeRefs == null) {
-          typeRefs = new HashSet<String>(typesToMakeStaleSet.size());
-          typeLoaderToTypeMap.put(typeLoader, typeRefs);
-        }
-        typeRefs.add(((AbstractTypeRef)type)._getTypeName());
-      }
-
-      // Step 5: Make the references stale
-      for (IType type : typesToMakeStaleArray) {
-        if (type != null) {
-          ((ITypeRef) type)._setStale(request.kind);
-        }
-      }
-
-      // Step 6: Clear all caches
-      getGlobalModuleTypeLoader().clearFromCaches(request);
-      ((ModuleTypeLoader) TypeSystem.getGlobalModule().getModuleTypeLoader()).clearFromCaches(request);
-
-      // Step 7: notify the typeloader
-      for (ITypeLoader typeLoader : typeLoaderToTypeMap.keySet()) {
-        final Set<String> strings = typeLoaderToTypeMap.get(typeLoader);
-        RefreshRequest theRequest = new RefreshRequest(strings.toArray(new String[strings.size()]), request, typeLoader);
-        typeLoader.refreshedTypes(theRequest);
-      }
-
-      // Step 8: Call all listeners
-      for (ITypeLoaderListener listener : getListeners()) {
-        listener.refreshedTypes(request);
-      }
-    } finally {
-      TypeSystem.unlock();
-    }
+    throw new UnsupportedOperationException();
+//    TypeRefFactory typeRefFactory = (TypeRefFactory) TypeSystem.getGlobalModule().getModuleTypeLoader().getTypeRefFactory();
+//    TypeSystem.lock();
+//    try {
+//      ++_iSingleRefreshChecksum;
+//
+//      CommonServices.getMemoryMonitor().reclaimMemory(request);
+//
+//      // Step 1: Find all top-level types that need to be refreshed
+//      Set<IType> typesToRefresh = new HashSet<IType>(10);
+//      for (String typeName : request.types) {
+//        IType type = typeRefFactory.get(typeName);
+//
+//        if (type != null) {
+//          typesToRefresh.add(type);
+//
+//          if (!((AbstractTypeRef) type).isStale()) {
+//            IType topLevelType = getTopLevelType(type);
+//            if (topLevelType != null) {
+//              typesToRefresh.add(topLevelType);
+//            }
+//            if (type instanceof IGosuEnhancement) {
+//              // add the current enhanced type
+//              IGosuEnhancement enhancement = (IGosuEnhancement) type;
+//              IType enhancedType = enhancement.getEnhancedType();
+//              if (enhancedType != null && !(enhancedType instanceof INonLoadableType) && !TypeSystem.isDeleted(enhancedType)) {
+//                IType topLevelType1 = getTopLevelType(enhancedType);
+//                if (topLevelType != null) {
+//                  typesToRefresh.add(topLevelType1);
+//                }
+//              }
+//            }
+//            // add the old enhanced type
+//            ITypeLoaderStack moduleTypeLoader = TypeSystem.getGlobalModule().getModuleTypeLoader();
+//            GosuClassTypeLoader gosuClassTypeLoader = moduleTypeLoader.getTypeLoader(GosuClassTypeLoader.class);
+//            String orphanedEnhancementName = gosuClassTypeLoader.getEnhancementIndex().getOrphanedEnhancement(type.getName());
+//            if (orphanedEnhancementName != null) {
+//              IType orphanedEnhancement = typeRefFactory.get(orphanedEnhancementName);
+//              if (orphanedEnhancement instanceof AbstractTypeRef && !((AbstractTypeRef) orphanedEnhancement).isStale()) {
+//                typesToRefresh.add(orphanedEnhancement);
+//              }
+//            }
+//          }
+//        }
+//      }
+//
+//      // Step 2: Find all subordinate types that need to be refreshed
+//      IdentitySet<IType> typesToMakeStaleSet = new IdentitySet<IType>(typesToRefresh.size() * 2);
+//      for (IType type : typesToRefresh) {
+//        typesToMakeStaleSet.add((IType) type);
+//        addGosuProxyClass(typesToMakeStaleSet, type);
+//        List<IType> subordinateRefs = typeRefFactory.getSubordinateRefs(type.getName());
+//        for (IType typeRef : subordinateRefs) {
+//          typesToMakeStaleSet.add(typeRef);
+//          addGosuProxyClass(typesToMakeStaleSet, typeRef);
+//        }
+//      }
+//
+//      // Step 3: Some stuff
+//      Iterator<IType> iterator = typesToMakeStaleSet.iterator();
+//      while (iterator.hasNext()) {
+//        IType typeToRefresh = iterator.next();
+//        if (typeToRefresh instanceof IGosuClassInternal && !((AbstractTypeRef) typeToRefresh).isStale()) {
+//          IGosuClassInternal gsClass = (IGosuClassInternal) typeToRefresh;
+//          ((IGosuClassInternal) gsClass.dontEverCallThis()).unloadBackingClass();
+//        }
+//      }
+//
+//      // Step 4: Sort all the types
+//      IType[] typesToMakeStaleArray = typesToMakeStaleSet.toArray(new IType[typesToMakeStaleSet.size()]);
+//      Arrays.sort(typesToMakeStaleArray,
+//          new Comparator<IType>() {
+//            public int compare(IType t1, IType t2) {
+//              return computeSortIndex((AbstractTypeRef) t2) - computeSortIndex((AbstractTypeRef) t1);
+//            }
+//
+//            private int computeSortIndex(AbstractTypeRef ref) {
+//              return ref != null ? ref._getIndexForSortingFast(ref._getTypeName()) : 10000;
+//            }
+//          }
+//      );
+//
+//      Map<ITypeLoader, Set<String>> typeLoaderToTypeMap = new HashMap<ITypeLoader, Set<String>>();
+//      typeLoaderToTypeMap.put(request.typeLoader, new HashSet<String>(Arrays.asList(request.types)));
+//
+//      for (IType type : typesToMakeStaleSet) {
+//        ITypeLoader typeLoader = type.getTypeLoaderDirectly();
+//        Set<String> typeRefs = typeLoaderToTypeMap.get(typeLoader);
+//        if (typeRefs == null) {
+//          typeRefs = new HashSet<String>(typesToMakeStaleSet.size());
+//          typeLoaderToTypeMap.put(typeLoader, typeRefs);
+//        }
+//        typeRefs.add(((AbstractTypeRef)type)._getTypeName());
+//      }
+//
+//      // Step 5: Make the references stale
+//      for (IType type : typesToMakeStaleArray) {
+//        if (type != null) {
+//          ((IType) type)._setStale(request.kind);
+//        }
+//      }
+//
+//      // Step 6: Clear all caches
+//      getGlobalModuleTypeLoader().clearFromCaches(request);
+//      ((ModuleTypeLoader) TypeSystem.getGlobalModule().getModuleTypeLoader()).clearFromCaches(request);
+//
+//      // Step 7: notify the typeloader
+//      for (ITypeLoader typeLoader : typeLoaderToTypeMap.keySet()) {
+//        final Set<String> strings = typeLoaderToTypeMap.get(typeLoader);
+//        RefreshRequest theRequest = new RefreshRequest(strings.toArray(new String[strings.size()]), request, typeLoader);
+//        typeLoader.refreshedTypes(theRequest);
+//      }
+//
+//      // Step 8: Call all listeners
+//      for (ITypeLoaderListener listener : getListeners()) {
+//        listener.refreshedTypes(request);
+//      }
+//    } finally {
+//      TypeSystem.unlock();
+//    }
   }
 
   private ModuleTypeLoader getGlobalModuleTypeLoader() {
@@ -517,24 +517,24 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     return rootModule != null ? (ModuleTypeLoader) rootModule.getModuleTypeLoader() : null;
   }
 
-  private void addGosuProxyClass( IdentitySet<ITypeRef> allTypes, IType type ) {
-    if( type instanceof IJavaTypeInternal && !((AbstractTypeRef)type).isStale() && !((AbstractTypeRef)type).isDeleted()) {
-      IGosuClassInternal gsProxyClass = ((IJavaTypeInternal)type).getAdapterClassDirectly();
-      if( gsProxyClass != null ) {
-        allTypes.add( (ITypeRef)gsProxyClass );
-      }
-    }
-  }
-
-  private ITypeRef getTopLevelType(IType type) {
-    IType topLevelType = TypeLord.getTopLevelType(type);
-    if (topLevelType instanceof ITypeRef) {
-      return (ITypeRef) topLevelType;
-    } else {
-      return null;
-    }
-  }
-
+//  private void addGosuProxyClass( IdentitySet<IType> allTypes, IType type ) {
+//    if( type instanceof IJavaTypeInternal && !((AbstractTypeRef)type).isStale() && !((AbstractTypeRef)type).isDeleted()) {
+//      IGosuClassInternal gsProxyClass = ((IJavaTypeInternal)type).getAdapterClassDirectly();
+//      if( gsProxyClass != null ) {
+//        allTypes.add( (IType)gsProxyClass );
+//      }
+//    }
+//  }
+//
+//  private IType getTopLevelType(IType type) {
+//    IType topLevelType = TypeLord.getTopLevelType(type);
+//    if (topLevelType instanceof IType) {
+//      return (IType) topLevelType;
+//    } else {
+//      return null;
+//    }
+//  }
+//
   public int getRefreshChecksum()
   {
     return _iRefreshChecksum;
@@ -873,7 +873,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     return TypeLord.boundTypes(targetType, typesToBound);
   }
 
-  public void refresh(ITypeRef typeRef) {
+  public void refresh(IType typeRef) {
     refreshTypes(new RefreshRequest(null, new String[]{typeRef.getName()}, typeRef.getTypeLoader(), RefreshKind.MODIFICATION));
   }
 

@@ -67,7 +67,6 @@ import gw.lang.reflect.IScriptabilityModifier;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeInfo;
 import gw.lang.reflect.ITypeInfoFactory;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.PropertyInfoDelegate;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.GosuClassTypeLoader;
@@ -176,7 +175,7 @@ public class GosuIndustrialParkImpl extends BaseService implements IGosuShop
 
   public IGosuClass createClass( String strNamespace, String strRelativeName, GosuClassTypeLoader loader, ISourceFileHandle sourceFile, ITypeUsesMap typeUsesMap )
   {
-    final ITypeRef ref = TypeSystem.getOrCreateTypeReference(new GosuClass(strNamespace, strRelativeName, loader, sourceFile, typeUsesMap));
+    final IType ref = TypeSystem.getOrCreateTypeReference(new GosuClass(strNamespace, strRelativeName, loader, sourceFile, typeUsesMap));
     return (IGosuClass) ref;
   }
   public IGosuProgram createProgram( String strNamespace, String strRelativeName, GosuClassTypeLoader loader, ISourceFileHandle sourceFile, ITypeUsesMap typeUsesMap, ISymbolTable symTable )

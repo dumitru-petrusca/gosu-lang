@@ -20,7 +20,6 @@ import gw.lang.parser.ILanguageLevel;
 import gw.lang.parser.IParseResult;
 import gw.lang.parser.ParserOptions;
 import gw.lang.reflect.IType;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.BytecodeOptions;
 import gw.lang.reflect.gs.GosuClassPathThing;
@@ -235,7 +234,7 @@ public class ExecutionEnvironment implements IExecutionEnvironment
                   for (String name : types) {
                     IType type = TypeSystem.getByFullNameIfValid(name);
                     if (type != null) {
-                      TypeSystem.refresh((ITypeRef) type);
+                      TypeSystem.refresh(type);
                       // Also update enhancement index if type is an enhancement
                       if( type instanceof IGosuEnhancementInternal ) {
                         ((GosuClassTypeLoader)type.getTypeLoader()).getEnhancementIndex().addEntry(

@@ -292,13 +292,7 @@ public abstract class BaseFeatureInfo implements IAttributedFeatureInfo
       TypeSystem.lock();
       try {
         if (_deprecated == null) {
-          IType container = _intrType == null ? getContainer().getOwnersType() : _intrType;
-          if( container instanceof ITypeRef ) {
-            _deprecated = getAnnotationsOfType(TypeSystem.get(gw.lang.Deprecated.class));
-          }
-          else {
-            _deprecated = Collections.emptyList();
-          }
+          _deprecated = Collections.emptyList();
         }
       }
       finally {

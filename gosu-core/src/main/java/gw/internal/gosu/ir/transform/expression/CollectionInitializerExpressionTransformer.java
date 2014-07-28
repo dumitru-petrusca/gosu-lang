@@ -59,21 +59,21 @@ public class CollectionInitializerExpressionTransformer extends AbstractElementT
   private Class getCollectionType()
   {
     Class collectionType = Collection.class;
-    IParsedElement parent = getParsedElement().getParent();
-    if( parent instanceof NewExpression )
-    {
-      IType newType = ((NewExpression)parent).getType();
-      IJavaClassInfo classInfo = IRTypeResolver.getJavaBackedClass(newType);
-      Class javaBackedClass = classInfo != null ? classInfo.getBackingClass() : null;
-      if( classInfo != null && javaBackedClass != null )
-      {
-        collectionType = javaBackedClass;
-      }
-      else if( JavaTypes.getJreType(AbstractCollection.class).isAssignableFrom( newType ) )
-      {
-        collectionType = AbstractCollection.class;
-      }
-    }
+//    IParsedElement parent = getParsedElement().getParent();
+//    if( parent instanceof NewExpression )
+//    {
+//      IType newType = ((NewExpression)parent).getType();
+//      IJavaClassInfo classInfo = IRTypeResolver.getJavaBackedClass(newType);
+//      Class javaBackedClass = classInfo != null ? classInfo.getBackingClass() : null;
+//      if( classInfo != null && javaBackedClass != null )
+//      {
+//        collectionType = javaBackedClass;
+//      }
+//      else if( JavaTypes.getJreType(AbstractCollection.class).isAssignableFrom( newType ) )
+//      {
+//        collectionType = AbstractCollection.class;
+//      }
+//    }
     return collectionType;
   }
 }

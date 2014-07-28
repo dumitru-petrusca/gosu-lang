@@ -18,7 +18,6 @@ import gw.lang.reflect.IPropertyInfo;
 import gw.lang.reflect.IRelativeTypeInfo;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.ITypeInfo;
-import gw.lang.reflect.ITypeRef;
 import gw.lang.reflect.Modifier;
 import gw.lang.reflect.TypeInfoUtil;
 import gw.lang.reflect.TypeSystem;
@@ -112,7 +111,7 @@ public class GosuClassProxyFactory
         gsAdapterClass = (IGosuClassInternal)outerProxy.getInnerClass( type.getRelativeName().substring( type.getRelativeName().indexOf( '.' ) + 1 ) );
         if( gsAdapterClass == null )
         {
-          TypeSystem.refresh( (ITypeRef)outerProxy);
+          TypeSystem.refresh( outerProxy);
           gsAdapterClass = (IGosuClassInternal)outerProxy.getInnerClass( type.getRelativeName().substring( type.getRelativeName().indexOf( '.' ) + 1 ) );
         }
       }

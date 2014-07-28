@@ -7,6 +7,8 @@ package gw.lang.parser;
 import gw.lang.reflect.gs.IFileSystemGosuClassRepository;
 
 public class FileSource implements ISource {
+
+  private String _cache;
   private IFileSystemGosuClassRepository.IClassFileInfo _file;
 
   public FileSource(IFileSystemGosuClassRepository.IClassFileInfo file) {
@@ -14,7 +16,10 @@ public class FileSource implements ISource {
   }
 
   public String getSource() {
-    return _file.getContent();
+    if (_cache == null) {
+      _cache = _file.getContent();
+    }
+    return _cache;
   }
 
 }
