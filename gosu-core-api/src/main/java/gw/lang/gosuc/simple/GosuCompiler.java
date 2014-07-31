@@ -150,10 +150,12 @@ public class GosuCompiler implements IGosuCompiler {
       File file = new File(srcFile.getPath().getFileSystemPathString());
       if (file.isFile()) {
         try {
-          copyFile(file, new File(parent, file.getName()));
+          File destFile = new File(parent, file.getName());
+          copyFile(file, destFile);
+          _driver.registerOutput(_compilingSourceFile, destFile);
         } catch (IOException e) {
           e.printStackTrace();
-          _driver.sendCompileIssue(sourceFile, ERROR, 0, 0, 0, "Cannot coopy source file to output folder.");
+          _driver.sendCompileIssue(sourceFile, ERROR, 0, 0, 0, "Cannot copy source file to output folder.");
         }
       }
     }
