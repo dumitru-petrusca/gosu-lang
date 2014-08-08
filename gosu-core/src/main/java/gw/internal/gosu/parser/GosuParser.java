@@ -5528,13 +5528,11 @@ public final class GosuParser extends ParserBase implements IGosuParser
     IType contextType = getContextType().getType();
     if( contextType != null )
     {
-      if( contextType.isEnum() )
+      if( contextType.isEnum() || TypeSystem.get(IEnumValue.class).isAssignableFrom(contextType) )
       {
-        IEnumType enumAccess = (IEnumType)contextType;
-
         try
         {
-          IPropertyInfo property = enumAccess.getTypeInfo().getProperty( strConstValue );
+          IPropertyInfo property = contextType.getTypeInfo().getProperty( strConstValue );
           if( property != null && property.isStatic() )
           {
             MemberAccess ma = new MemberAccess();
