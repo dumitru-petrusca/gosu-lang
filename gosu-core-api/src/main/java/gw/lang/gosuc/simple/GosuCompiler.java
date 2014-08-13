@@ -27,11 +27,6 @@ import java.util.*;
 import static gw.lang.gosuc.simple.ICompilerDriver.*;
 
 public class GosuCompiler implements IGosuCompiler {
-  private final LocklessLazyVar<IType> doNotVerifyResourceType = new LocklessLazyVar<IType>() {
-    protected IType init() {
-      return TypeSystem.getByFullNameIfValid("gw.testharness.DoNotVerifyResource");
-    }
-  };
   protected static ICompilerDriver _driver;
   protected GosuInitialization _gosuInitialization;
   protected File _compilingSourceFile;
@@ -77,7 +72,8 @@ public class GosuCompiler implements IGosuCompiler {
   }
 
   private boolean isCompilable(IType type) {
-    return type instanceof IGosuClass && !type.getTypeInfo().hasAnnotation(doNotVerifyResourceType.get());
+    IType doNotVerifyAnnotation = TypeSystem.getByFullNameIfValid("gw.testharness.DoNotVerifyResource");
+    return type instanceof IGosuClass && !type.getTypeInfo().hasAnnotation(doNotVerifyAnnotation);
   }
 
   private void createOutputFiles(IGosuClass gsClass) {
@@ -213,7 +209,9 @@ public class GosuCompiler implements IGosuCompiler {
   public void unitializeGosu() {
     TypeSystem.shutdown(TypeSystem.getExecutionEnvironment());
     if (_gosuInitialization != null) {
-      _gosuInitialization.uninitializeCompiler();
+      if (_gosuInitialization.isInitialized()) {
+        _gosuInitialization.uninitializeCompiler();
+      }
       _gosuInitialization = null;
     }
   }
