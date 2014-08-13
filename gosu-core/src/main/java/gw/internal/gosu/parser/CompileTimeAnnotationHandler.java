@@ -197,7 +197,8 @@ public class CompileTimeAnnotationHandler
             mcv = ctor.newInstance();
           }
           catch( Exception e ) {
-            CommonServices.getEntityAccess().getLogger().warn( "Unable to instantiate IUsageSiteValidator of type " + validator.getName() );
+            String name = validator != null ? validator.getName() : null;
+            CommonServices.getEntityAccess().getLogger().warn( "Unable to instantiate IUsageSiteValidator of type " + name);
           }
         }
       }
@@ -228,6 +229,10 @@ public class CompileTimeAnnotationHandler
 
   private static Object evalAndHandleError( IAnnotationInfo ai, IParsedElement elt )
   {
+    if (!ExecutionMode.isRuntime()) {
+      return null;
+    }
+
     try
     {
       IType gsClass = ai.getType();
