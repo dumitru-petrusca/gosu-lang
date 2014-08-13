@@ -1,6 +1,7 @@
 package gw.internal.gosu.parser;
 
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.lang.reflect.IAnnotationInfo;
 import gw.lang.reflect.java.IJavaClassMethod;
 import gw.lang.reflect.java.IJavaPropertyInfo;
@@ -51,8 +52,8 @@ class JavaTypeExtensions {
 
   private static ExtendedTypeDataFactory getExtendedTypeDataFactory(IJavaType javaType) {
     boolean extendedType;
-    Class<?> backingClass = javaType.getBackingClass();
-    if (backingClass != null) {
+    if (ExecutionMode.isRuntime()) {
+      Class<?> backingClass = javaType.getBackingClass();
       // Server runtime case. We can't go through the IJavaClassInfo for this case, because it leads to a
       // circularity w.r.t. the JavaType (ClassAnnotationInfo attempts to get the JavaType)
       extendedType = backingClass.isAnnotationPresent(ExtendedType.class);
