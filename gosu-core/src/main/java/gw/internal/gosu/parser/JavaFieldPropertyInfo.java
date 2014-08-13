@@ -9,6 +9,7 @@ import gw.internal.gosu.parser.java.classinfo.JavaSourceEnumConstant;
 import gw.internal.gosu.parser.java.classinfo.JavaSourceField;
 import gw.lang.Deprecated;
 import gw.lang.GosuShop;
+import gw.lang.SimplePropertyProcessing;
 import gw.lang.javadoc.IClassDocNode;
 import gw.lang.javadoc.IDocRef;
 import gw.lang.javadoc.IVarNode;
@@ -23,6 +24,7 @@ import gw.lang.reflect.IPropertyAccessor;
 import gw.lang.reflect.IRelativeTypeInfo;
 import gw.lang.reflect.IScriptabilityModifier;
 import gw.lang.reflect.IType;
+import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.java.IJavaAnnotatedElement;
 import gw.lang.reflect.java.IJavaClassField;
 import gw.lang.reflect.java.IJavaFieldPropertyInfo;
@@ -67,8 +69,11 @@ public class JavaFieldPropertyInfo extends JavaBaseFeatureInfo implements IJavaF
       ((FieldJavaClassField)_field).setAccessible( true );
     }
     _isStatic = isStatic;
-    //_strName = NewIntrospector.capitalizeFirstChar( _field.getName() ).replace( '$', '_' );
-    _strName = _field.getName().replace( '$', '_' );
+    _strName = _field.getName();
+    if (!getOwnersType().getTypeInfo().hasAnnotation(TypeSystem.get(SimplePropertyProcessing.class))) {
+      //_strName = NewIntrospector.capitalizeFirstChar( _strName ).replace( '$', '_' );
+      _strName = _strName.replace( '$', '_' );
+    }
     if( _isStatic )
     {
       _accessor = new StaticAccessor();
