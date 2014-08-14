@@ -17,8 +17,6 @@ import gw.lang.parser.StandardSymbolTable;
 import gw.lang.parser.exceptions.ParseException;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.IPropertyInfo;
-import gw.lang.reflect.java.IJavaType;
-import gw.lang.reflect.java.JavaTypes;
 import gw.lang.reflect.java.JavaTypes;
 
 /**
@@ -37,7 +35,7 @@ public class MemberExpansionAccessTransformer extends AbstractMemberExpansionTra
   }
 
   @Override
-  protected IRExpression createIterationExpr(IType rootComponentType, String irIdentifierSym, IType identifierType, IType compType) {
+  protected IRExpression createIterationExpr(IType rootComponentType, String irIdentifierSym, IType identifierType) {
     // Make MemberAccessExpr for *temp_mae_X.<property>
 
     MemberAccess ma;
@@ -53,7 +51,7 @@ public class MemberExpansionAccessTransformer extends AbstractMemberExpansionTra
     {
       ma = new MemberAccess();
       // We need to set the type of the MemberAccess to exactly the type of the property in question
-      ma.setType( getPropertyOrMethodType(rootComponentType, compType) );
+      ma.setType( getPropertyOrMethodType(rootComponentType) );
       ma.setMemberAccessKind( MemberAccessKind.NULL_SAFE ); // expansion implies null-safety on elements
     }
     Identifier id = new Identifier();
@@ -68,7 +66,7 @@ public class MemberExpansionAccessTransformer extends AbstractMemberExpansionTra
   }
 
   @Override
-  protected IType getPropertyOrMethodType(IType rootComponentType, IType compType) {
+  protected IType getPropertyOrMethodType(IType rootComponentType) {
     return getProperty( rootComponentType ).getFeatureType();
   }
 

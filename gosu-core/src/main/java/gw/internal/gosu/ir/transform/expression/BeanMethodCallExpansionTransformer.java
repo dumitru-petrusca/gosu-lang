@@ -31,7 +31,7 @@ public class BeanMethodCallExpansionTransformer extends AbstractMemberExpansionT
   }
 
   @Override
-  protected IRExpression createIterationExpr(IType rootComponentType, String identifierName, IType identifierType, IType compType)
+  protected IRExpression createIterationExpr(IType rootComponentType, String identifierName, IType identifierType)
   {
     // Make BeanMethodCallExpressionExpr for identifierSym.<call()>
     BeanMethodCallExpression mc = new BeanMethodCallExpression();
@@ -51,7 +51,7 @@ public class BeanMethodCallExpansionTransformer extends AbstractMemberExpansionT
   }
 
   @Override
-  protected IType getPropertyOrMethodType(IType rootComponentType, IType compType) {
+  protected IType getPropertyOrMethodType(IType rootComponentType) {
     return getMethodReturnType();
   }
 

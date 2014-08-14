@@ -45,9 +45,9 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
   /**
    * Subclassers need only implement this method for the iteration expression i.e., the singular form of the expansion expr.
    */
-  protected abstract IRExpression createIterationExpr(IType rootComponentType, String identifierName, IType identifierType, IType compType);
+  protected abstract IRExpression createIterationExpr(IType rootComponentType, String identifierName, IType identifierType);
 
-  protected abstract IType getPropertyOrMethodType(IType rootComponentType, IType compType);
+  protected abstract IType getPropertyOrMethodType(IType rootComponentType);
 
   protected IRExpression compile_impl()
   {
@@ -61,7 +61,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     IType rootType = _expr().getRootType();
     final IType rootComponentType = TypeLord.getExpandableComponentType( rootType );
 
-    IType propertyType = getPropertyOrMethodType(rootComponentType, compType);
+    IType propertyType = getPropertyOrMethodType(rootComponentType);
 
     _cc().pushScope( false );
     try
@@ -69,7 +69,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
       if (bVoid)
       {
         // This is like calling root.each(\r -> r.foo())
-        return compileExpansionWithNoReturnValue( rootType, rootComponentType, arrayType, compType );
+        return compileExpansionWithNoReturnValue( rootType, rootComponentType);
       }
       else if(isBytecodeType( propertyType ) && isArrayOrCollection( rootType ) && !isArrayOrCollection( rootComponentType ) && !isArrayOrCollection( propertyType ))
       {
@@ -93,12 +93,12 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     return type.isArray() || JavaTypes.COLLECTION().isAssignableFrom( type );
   }
 
-  protected IRExpression compileExpansionWithNoReturnValue( IType rootType, IType rootComponentType, IType resultType, IType resultCompType ) {
+  protected IRExpression compileExpansionWithNoReturnValue(IType rootType, IType rootComponentType) {
     // Evaluate the root and assign it to a temp variable
     IRSymbol tempRoot = _cc().makeAndIndexTempSymbol( getDescriptor( rootType ) );
     IRStatement tempRootAssignment = buildAssignment( tempRoot, ExpressionTransformer.compile( _expr().getRootExpression(), _cc() ) );
 
-    IRForEachStatement statement = createNoValueLoop( rootType, rootComponentType, resultCompType, tempRoot );
+    IRForEachStatement statement = createNoValueLoop( rootType, rootComponentType, tempRoot );
 
     return buildComposite(
             tempRootAssignment,
@@ -107,11 +107,11 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
             );
   }
 
-  private IRForEachStatement createNoValueLoop(IType rootType, IType rootComponentType, IType resultCompType, IRSymbol tempRoot ) {
+  private IRForEachStatement createNoValueLoop(IType rootType, IType rootComponentType, IRSymbol tempRoot) {
     Symbol loopIdentifier = new Symbol(_cc().makeTempSymbolName(), rootComponentType, null);
     IRForEachStatement forLoop = ForEachStatementTransformer.makeLoop( _cc(), identifier( tempRoot ), rootType, loopIdentifier, null);
     IRSymbol irLoopIdentifier = _cc().getSymbol( loopIdentifier.getName() );
-    forLoop.setBody( new IRStatementList( false, buildMethodCall( createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType, resultCompType ) ) ) );
+    forLoop.setBody( new IRStatementList( false, buildMethodCall( createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType) ) ) );
     return forLoop;
   }
 
@@ -142,7 +142,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     IRStatement arrayCreation = buildAssignment( resultArray, makeArray( resultCompType, createArrayLengthExpression( rootType, tempRoot ) ) );
 
     // Create the loop that populates the array
-    IRForEachStatement forLoop = createArrayStoreLoop(rootType, rootComponentType, resultCompType, tempRoot, resultArray);
+    IRForEachStatement forLoop = createArrayStoreLoop(rootType, rootComponentType, tempRoot, resultArray);
 
     // Build the expansion out of the array creation, for loop, and identifier
     IRExpression expansion = buildComposite( arrayCreation, forLoop, identifier( resultArray ) );
@@ -189,7 +189,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     }
   }
 
-  private IRForEachStatement createArrayStoreLoop(IType rootType, IType rootComponentType, IType resultCompType, IRSymbol tempRoot, IRSymbol resultArray) {
+  private IRForEachStatement createArrayStoreLoop(IType rootType, IType rootComponentType, IRSymbol tempRoot, IRSymbol resultArray) {
     // The body of the loop looks like:
     // temp_array[i] = l.Bar
     Symbol loopIdentifier = new Symbol(_cc().makeTempSymbolName(), rootComponentType, null);
@@ -199,7 +199,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     IRSymbol irLoopIndex = _cc().getSymbol( loopIndex.getName() );
     forLoop.setBody( buildArrayStore( identifier( resultArray),
                                       identifier( irLoopIndex ),
-                                      createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType, resultCompType ),
+                                      createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType),
                                       resultArray.getType().getComponentType() ) );
     return forLoop;
   }
@@ -229,7 +229,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
 
     // Now we loop over each element in the root array or collection.  For each element, we evaluate the
     // RHS, wrap it by calling arrayToCollection, then add it to the result list via addAll
-    IRForEachStatement forLoop = createArrayListAddLoop(rootType, rootComponentType, resultCompType, tempRoot, resultArrayList, propertyType );
+    IRForEachStatement forLoop = createArrayListAddLoop(rootType, rootComponentType, tempRoot, resultArrayList, propertyType );
 
     // Now take the ArrayList and convert it to the desired return type
     IRExpression listToArrayConversion = convertListToArray(resultType, resultCompType, resultArrayList);
@@ -237,7 +237,7 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     return buildComposite( tempRootAssignment, arrayListCreation, forLoop, listToArrayConversion );
   }
 
-  private IRForEachStatement createArrayListAddLoop(IType rootType, IType rootComponentType, IType resultCompType, IRSymbol tempRoot, IRSymbol resultArrayList, IType propertyType) {
+  private IRForEachStatement createArrayListAddLoop(IType rootType, IType rootComponentType, IRSymbol tempRoot, IRSymbol resultArrayList, IType propertyType) {
     Symbol loopIdentifier = new Symbol(_cc().makeTempSymbolName(), rootComponentType, null);
     IRForEachStatement forLoop = ForEachStatementTransformer.makeLoop( _cc(), identifier( tempRoot ), rootType, loopIdentifier, null);
     IRSymbol irLoopIdentifier = _cc().getSymbol( loopIdentifier.getName() );
@@ -247,14 +247,14 @@ public abstract class AbstractMemberExpansionTransformer<T extends IMemberAccess
     IRStatement loopBody;
     if ( propertyType.isArray() ) {
       IRExpression resultAsCollection = callStaticMethod( AbstractMemberExpansionTransformer.class, "arrayToCollection", new Class[]{Object.class},
-              exprList( createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType, resultCompType) ) );
+              exprList( createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType) ) );
       loopBody = buildMethodCall( callMethod( ArrayList.class, "addAll", new Class[]{Collection.class},
                       identifier( resultArrayList ),
                       exprList( resultAsCollection ) ) );
     } else {
       loopBody = buildMethodCall( callMethod( ArrayList.class, "add", new Class[]{Object.class},
                       identifier( resultArrayList ),
-                      exprList( boxValueToType( propertyType, createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType, resultCompType) ) ) ) );
+                      exprList( boxValueToType( propertyType, createIterationExpr( rootComponentType, irLoopIdentifier.getName(), rootComponentType) ) ) ) );
     }
     forLoop.setBody( new IRStatementList( false, loopBody ) );
     return forLoop;
