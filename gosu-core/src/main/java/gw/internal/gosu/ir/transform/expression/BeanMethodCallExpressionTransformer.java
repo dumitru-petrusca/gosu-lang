@@ -109,7 +109,7 @@ public class BeanMethodCallExpressionTransformer extends AbstractExpressionTrans
         pushArgumentsWithCasting( irMethod, _expr().getArgs(), irArgs );
         if( isSuperCall( rootExpr ) )
         {
-          irMethodCall = callSpecialMethod( getDescriptor( _cc().getSuperType() ), irMethod, irRoot, irArgs, namedArgOrder );
+          irMethodCall = callSpecialMethod(irMethod, irRoot, irArgs, namedArgOrder );
         }
         else
         {

@@ -197,33 +197,33 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
 
   public IRExpression callMethod( IRMethod method, IRExpression root, List<IRExpression> explicitArgs )
   {
-    return callMethod( method.getOwningIRType(), method, root, Collections.<IRExpression>emptyList(), explicitArgs, null, false );
+    return callMethod( method, root, Collections.<IRExpression>emptyList(), explicitArgs, null, false );
   }
 
   public IRExpression callMethod( IRMethod method, IRExpression root, List<IRExpression> explicitArgs, int[] namedArgOrder )
   {
-    return callMethod( method.getOwningIRType(), method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder, false );
+    return callMethod( method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder, false );
   }
 
   public IRExpression callMethod( IRMethod method, IRExpression root, List<IRExpression> explicitArgs, int[] namedArgOrder, boolean special )
   {
-    return callMethod( method.getOwningIRType(), method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder, special );
+    return callMethod( method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder, special );
   }
 
-  public IRExpression callSpecialMethod( IRType rootType, IRMethod method, IRExpression root, List<IRExpression> explicitArgs )
+  public IRExpression callSpecialMethod(IRMethod method, IRExpression root, List<IRExpression> explicitArgs)
   {
-    return callMethod( rootType, method, root, Collections.<IRExpression>emptyList(), explicitArgs, null, true );
+    return callMethod( method, root, Collections.<IRExpression>emptyList(), explicitArgs, null, true );
   }
-  public IRExpression callSpecialMethod( IRType rootType, IRMethod method, IRExpression root, List<IRExpression> explicitArgs, int[] namedArgOrder )
+  public IRExpression callSpecialMethod(IRMethod method, IRExpression root, List<IRExpression> explicitArgs, int[] namedArgOrder)
   {
-    return callSpecialMethod( rootType, method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder );
+    return callSpecialMethod(method, root, Collections.<IRExpression>emptyList(), explicitArgs, namedArgOrder );
   }
-  public IRExpression callSpecialMethod( IRType rootType, IRMethod method, IRExpression root, List<IRExpression> implicitArgs, List<IRExpression> explicitArgs, int[] namedArgOrder )
+  public IRExpression callSpecialMethod(IRMethod method, IRExpression root, List<IRExpression> implicitArgs, List<IRExpression> explicitArgs, int[] namedArgOrder)
   {
-    return callMethod( rootType, method, root, implicitArgs, explicitArgs, namedArgOrder, true );
+    return callMethod( method, root, implicitArgs, explicitArgs, namedArgOrder, true );
   }
 
-  private IRExpression callMethod( IRType rootType, IRMethod method, IRExpression root,
+  private IRExpression callMethod( IRMethod method, IRExpression root,
                                    List<IRExpression> implicitArgs,
                                    List<IRExpression> explicitArgs, int[] namedArgOrder,
                                    boolean special )
@@ -272,7 +272,7 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
       actualArgs.add( 0, identifier( tempRoot ) );
 
       // Now call the method as if it were a static method
-      compositeElements.add( callMethod( rootType, method, null, special, owner, actualArgs ) );
+      compositeElements.add( callMethod( method, null, special, owner, actualArgs ) );
       return new IRCompositeExpression( compositeElements );
     }
     else
@@ -292,12 +292,12 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
 
         // Add the temp named arg assignments (if any)
         compositeElements.addAll( namedArgElements );
-        compositeElements.add( callMethod( rootType, method, root, special, owner, actualArgs ) );
+        compositeElements.add( callMethod( method, root, special, owner, actualArgs ) );
         return new IRCompositeExpression( compositeElements );
       }
       else
       {
-        return callMethod( rootType, method, root, special, owner, actualArgs );
+        return callMethod( method, root, special, owner, actualArgs );
       }
     }
   }
@@ -350,7 +350,7 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
            !(method instanceof SyntheticIRMethod);
   }
 
-  private IRExpression callMethod(IRType rootType, IRMethod method, IRExpression root, boolean special, IType owner, List<IRExpression> actualArgs) {
+  private IRExpression callMethod(IRMethod method, IRExpression root, boolean special, IType owner, List<IRExpression> actualArgs) {
     if ( !special && _cc().shouldUseReflection( owner, method.getAccessibility() ) ) {
       return callMethodReflectively( owner, method.getName(), method.getReturnType(), method.getAllParameterTypes(), root, actualArgs );
     } else {

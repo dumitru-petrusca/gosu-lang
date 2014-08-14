@@ -212,7 +212,7 @@ public class MemberAccessTransformer extends AbstractExpressionTransformer<Membe
     }
     else if( isSuperCall( rootExpr ) )
     {
-      return callSpecialMethod( getDescriptor( _cc().getSuperType() ), irProperty.getGetterMethod(), root, exprList() );
+      return callSpecialMethod(irProperty.getGetterMethod(), root, exprList() );
     }
     else if( isOuterCall( pi ) )
     {

@@ -80,7 +80,7 @@ public class GosuFragmentTransformer extends AbstractElementTransformer<IExpress
 
     List<IRStatement> statements = new ArrayList<IRStatement>();
     IRMethod irMethod = IRMethodFactory.createConstructorIRMethod( _cc().getSuperType(), new IRType[0] );
-    statements.add( new IRMethodCallStatement( callSpecialMethod( getDescriptor( _cc().getSuperType() ), irMethod, pushThis(), Collections.<IRExpression>emptyList() ) ) );
+    statements.add( new IRMethodCallStatement( callSpecialMethod(irMethod, pushThis(), Collections.<IRExpression>emptyList() ) ) );
     statements.add( new IRReturnStatement() );
 
     IRMethodStatement methodStatement = new IRMethodStatement(

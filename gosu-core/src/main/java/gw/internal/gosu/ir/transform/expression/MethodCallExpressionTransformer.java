@@ -228,7 +228,7 @@ public class MethodCallExpressionTransformer extends AbstractExpressionTransform
     pushEnumSuperConstructorArguments( implicitArgs );
     IRMethod irMethod = IRMethodFactory.createConstructorIRMethod( targetType, dfs, iTypeParams );
     List<IRExpression> explicitArgs = pushArguments( irMethod );
-    IRExpression methodCall = callSpecialMethod( getDescriptor( targetType ), irMethod, pushThis(),
+    IRExpression methodCall = callSpecialMethod(irMethod, pushThis(),
                                                  implicitArgs, explicitArgs, _expr().getNamedArgOrder() );
     _cc().markSuperInvoked();
 

@@ -17,10 +17,12 @@ import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.gs.ISourceFileHandle;
 import gw.lang.reflect.module.IExecutionEnvironment;
+import gw.lang.reflect.module.IFileSystem;
 import gw.lang.reflect.module.IModule;
 import gw.util.concurrent.LocklessLazyVar;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.nio.channels.FileChannel;
 import java.util.*;
 
@@ -193,6 +195,7 @@ public class GosuCompiler implements IGosuCompiler {
   public long initializeGosu(List<String> contentRoots, List<File> cfaModules, List<String> sourceFolders, List<String> classpath, String outputPath) {
     final long start = System.currentTimeMillis();
 
+    CommonServices.getKernel().redefineService_Privileged(IFileSystem.class, createFileSystemInstance());
     CommonServices.getKernel().redefineService_Privileged(IMemoryMonitor.class, new CompilerMemoryMonitor());
     CommonServices.getKernel().redefineService_Privileged(IPlatformHelper.class, new CompilerPlatformHelper());
 
@@ -204,6 +207,16 @@ public class GosuCompiler implements IGosuCompiler {
     _gosuInitialization.initializeCompiler(gosucModule);
 
     return System.currentTimeMillis() - start;
+  }
+
+  private static IFileSystem createFileSystemInstance() {
+    try {
+      Class cls = Class.forName("gw.internal.gosu.module.fs.FileSystemImpl");
+      Constructor m = cls.getConstructor(IFileSystem.CachingMode.class);
+      return (IFileSystem) m.newInstance(IFileSystem.CachingMode.FULL_CACHING);
+    } catch ( Exception e ) {
+      throw new RuntimeException( e );
+    }
   }
 
   public void unitializeGosu() {

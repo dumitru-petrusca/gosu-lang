@@ -618,7 +618,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
     IRType[] params = getConstructorParamTypes( superParameterTypes, iTypeParams, _cc().getSuperType() );
 
     IRMethod irMethod = IRMethodFactory.createConstructorIRMethod( _cc().getSuperType(), params );
-    statements.add( new IRMethodCallStatement( callSpecialMethod( getDescriptor( _cc().getSuperType() ), irMethod, pushThis(), superArgs ) ) );
+    statements.add( new IRMethodCallStatement( callSpecialMethod(irMethod, pushThis(), superArgs ) ) );
 
     initializeInstanceFields( statements );
     statements.add( new IRReturnStatement() );

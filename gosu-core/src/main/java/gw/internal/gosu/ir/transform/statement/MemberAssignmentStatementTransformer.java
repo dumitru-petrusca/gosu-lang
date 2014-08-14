@@ -99,7 +99,7 @@ public class MemberAssignmentStatementTransformer extends AbstractStatementTrans
       }
       else {
         if( isSuperCall( _stmt().getRootExpression() ) ) {
-          return buildMethodCall( callSpecialMethod( getDescriptor( _cc().getSuperType() ), irProperty.getSetterMethod(), root, exprList( rhs ) ) );
+          return buildMethodCall( callSpecialMethod(irProperty.getSetterMethod(), root, exprList( rhs ) ) );
         }
         else {
           IRExpression irMethodCall = callMethod( irProperty.getSetterMethod(), root, exprList( rhs ) );
