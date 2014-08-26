@@ -77,6 +77,7 @@ import gw.lang.reflect.Modifier;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.gs.BytecodeOptions;
 import gw.lang.reflect.gs.GosuClassPathThing;
+import gw.lang.reflect.gs.GosuMarker;
 import gw.lang.reflect.gs.IExternalSymbolMap;
 import gw.lang.reflect.gs.IGenericTypeVariable;
 import gw.lang.reflect.gs.IGosuClass;
@@ -96,10 +97,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  */
@@ -160,7 +163,13 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
   private void addAnnotations()
   {
     List<IRAnnotation> annotations = getIRAnnotations( _gsClass.getTypeInfo().getAnnotations() );
+//    addGosuMarker( annotations );
     _irClass.setAnnotations( annotations );
+  }
+
+  private void addGosuMarker( List<IRAnnotation> annotations )
+  {
+    annotations.add( new IRAnnotation( getDescriptor( GosuMarker.class ), true ) );
   }
 
   private List<IRAnnotation> getIRAnnotations( List<? extends IAnnotationInfo> gosuAnnotations )
@@ -304,6 +313,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       IRFieldDecl fieldDecl = new IRFieldDecl( getModifiers( (AbstractDynamicSymbol)field.getSymbol() ),
                                                field.getIdentifierName(),
                                                getDescriptor( field.getType() ),
+                                               field.getType(),
                                                null );
       fieldDecl.setAnnotations( getIRAnnotations( makeAnnotationInfos( ((VarStatement)field).getAnnotations(), getGosuClass().getTypeInfo() ) ) );
       _irClass.addField( fieldDecl );
@@ -317,6 +327,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       IRFieldDecl fieldDecl = new IRFieldDecl( getModifiers( (Symbol)field.getSymbol() ),
                                                field.getIdentifierName(),
                                                getDescriptor( field.getType() ),
+                                               field.getType(),
                                                null );
       fieldDecl.setAnnotations( getIRAnnotations( makeAnnotationInfos( ((VarStatement)field).getAnnotations(), getGosuClass().getTypeInfo() ) ) );
       _irClass.addField( fieldDecl );
@@ -478,8 +489,11 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         methodBody,
         "<init>",
         iModifiers,
-              IRTypeConstants.pVOID(),
-        parameters );
+        IRTypeConstants.pVOID(),
+        dfs.getReturnType(),
+        parameters,
+        dfs.getArgTypes(),
+        dfs.getType(), null);
 
       _irClass.addMethod( methodStatement );
     }
@@ -669,7 +683,10 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
     for( IDynamicFunctionSymbol idfs : methodSet )
     {
       compileMethod( (DynamicFunctionSymbol)idfs );
-      compileBridgeMethods( (DynamicFunctionSymbol)idfs );
+      if( !idfs.isAbstract() )
+      {
+        compileBridgeMethods( (DynamicFunctionSymbol)idfs );
+      }
     }
 
     if( !_gsClass.isInterface() && !isCompilingEnhancement() && !_cc().compilingBlock() )
@@ -704,29 +721,23 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
    * - method overrides and specifies a concrete type for a parameter that is a
    * type variable in the super e.g., B extends A<String> where B#foo( o: String ) -> A#foo( o: T )
    */
+  Set<String> bridges = new HashSet<String>();
   private void compileBridgeMethods( DynamicFunctionSymbol dfs )
   {
-    if( dfs.isAbstract() )
+    List<DynamicFunctionSymbol> list;
+    list = maybeGetSuperDfs( dfs );
+    if( list.isEmpty() )
     {
+      if( dfs.isOverride() )
+      {
+        dfs = dfs.getSuperDfs();
+        compileBridgeMethods( dfs );
+      }
       return;
     }
 
-    while( true )
+    for( DynamicFunctionSymbol superDfs: list )
     {
-      DynamicFunctionSymbol superDfs;
-      if( dfs.isOverride() )
-      {
-        superDfs = dfs.getSuperDfs();
-      }
-      else
-      {
-        superDfs = maybeGetSuperDfsFromJavaProxy( dfs );
-        if( superDfs == null )
-        {
-          break;
-        }
-      }
-
       while( superDfs instanceof ParameterizedDynamicFunctionSymbol )
       {
         superDfs = ((ParameterizedDynamicFunctionSymbol)superDfs).getBackingDfs();
@@ -734,7 +745,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
 
       if( genProxyCovariantBridgeMethod( dfs, superDfs ) )
       {
-        return;
+        continue;
       }
 
       IRType superRetDescriptor = getDescriptorNoStructures( superDfs.getReturnType() );
@@ -796,8 +807,11 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
           makeModifiersForBridgeMethod( getModifiers( dfs ) ),
           superRetDescriptor,
           parameters );
-        _irClass.addMethod( bridgeMethod );
-
+        if( !bridges.contains( bridgeMethod.signature() ) )
+        {
+          _irClass.addMethod( bridgeMethod );
+          bridges.add( bridgeMethod.signature() );
+        }
       }
       else
       {
@@ -805,37 +819,67 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         if( gsProxyClass != null && gsProxyClass.isProxy() )
         {
           if( addCovarientProxyBridgeMethods( superDfs ) ) {
-            break;
+            continue;
           }
         }
       }
-      dfs = superDfs;
+      compileBridgeMethods( superDfs );
     }
   }
 
-  private DynamicFunctionSymbol maybeGetSuperDfsFromJavaProxy( DynamicFunctionSymbol dfs )
+  private List<DynamicFunctionSymbol> maybeGetSuperDfs( DynamicFunctionSymbol dfs )
   {
     IScriptPartId scriptPart = dfs.getScriptPart();
     if( scriptPart == null )
     {
-      return null;
+      return Collections.emptyList();
     }
     IType gsClass = scriptPart.getContainingType();
     if( gsClass == null )
     {
-      return null;
+      return Collections.emptyList();
     }
-    if( !IGosuClass.ProxyUtil.isProxy( gsClass ) )
+    boolean bProxy = IGosuClass.ProxyUtil.isProxy( gsClass );
+    List<DynamicFunctionSymbol> list = new ArrayList<DynamicFunctionSymbol>( 2 );
+    Set<IType> set = new HashSet<IType>();
+    IType superType = bProxy ? ((IGosuClass)gsClass).getJavaType().getSupertype() : gsClass.getSupertype();
+    if( superType != null )
     {
-      return null;
+      DynamicFunctionSymbol superDfs = getSuperDfs( dfs, gsClass, superType );
+      if( superDfs != null && !set.contains( superDfs.getReturnType() ) ) {
+        list.add( superDfs );
+        set.add( superDfs.getReturnType() );
+      }
     }
-    IJavaType javaSuperType = (IJavaType)((IGosuClass)gsClass).getJavaType().getSupertype();
-    if( javaSuperType == null )
+    IType[] interfaces = bProxy ? ((IGosuClass)gsClass).getJavaType().getInterfaces() : gsClass.getInterfaces();
+    if( interfaces != null ) {
+      for( IType iface : interfaces ) {
+        DynamicFunctionSymbol superDfs = getSuperDfs( dfs, gsClass, iface );
+        if( superDfs != null && !set.contains( superDfs.getReturnType() ) ) {
+          list.add( superDfs );
+          set.add( superDfs.getReturnType() );
+        }
+      }
+    }
+    return list;
+  }
+
+  private DynamicFunctionSymbol getSuperDfs( DynamicFunctionSymbol dfs, IType gsClass, IType superType )
+  {
+    IGosuClassInternal gosuSuperType;
+    if( superType instanceof IJavaType )
     {
-      return null;
+      gosuSuperType = IGosuClassInternal.Util.getGosuClassFrom( superType );
+      if( gosuSuperType == null )
+      {
+        return null;
+      }
     }
-    IGosuClassInternal gosuSuperType = IGosuClassInternal.Util.getGosuClassFrom( javaSuperType );
-    if( gosuSuperType == null )
+    else if( superType instanceof IGosuClass )
+    {
+      gosuSuperType = (IGosuClassInternal)superType;
+    }
+    else
     {
       return null;
     }
@@ -856,7 +900,17 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
           if( csr.getBackingDfs() != null )
           {
             csr = csr.getBackingDfs();
-            return gosuSuperType.getParseInfo().getMemberFunctions().get( csr.getName() );
+            superDfs = gosuSuperType.getParseInfo().getMemberFunctions().get( csr.getName() );
+            if( superDfs == null )
+            {
+              IScriptPartId scriptPart = csr.getScriptPart();
+              gosuSuperType = scriptPart != null ? (IGosuClassInternal)scriptPart.getContainingType() : null;
+              if( gosuSuperType != null )
+              {
+                superDfs = gosuSuperType.getParseInfo().getMemberFunctions().get( csr.getName() );
+              }
+            }
+            return superDfs;
           }
         }
       }
@@ -1023,7 +1077,11 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         makeModifiersForBridgeMethod( m.getModifiers() ),
         superRetDescriptor,
         parameters );
-      _irClass.addMethod( bridgeMethod );
+      if( !bridges.contains( bridgeMethod.signature() ) )
+      {
+        _irClass.addMethod( bridgeMethod );
+        bridges.add( bridgeMethod.signature() );
+      }
       return true;
     }
     return false;
@@ -1135,7 +1193,11 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       getDescriptor( method.getReturnClassInfo() ),
       parameters
     );
-    _irClass.addMethod( bridgeMethod );
+    if( !bridges.contains( bridgeMethod.signature() ) )
+    {
+      _irClass.addMethod( bridgeMethod );
+      bridges.add( bridgeMethod.signature() );
+    }
   }
 
   private IType[] getParamsIncludingTypeParams( DynamicFunctionSymbol dfs )
@@ -1260,7 +1322,10 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
                                                       NameResolver.getFunctionName( dfs ),
                                                       getModifiers( dfs ),
                                                       getDescriptor( dfs.getReturnType() ),
+                                                      dfs.getReturnType(),
                                                       parameters,
+                                                      dfs.getArgTypes(),
+                                                      dfs.getType(),
                                                       annotationDefaultValue );
     method.setAnnotations( getIRAnnotations( makeAnnotationInfos( dfs.getModifierInfo().getAnnotations(), getGosuClass().getTypeInfo() ) ) );
     _irClass.addMethod( method );
@@ -1778,6 +1843,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
     {
       _irClass.addInterface( iface );
     }
+    _irClass.makeGenericSignature( _gsClass );
   }
 
   private IRType getSuperSlashName()

@@ -84,35 +84,35 @@ public class UnaryExpressionTransformer extends AbstractExpressionTransformer<Un
 
       if( value instanceof BigDecimal )
       {
-        value = CoercionUtil.makeBigDecimalFrom(value).negate();
+        value = ((BigDecimal)value).negate();
       }
       else if( value instanceof BigInteger )
       {
-        value = CoercionUtil.makeBigIntegerFrom(value).negate();
+        value = ((BigInteger)value).negate();
       }
       else if( value instanceof Integer )
       {
-        value = -CoercionUtil.makeIntegerFrom(value);
+        value = -(Integer)value;
       }
       else if( value instanceof Long )
       {
-        value = -CoercionUtil.makeLongFrom(value);
+        value = -(Long)value;
       }
       else if( value instanceof Double )
       {
-        value = -CoercionUtil.makeDoubleFrom(value);
+        value = -(Double)value;
       }
       else if( value instanceof Float )
       {
-        value = -CoercionUtil.makeFloatFrom(value);
+        value = -(Float)value;
       }
       else if( value instanceof Short )
       {
-        value = (short)-CoercionUtil.makeIntegerFrom(value).shortValue();
+        value = Short.valueOf( (short)-((Short)value).shortValue() );
       }
       else if( value instanceof Byte )
       {
-        value = (byte)-CoercionUtil.makeIntegerFrom(value).byteValue();
+        value = Byte.valueOf( (byte)-((Byte)value).byteValue() );
       }
       else
       {

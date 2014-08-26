@@ -523,6 +523,15 @@ public class DefaultEntityAccess extends BaseService implements IEntityAccess
     }
 
     //=============================================================================
+    // JavaType interface <- block class
+    //=============================================================================
+    if( rhsType instanceof IBlockClass && lhsType.isInterface() )
+    {
+      // Note this condition is only ever called at runtime e.g., block cast to Object cast to Interface
+      return FunctionToInterfaceCoercer.instance();
+    }
+
+    //=============================================================================
     // block <- compatible block
     //=============================================================================
     if (lhsType instanceof IFunctionType &&

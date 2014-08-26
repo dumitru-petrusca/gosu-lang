@@ -14,11 +14,9 @@ import gw.lang.parser.expressions.IAdditiveExpression;
 import gw.lang.reflect.IPlaceholder;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
-import gw.lang.reflect.gs.IGosuClass;
 import gw.lang.reflect.java.JavaTypes;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 
 /**
@@ -70,50 +68,7 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
 
   public static Object evaluate( IType type, Object lhsValue, Object rhsValue, IType lhsType, IType rhsType, boolean bAdditive, boolean bNullSafe, boolean bNumericType, Object ctx, int startLhs, int endLhs, int startRhs, int endRhs )
   {
-    if( bNumericType )
-    {
-      AdditiveExpression.maybeThrowRichNPE( lhsValue, rhsValue, bNullSafe, ctx, startLhs, endLhs, startRhs, endRhs );
-    }
     return evaluate( type, lhsValue, rhsValue, lhsType, rhsType, bAdditive, bNullSafe, bNumericType );
-  }
-
-  public static void maybeThrowRichNPE( Object lhsValue, Object rhsValue, boolean bNullSafe, Object ctx, int startLhs, int endLhs, int startRhs, int endRhs )
-  {
-    if( !bNullSafe && ctx instanceof IGosuClass )
-    {
-      NullPointerException npe = null;
-      try
-      {
-        IGosuClass gsClass = (IGosuClass)ctx;
-        if( lhsValue == null && rhsValue == null )
-        {
-          CharSequence entireExpr = gsClass.getSource().subSequence( startLhs, endRhs + 1 );
-          npe = new NullPointerException( "Both sides of the expression \"" + entireExpr + "\" evaluated to null." );
-        }
-        else if( lhsValue == null )
-        {
-          CharSequence entireExpr = gsClass.getSource().subSequence( startLhs, endRhs + 1 );
-          CharSequence lhsCode = gsClass.getSource().subSequence( startLhs, endLhs + 1 );
-          npe = new NullPointerException( "The expression \"" + lhsCode + "\" evaluated to null within the expression \"" + entireExpr + "\"." );
-        }
-        else if( rhsValue == null )
-        {
-          CharSequence entireExpr = gsClass.getSource().subSequence( startLhs, endRhs + 1 );
-          CharSequence rhsCode = gsClass.getSource().subSequence( startRhs, endRhs + 1 );
-          npe = new NullPointerException( "The expression \"" + rhsCode + "\" evaluated to null within the expression \"" + entireExpr + "\"." );
-        }
-      }
-      catch( Exception e )
-      {
-        //ignore
-      }
-      if( npe != null )
-      {
-        StackTraceElement[] elts = npe.getStackTrace();
-        npe.setStackTrace( Arrays.copyOfRange( elts, 2, elts.length ) );
-        throw npe;
-      }
-    }
   }
 
   public static Object evaluate( IType type, Object lhsValue, Object rhsValue, IType lhsType, IType rhsType, boolean bAdditive, boolean bNullSafe, boolean bNumericType )
@@ -156,12 +111,15 @@ public final class AdditiveExpression extends ArithmeticExpression implements IA
         throw new NullPointerException("right-hand operand was null");
       }
 
-      DimensionOperandResolver dimOperandResolver =
-        DimensionOperandResolver.resolve( type, bAdditive ? '+' : '-', lhsType, lhsValue, rhsType, rhsValue );
-      type = dimOperandResolver.getRawNumberType();
-      lhsValue = dimOperandResolver.getLhsValue();
-      rhsValue = dimOperandResolver.getRhsValue();
-      IDimension customNumberBase = dimOperandResolver.getBase();
+      IDimension customNumberBase = null;
+      if( JavaTypes.IDIMENSION().isAssignableFrom( type ) ) {
+        DimensionOperandResolver dimOperandResolver =
+          DimensionOperandResolver.resolve( type, lhsType, lhsValue, rhsType, rhsValue );
+        type = dimOperandResolver.getRawNumberType();
+        lhsValue = dimOperandResolver.getLhsValue();
+        rhsValue = dimOperandResolver.getRhsValue();
+        customNumberBase = dimOperandResolver.getBase();
+      }
 
       // Add/Subtract values as numbers
       Object retValue;

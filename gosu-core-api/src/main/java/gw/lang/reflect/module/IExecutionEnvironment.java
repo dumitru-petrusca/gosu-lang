@@ -33,4 +33,6 @@ public interface IExecutionEnvironment
   TypeSystemState getState();
 
   boolean isShadowingMode();
+
+  String makeGosucProjectFile( String gosucProjectClassName );
 }

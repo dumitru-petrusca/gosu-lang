@@ -18,6 +18,7 @@ import gw.lang.parser.EvaluationException;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.java.JavaTypes;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -72,7 +73,7 @@ public class ArrayAssignmentStatementTransformer extends AbstractStatementTransf
     if( rootType.isArray() && isBytecodeType( rootType ) )
     {
       // Normal array access
-      return buildArrayStore(root, index, value, getDescriptor( rootType.getComponentType() ));
+      return buildArrayStore( root, index, value, getDescriptor( rootType.getComponentType() ) );
     }
     else
     {
@@ -82,6 +83,16 @@ public class ArrayAssignmentStatementTransformer extends AbstractStatementTransf
                                     buildAssignment( tempIndex, originalIndex ),
                                     buildMethodCall( callStaticMethod( ArrayAssignmentStatementTransformer.class, "setOrAddElement", new Class[]{Object.class, int.class, Object.class},
                                                                        exprList( root, index, value ) ) ) );
+      }
+      else if( JavaTypes.LIST().isAssignableFrom( rootType ) )
+      {
+        return buildMethodCall( buildMethodCall( List.class, "set", Object.class, new Class[]{int.class, Object.class},
+                                                 buildCast( getDescriptor( List.class ), root ), Arrays.asList( index, value ) ) );
+      }
+      else if( JavaTypes.STRING_BUILDER().isAssignableFrom( rootType ) )
+      {
+        return buildMethodCall( buildMethodCall( StringBuilder.class, "setCharAt", void.class, new Class[]{int.class, char.class},
+                                                 buildCast( getDescriptor( StringBuilder.class ), root ), Arrays.asList( index, value ) ) );
       }
       else
       {
