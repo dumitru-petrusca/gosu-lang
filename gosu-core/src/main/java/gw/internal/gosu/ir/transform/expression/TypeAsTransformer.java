@@ -18,6 +18,7 @@ import gw.internal.gosu.ir.transform.TopLevelTransformationContext;
 import gw.internal.gosu.parser.CompoundType;
 import gw.lang.ir.IRType;
 import gw.lang.ir.expression.IRCompositeExpression;
+import gw.lang.ir.expression.IRConditionalOrExpression;
 import gw.lang.ir.expression.IRIdentifier;
 import gw.lang.ir.expression.IRInstanceOfExpression;
 import gw.lang.ir.statement.IRAssignmentStatement;
@@ -281,7 +282,8 @@ public class TypeAsTransformer extends AbstractExpressionTransformer<ITypeAsExpr
     ICoercer coercer = _expr().getCoercer();
     IType exprType = _expr().getType();
     if( (coercer == IdentityCoercer.instance() && !exprType.isPrimitive()) ||
-        exprType instanceof CompoundType )
+        exprType instanceof CompoundType ||
+        areAssignableBytecodeTypes( coercer, exprType, lhsType ) )
     {
       if( !lhsType.isPrimitive() && lhsType != exprType )
       {
@@ -300,13 +302,13 @@ public class TypeAsTransformer extends AbstractExpressionTransformer<ITypeAsExpr
           // Generate code like the following:
           //
           // LhsType temp = <lhs-expr>
-          // temp instanceof AsType ? (AsType)temp : coerce( temp, AsType )
+          // (temp instanceof AsType || temp == null) ? (AsType)temp : coerce( temp, AsType )
           //
           IRType asType = getDescriptor( exprType );
           IRSymbol rootValue = _cc().makeAndIndexTempSymbol( root.getType() );
           root = buildComposite(
             buildAssignment( rootValue, root ),
-            buildTernary( new IRInstanceOfExpression( identifier( rootValue ), asType ),
+            buildTernary( new IRConditionalOrExpression( new IRInstanceOfExpression( identifier( rootValue ), asType ), buildEquals( identifier( rootValue ), nullLiteral() ) ),
                           checkCast( exprType, identifier( rootValue ) ),
                           coerce( identifier( rootValue ), RuntimeCoercer.instance() ),
                           asType ) );
@@ -323,6 +325,13 @@ public class TypeAsTransformer extends AbstractExpressionTransformer<ITypeAsExpr
     }
 
     return coerce( root, coercer );
+  }
+
+  private boolean areAssignableBytecodeTypes( ICoercer coercer, IType asType, IType lhsType ) {
+    return (coercer instanceof IdentityCoercer || coercer == null) &&
+           (asType.isAssignableFrom( lhsType ) || lhsType.isAssignableFrom( asType )) &&
+           TypeSystem.isBytecodeType( lhsType ) &&
+           TypeSystem.isBytecodeType( asType );
   }
 
   private boolean isStructureType( IType exprType ) {
