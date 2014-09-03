@@ -26,25 +26,25 @@
 
   <build>
     <sourceDirectory>../gosu-core-api/src/main/gosu</sourceDirectory>
-    <plugins>
-      <!-- Pre-compile all gosu enhancements, etc -->
-      <plugin>
-        <groupId>org.gosu-lang.gosu</groupId>
-        <artifactId>gosu-maven-plugin</artifactId>
-        <version>1-compilerChanges-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <phase>compile</phase>
-            <configuration>
-              <roots><root>../gosu-core-api/</root></roots>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+    <!--<plugins>-->
+      <!--&lt;!&ndash; Pre-compile all gosu enhancements, etc &ndash;&gt;-->
+      <!--<plugin>-->
+        <!--<groupId>org.gosu-lang.gosu</groupId>-->
+        <!--<artifactId>gosu-maven-plugin</artifactId>-->
+        <!--<version>1-compilerChanges-SNAPSHOT</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<goals>-->
+              <!--<goal>compile</goal>-->
+            <!--</goals>-->
+            <!--<phase>compile</phase>-->
+            <!--<configuration>-->
+              <!--<roots><root>../gosu-core-api/</root></roots>-->
+            <!--</configuration>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
+    <!--</plugins>-->
   </build>
 
 </project>

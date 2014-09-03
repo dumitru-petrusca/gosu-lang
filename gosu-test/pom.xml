@@ -46,20 +46,20 @@
 
   <build>
     <testSourceDirectory>src/test/gosu</testSourceDirectory>
-    <plugins>
-      <plugin>
-        <groupId>org.gosu-lang.gosu</groupId>
-        <artifactId>gosu-maven-plugin</artifactId>
-        <version>1-compilerChanges-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>test-compile</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
+    <!--<plugins>-->
+      <!--<plugin>-->
+        <!--<groupId>org.gosu-lang.gosu</groupId>-->
+        <!--<artifactId>gosu-maven-plugin</artifactId>-->
+        <!--<version>1-compilerChanges-SNAPSHOT</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<goals>-->
+              <!--<goal>test-compile</goal>-->
+            <!--</goals>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
+    <!--</plugins>-->
   </build>
 
 </project>
