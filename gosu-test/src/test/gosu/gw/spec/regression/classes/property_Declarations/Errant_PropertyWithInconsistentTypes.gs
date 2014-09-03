@@ -2,7 +2,7 @@ package gw.spec.regression.classes.property_Declarations
 
 uses java.lang.Integer
 
-class Errant_PropertyDeclTest {
+class Errant_PropertyWithInconsistentTypes {
 
   property get Prop1() :  String {   //## issuekeys: MSG_PROPERTIES_MUST_AGREE_ON_TYPE
     return null
