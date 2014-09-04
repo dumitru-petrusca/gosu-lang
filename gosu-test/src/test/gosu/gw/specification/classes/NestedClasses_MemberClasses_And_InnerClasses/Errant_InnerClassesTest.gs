@@ -60,6 +60,9 @@ class Errant_InnerClassesTest {
 
     class Bar {
 
+      class Foo {  //## issuekeys: MSG_DUPLICATE_CLASS_FOUND
+      }
+
       class Bar {    //## issuekeys: MSG_DUPLICATE_CLASS_FOUND
       }
     }

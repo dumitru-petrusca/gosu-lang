@@ -2,6 +2,7 @@ package gw.spec.regression.statements
 
 uses junit.framework.TestCase
 uses java.util.Date
+uses gw.spec.regression.Type1
 
 class Errant_DuplicateCaseInSwitch extends TestCase {
 
