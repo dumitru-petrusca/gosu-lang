@@ -1,4 +1,4 @@
-package gw.spec.regression.typeinference
+package gw.spec.regression.types
 
 uses java.lang.Integer
 uses java.util.HashMap
