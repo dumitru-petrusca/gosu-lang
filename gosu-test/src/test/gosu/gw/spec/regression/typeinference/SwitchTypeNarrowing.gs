@@ -1,21 +1,28 @@
 package gw.spec.regression.typeinference
 
 uses junit.framework.TestCase
-uses java.util.Date
 
 class SwitchTypeNarrowing extends TestCase {
+  private enum MyEnum  { ONE, TWO }
 
   function test() {
     var x: Object = "neat"
+    var f = x typeis String
 
-    switch (typeof(x)) {
+    switch (typeof( ((x)) )) {  // crazy parentheses are valid 
+      case MyEnum:
+        if (f) {
+          switch (x) {
+            case ONE:
+              return
+            case TWO:
+              throw new RuntimeException()
+          }
+        } else {
+          break
+        }
       case String:
-        print(x.charAt(0))
-        break
-      case Date:
-        print(x.Time)
-        break
+        x.contains("ne")
     }
   }
-
 }
