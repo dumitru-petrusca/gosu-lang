@@ -1,8 +1,6 @@
 package gw.spec.regression.typeinference
 
-uses junit.framework.TestCase
-
-class SwitchTypeNarrowing extends TestCase {
+class SwitchTypeNarrowing {
   private enum MyEnum  { ONE, TWO }
 
   function test() {
@@ -16,7 +14,7 @@ class SwitchTypeNarrowing extends TestCase {
             case ONE:
               return
             case TWO:
-              throw new RuntimeException()
+              throw new java.lang.RuntimeException()
           }
         } else {
           break
