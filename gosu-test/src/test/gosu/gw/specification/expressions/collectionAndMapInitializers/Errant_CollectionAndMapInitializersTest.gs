@@ -22,6 +22,7 @@ class Errant_CollectionAndMapInitializersTest {
     var x2 = { 1-> "2", 2 -> "4"}
     var x3 : Map = {{1->2} -> 3}
     var x1 : Map = { 1, 2 -> 3}  //## issuekeys: MSG_EXPECTING_ARROW_AFTER_MAP_KEY
+    var x2 = { {1 -> 2} -> 3 } //## issuekeys: MSG_EXPECTING_ARROW_AFTER_MAP_KEY
   }
 
   function testErrors(){
