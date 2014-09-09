@@ -1,10 +1,9 @@
 package gw.spec.regression.expressions
 
-uses junit.framework.TestCase
 uses java.lang.Integer
 uses java.lang.System
 
-class Errant_ObjectInitializer extends TestCase {
+class Errant_CollectionElementInitializer {
 
   function foo() {
     var a = new Integer[]{
