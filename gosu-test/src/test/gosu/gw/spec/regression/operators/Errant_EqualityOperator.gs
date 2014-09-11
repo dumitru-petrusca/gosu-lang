@@ -16,6 +16,9 @@ class Errant_EqualityOperator {
     var eq4 = 42 == s
     var eq5 = 42 == t            //## issuekeys: MSG_
     var eq6 = t == sub
+    var eq7 = {1->2, 3->4} == o
+    var eq8 = 42 != !true         //## issuekeys: MSG
+    var eq9 = {1->4, 5->6} != {1, 2, 3}         //## issuekeys: MSG
   }
 
 }
