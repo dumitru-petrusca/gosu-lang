@@ -1,9 +1,8 @@
 package gw.spec.regression.typeinference
 
-uses junit.framework.TestCase
 uses java.util.Date
 
-class IfTypeNarrowing extends TestCase {
+class IfTypeNarrowing {
 
   function test() {
     var x: Object = "neat"
