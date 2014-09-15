@@ -1,3 +1,4 @@
+uses java.io.Serializable
 uses java.lang.Double
 uses java.lang.Integer
 
@@ -25,5 +26,13 @@ class Errant_GenericMethodBounds {
     upperBoundDouble(1, 2)
     upperBoundDouble('c', 'c')
     upperBoundDouble(222)        //## issuekeys: MSG_
+  }
+
+  function upperBoundSerializable<T extends Serializable>(t1: T, t2: T) {}
+  function caller4() {
+    var m = {1 -> 2}
+    var l = {1, 2, 3}
+    upperBoundSerializable(m, l)
+    upperBoundSerializable({1 -> 2}, {1, 2, 3})
   }
 }
