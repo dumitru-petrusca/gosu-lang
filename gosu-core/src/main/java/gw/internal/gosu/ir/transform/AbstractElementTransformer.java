@@ -3080,8 +3080,8 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
         stringValueExpr = callMethod( Object.class, "toString", new Class[0], expr, Collections.<IRExpression>emptyList() );
       }
       else {
-        stringValueExpr = callMethod( ICoercionManager.class, "makeStringFrom", new Class[]{Object.class},
-                       callStaticMethod( CommonServices.class, "getCoercionManager", new Class[]{}, Collections.<IRExpression>emptyList() ),
+        stringValueExpr = callMethod( IEntityAccess.class, "makeStringFrom", new Class[]{Object.class},
+                       callStaticMethod( CommonServices.class, "getEntityAccess", new Class[]{}, Collections.<IRExpression>emptyList() ),
                        Collections.singletonList( expr ) );
       }
     }
@@ -3097,8 +3097,8 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
       }
       else {
         // This is really stupid, but the pl coercion mgr converts double/float to non-decimal strings if the value is non-fractional, so instead of printing 1.0 for a normal _decimal_ value it prints 1  (fart)
-        stringValueExpr = callMethod( ICoercionManager.class, "makeStringFrom", new Class[]{Object.class},
-                       callStaticMethod( CommonServices.class, "getCoercionManager", new Class[]{}, Collections.<IRExpression>emptyList() ),
+        stringValueExpr = callMethod( IEntityAccess.class, "makeStringFrom", new Class[]{Object.class},
+                       callStaticMethod( CommonServices.class, "getEntityAccess", new Class[]{}, Collections.<IRExpression>emptyList() ),
                        Collections.singletonList( boxValue( getDescriptor( primitiveClass ), expr ) ) );
       }
     }
@@ -3117,8 +3117,7 @@ public abstract class AbstractElementTransformer<T extends IParsedElement>
       operandType == JavaTypes.pDOUBLE() ||
       operandType == JavaTypes.DATE() ||
       TypeSystem.get( IEnumConstant.class ).isAssignableFrom( operandType ) ||
-      CommonServices.getEntityAccess().isTypekey( operandType ) ||
-      CommonServices.getEntityAccess().isEntityClass( operandType );
+      CommonServices.getEntityAccess().isDomainInstance( operandType );
   }
 
   final protected IType findDimensionType( IType type ) {

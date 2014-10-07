@@ -155,6 +155,7 @@ public class GosuClassPathThing {
 
   private static void removeOurProtocolPackage() {
     String strProtocolProp = "java.protocol.handler.pkgs";
+    String ours = "gw.internal.gosu.compiler.protocols";
     String protocols = System.getProperty( strProtocolProp );
     if( protocols != null ) {
       if (ours.equals(protocols)) {

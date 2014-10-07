@@ -18,10 +18,10 @@ import gw.lang.ir.IRSymbol;
 import gw.lang.ir.expression.IRArithmeticExpression;
 import gw.lang.ir.expression.IRStringLiteralExpression;
 import gw.lang.ir.statement.IRAssignmentStatement;
-import gw.lang.parser.ICoercionManager;
 import gw.lang.parser.ILanguageLevel;
 import gw.lang.parser.IParseTree;
 import gw.lang.parser.IParsedElement;
+import gw.lang.reflect.IEntityAccess;
 import gw.lang.reflect.IType;
 import gw.lang.reflect.TypeSystem;
 import gw.lang.reflect.java.IJavaType;
@@ -189,7 +189,7 @@ public class AdditiveExpressionTransformer extends ArithmeticExpressionTransform
     }
 
     handleConcatOperand( sbHandle, _expr().getLHS() );
-    handleConcatOperand( sbHandle, _expr().getRHS() );
+    handleConcatOperand(sbHandle, _expr().getRHS());
 
     if( _stringBuilderFromParent == null ) {
       //## perf: Maybe create your own MyStringBuilder class that exposes the char[] and use SharedSecrets.getJavaLangAccess().newStringUnsafe( char[] ).
