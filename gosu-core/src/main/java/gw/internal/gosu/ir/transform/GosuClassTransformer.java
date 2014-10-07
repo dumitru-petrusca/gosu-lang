@@ -109,6 +109,7 @@ import java.util.Set;
 public class GosuClassTransformer extends AbstractElementTransformer<ClassStatement>
 {
   public static final String ENUM_VALUES_FIELD = "ENUM$VALUES";
+  public static final String ENHANCED_TYPE_FIELD = "ENHANCED$TYPE";
 
   private IGosuClassInternal _gsClass;
   private EnumOrdinalCounter _enumCounter;
@@ -311,12 +312,33 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
     for( IVarStatement field : getOrderedFields() )
     {
       IRFieldDecl fieldDecl = new IRFieldDecl( getModifiers( (AbstractDynamicSymbol)field.getSymbol() ),
+                                               field.isInternal(),
                                                field.getIdentifierName(),
                                                getDescriptor( field.getType() ),
                                                field.getType(),
                                                null );
       fieldDecl.setAnnotations( getIRAnnotations( makeAnnotationInfos( ((VarStatement)field).getAnnotations(), getGosuClass().getTypeInfo() ) ) );
       _irClass.addField( fieldDecl );
+    }
+
+    maybeAddEnhancedTypeMarkerField();
+  }
+
+  /**
+   * If this is an enhancement, add a (hacky) marker field to indicate the enhanced type for tooling.  E.g.,
+   *  private static final <enhanced-type> ENHNANCED$TYPE;
+   *
+   */
+  private void maybeAddEnhancedTypeMarkerField() {
+    if( getGosuClass() instanceof IGosuEnhancementInternal ) {
+      int iModifiers = Opcodes.ACC_STATIC | Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC;
+      iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : Opcodes.ACC_PRIVATE);
+      IRFieldDecl enhancedTypeMarkerField = new IRFieldDecl( iModifiers,
+                                               false,
+                                               ENHANCED_TYPE_FIELD,
+                                               IRTypeResolver.getDescriptor( ((IGosuEnhancementInternal)getGosuClass()).getEnhancedType() ),
+                                               null );
+      _irClass.addField( enhancedTypeMarkerField );
     }
   }
 
@@ -325,6 +347,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
     for( IVarStatement field : _gsClass.getStaticFields() )
     {
       IRFieldDecl fieldDecl = new IRFieldDecl( getModifiers( (Symbol)field.getSymbol() ),
+                                               field.isInternal(),
                                                field.getIdentifierName(),
                                                getDescriptor( field.getType() ),
                                                field.getType(),
@@ -335,12 +358,13 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
 
     // Enums automatically get a synthetic field that holds an array of all enum values
     // in the appropriate order and which is used to implement values() method.  The field
-    // is intialized statically, immediately after all the enum constants have been initialized.
+    // is initialized statically, immediately after all the enum constants have been initialized.
     if( _gsClass.isEnum() )
     {
       int iModifiers = Opcodes.ACC_STATIC | Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC;
       iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : Opcodes.ACC_PRIVATE);
       IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                               false,
                                                ENUM_VALUES_FIELD,
                                                getDescriptor( _gsClass.getArrayType() ),
                                                null );
@@ -355,6 +379,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       int iModifiers = Opcodes.ACC_FINAL + Opcodes.ACC_SYNTHETIC;
       iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : 0);
       IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                               false,
                                                getOuterThisFieldName(),
                                                getDescriptor( getRuntimeEnclosingType( _gsClass ) ),
                                                null );
@@ -378,6 +403,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         int iModifiers = Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC;
         iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : Opcodes.ACC_PRIVATE);
         IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                                 false,
                                                  CAPTURED_VAR_PREFIX + sym.getName(),
                                                  getDescriptor( sym.getType().getArrayType() ),
                                                  null );
@@ -390,6 +416,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       int iModifiers = Opcodes.ACC_FINAL | Opcodes.ACC_SYNTHETIC;
       iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : Opcodes.ACC_PRIVATE);
       IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                               false,
                                                GosuFragmentTransformer.SYMBOLS_PARAM_NAME,
                                                getDescriptor( IExternalSymbolMap.class ),
                                                null );
@@ -408,6 +435,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         int iModifiers = Opcodes.ACC_FINAL + Opcodes.ACC_SYNTHETIC;
         iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : 0);
         IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                                 false,
                                                  TYPE_PARAM_PREFIX + genTypeVar.getName(),
                                                  getDescriptor( IType.class ),
                                                  null );
@@ -427,6 +455,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
         int iModifiers = Opcodes.ACC_FINAL + Opcodes.ACC_SYNTHETIC;
         iModifiers |= (BytecodeOptions.isSingleServingLoader() ? Opcodes.ACC_PUBLIC : 0);
         IRFieldDecl fieldDecl = new IRFieldDecl( iModifiers,
+                                                 false,
                                                  TYPE_PARAM_PREFIX + genTypeVar.getName(),
                                                  getDescriptor( IType.class ),
                                                  null );
@@ -1968,7 +1997,7 @@ public class GosuClassTransformer extends AbstractElementTransformer<ClassStatem
       return;
     }
     _bHasAsserts = true;
-    IRFieldDecl fieldDecl = new IRFieldDecl( 0x1018,
+    IRFieldDecl fieldDecl = new IRFieldDecl( 0x1018, false,
             AssertStatementTransformer.$_ASSERTIONS_DISABLED,
             getDescriptor( JavaTypes.pBOOLEAN() ),
             null );
