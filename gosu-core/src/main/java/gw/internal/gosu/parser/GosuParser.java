@@ -2281,6 +2281,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       Expression lhs = popExpression();
       rhs = verifyConditionalTypes( lhs, rhs );
       IType type = IntervalExpression.getIntervalType( rhs.getType() );
+      verifyComparable( rhs.getType(), lhs, true );
       lhs = possiblyWrapWithImplicitCoercion( lhs, rhs.getType() );
       IntervalExpression e = new IntervalExpression( bClosed || !bLeftOpen, bClosed || !bRightOpen, lhs, rhs );
       verify( e, !bNextTokenIsDotNoWhitespace, Res.MSG_EXTRA_DOT_FOUND_IN_INTERVAL );
