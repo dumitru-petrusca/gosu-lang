@@ -714,13 +714,13 @@ public class Gosu implements IGosuLaunch
     @Override
     public int run() throws Exception
     {
-      if( _fqn != null && !_fqn.isEmpty() )
+      if( _argInfo.getProgramSource().getFile() != null )
       {
-        return runWithType();
+        return runWithFile();
       }
       else
       {
-        return runWithFile();
+        return runWithType();
       }
     }
 
