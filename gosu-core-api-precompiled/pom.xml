@@ -2,7 +2,7 @@
   <parent>
     <groupId>org.gosu-lang.gosu</groupId>
     <artifactId>gosu-parent</artifactId>
-    <version>1-entityMerged-SNAPSHOT</version>
+    <version>1-studio-SNAPSHOT</version>
     <relativePath>../gosu-parent/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -15,22 +15,24 @@
     <dependency>
       <groupId>org.gosu-lang.gosu</groupId>
       <artifactId>gosu-core-api</artifactId>
-      <version>1-entityMerged-SNAPSHOT</version>
+      <version>1-studio-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.gosu-lang.gosu</groupId>
       <artifactId>gosu-core</artifactId>
-      <version>1-entityMerged-SNAPSHOT</version>
+      <version>1-studio-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <!-- Pre-compile all gosu enhancements, etc -->
+      <!--TODO-dp uncomment this during the merge -->
+<!--
       <plugin>
         <groupId>org.gosu-lang.gosu</groupId>
         <artifactId>gosu-maven-plugin</artifactId>
-        <version>1-entityMerged-SNAPSHOT</version>
+        <version>1-studio-SNAPSHOT</version>
         <executions>
           <execution>
             <goals>
@@ -38,11 +40,12 @@
             </goals>
             <phase>compile</phase>
             <configuration>
-              <moduleName>_jre_module_</moduleName> <!-- Precompile JRE module -->
+              <moduleName>_jre_module_</moduleName> &lt;!&ndash; Precompile JRE module &ndash;&gt;
             </configuration>
           </execution>
         </executions>
       </plugin>
+-->
     </plugins>
   </build>
 
