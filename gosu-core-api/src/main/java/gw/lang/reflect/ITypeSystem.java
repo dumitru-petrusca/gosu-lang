@@ -240,8 +240,6 @@ public interface ITypeSystem extends IService
 
   IMetaType getDefaultType();
 
-  boolean isSingleModuleMode();
-
   void addShutdownListener(TypeSystemShutdownListener listener);
 
   void pushModule(IModule gosuModule);
