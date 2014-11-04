@@ -32,7 +32,7 @@ class WsiExportable implements IAnnotation, IDeclarationSiteValidator {
 
   override function validate(feature : IParsedElement) {
     //TODO-dp remove this
-    if (CommonServices.getPlatformHelper().isInIDE()) {
+    if (ExecutionMode.isIDE()) {
       return
     }
 

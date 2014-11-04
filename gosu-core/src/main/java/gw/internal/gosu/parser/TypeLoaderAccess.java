@@ -6,6 +6,7 @@ package gw.internal.gosu.parser;
 
 import gw.config.BaseService;
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.fs.IFile;
 import gw.fs.IResource;
 import gw.internal.gosu.compiler.SingleServingGosuClassLoader;
@@ -125,7 +126,7 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
 
   public Module getCurrentModule()
   {
-    if( TypeSystem.isSingleModuleMode() )
+    if( !ExecutionMode.isIDE() )
     {
       return (Module)TypeSystem.getGlobalModule();
     }
@@ -1415,11 +1416,6 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
   @Override
   public IMetaType getDefaultType() {
     return (IMetaType) MetaType.DEFAULT_TYPE_TYPE.get();
-  }
-
-  @Override
-  public boolean isSingleModuleMode() {
-    return ExecutionEnvironment.isDefaultSingleModuleMode();
   }
 
 }

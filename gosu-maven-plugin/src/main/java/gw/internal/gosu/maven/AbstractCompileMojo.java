@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import gw.config.AbstractPlatformHelper;
 import gw.config.CommonServices;
+import gw.config.ExecutionMode;
 import gw.config.IPlatformHelper;
 import gw.config.Registry;
 import gw.fs.IDirectory;
@@ -331,9 +332,9 @@ public abstract class AbstractCompileMojo extends AbstractMojo {
 
   private static class MavenPlatformHelper extends AbstractPlatformHelper {
     @Override
-    public boolean isInIDE() {
+    public ExecutionMode getExecutionMode() {
       // XXX: Seems like in multiple modules mode, this has to be 'true'
-      return true;
+      return ExecutionMode.IDE;
     }
 
     @Override

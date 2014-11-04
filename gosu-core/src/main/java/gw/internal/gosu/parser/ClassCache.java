@@ -4,6 +4,7 @@
 
 package gw.internal.gosu.parser;
 
+import gw.config.ExecutionMode;
 import gw.fs.IFile;
 import gw.internal.gosu.module.DefaultSingleModule;
 import gw.lang.reflect.java.asm.AsmClass;
@@ -43,13 +44,13 @@ public class ClassCache {
 
   public ClassCache(final IModule module) {
     _module = module;
-    ignoreTheCache = module instanceof DefaultSingleModule;
+    ignoreTheCache = ExecutionMode.isRuntime();
     _classPathCache =
       new LockingLazyVar<ClassPath>() {
         protected ClassPath init() {
           return
             new ClassPath( _module,
-                _module instanceof DefaultSingleModule ?
+                    ExecutionMode.isRuntime() ?
                         IClassPath.ONLY_API_CLASSES : // FIXME-isd: for performance reasons, only select API classes
                         IClassPath.ALLOW_ALL_WITH_SUN_FILTER);
         }

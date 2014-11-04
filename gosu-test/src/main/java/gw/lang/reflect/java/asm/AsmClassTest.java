@@ -4,6 +4,7 @@
 
 package gw.lang.reflect.java.asm;
 
+import gw.config.ExecutionMode;
 import gw.fs.FileFactory;
 import gw.fs.IFile;
 import gw.internal.gosu.parser.DefaultPlatformHelper;
@@ -23,13 +24,13 @@ public class AsmClassTest extends TestClass {
   @Override
   public void beforeTestMethod() {
     super.beforeTestMethod();
-    DefaultPlatformHelper.IN_IDE = true;
+    DefaultPlatformHelper.EXECUTION_MODE = ExecutionMode.COMPILER;
   }
 
   @Override
   public void afterTestMethod( Throwable possibleException ) {
     super.afterTestMethod( possibleException );
-    DefaultPlatformHelper.IN_IDE = false;
+    DefaultPlatformHelper.EXECUTION_MODE = ExecutionMode.RUNTIME;
   }
 
   public void testClassDeclaration() {
