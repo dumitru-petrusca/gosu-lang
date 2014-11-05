@@ -40,6 +40,7 @@ public class ClassCache {
       return strings;
     }
   };
+  private AsmClassLoader _asmClassLoader;
   private boolean ignoreTheCache;
 
   public ClassCache(final IModule module) {
@@ -55,6 +56,7 @@ public class ClassCache {
                         IClassPath.ALLOW_ALL_WITH_SUN_FILTER);
         }
       };
+    _asmClassLoader = new AsmClassLoader(_module);
   }
 
   private Class tryToLoadClass(CharSequence name) {
@@ -119,7 +121,7 @@ public class ClassCache {
         IFile file = _classPathCache.get().get( className );
         if( file != null ) {
           try {
-            return AsmClassLoader.loadClass( _module, className, file.openInputStream() );
+            return _asmClassLoader.findClass( className, file.openInputStream() );
           }
           catch( IOException e ) {
             throw new RuntimeException( e );

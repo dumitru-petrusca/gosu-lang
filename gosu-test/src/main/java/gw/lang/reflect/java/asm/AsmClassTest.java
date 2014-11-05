@@ -250,6 +250,8 @@ public class AsmClassTest extends TestClass {
 //      throw new RuntimeException( e );
 //    }
 //  }
+  AsmClassLoader _asmClassLoader = new AsmClassLoader(null);
+
   private AsmClass loadAsmClass( Class<?> cls ) {
     URL location = cls.getProtectionDomain().getCodeSource().getLocation();
     String fileLocation = "";
@@ -257,13 +259,13 @@ public class AsmClassTest extends TestClass {
       if( location.getFile().toLowerCase().endsWith( ".jar" ) ) {
         fileLocation = "jar:" + location.toExternalForm() + "!/" + cls.getPackage().getName().replace( '.', '/' ) + '/' + getSimpleName( cls ) + ".class";
         IFile classFile = FileFactory.instance().getIFile( new URL( fileLocation ), false );
-        return AsmClassLoader.loadClass( null, cls.getName(), classFile.openInputStream() );
+        return _asmClassLoader.findClass( cls.getName(), classFile.openInputStream() );
       }
       else {
         File dir = new File( location.toURI() );
         dir = new File( dir, cls.getPackage().getName().replace( '.', '/' ) );
         File classFile = new File( dir, getSimpleName( cls ) + ".class" );
-        return AsmClassLoader.loadClass( null, cls.getName(), new FileInputStream( classFile ) );
+        return _asmClassLoader.findClass( cls.getName(), new FileInputStream( classFile ) );
       }
     }
     catch( Exception e ) {
