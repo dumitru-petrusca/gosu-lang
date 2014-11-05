@@ -1226,10 +1226,6 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     pushTypeLoader(null, loader);
   }
 
-  public boolean areBeansEqual(Object o1, Object o2) {
-    return BeanAccess.areBeansEqual(o1, o2);
-  }
-
   public void pushIncludeAll() {
     GosuClassTypeInfo.pushIncludeAll();
   }
