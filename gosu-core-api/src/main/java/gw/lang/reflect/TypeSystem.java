@@ -460,11 +460,6 @@ public class TypeSystem
     return CommonServices.getEntityAccess().getKeyType();
   }
 
-  public static boolean areBeansEqual( Object o1, Object o2 )
-  {
-    return CommonServices.getTypeSystem().areBeansEqual( o1, o2 );
-  }
-
   public static void pushIncludeAll()
   {
     CommonServices.getTypeSystem().pushIncludeAll();
