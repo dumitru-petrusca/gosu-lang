@@ -12,6 +12,7 @@ import gw.internal.gosu.module.DefaultSingleModule;
 import gw.internal.gosu.module.GlobalModule;
 import gw.internal.gosu.module.JreModule;
 import gw.internal.gosu.module.Module;
+import gw.fs.AdditionalDirectory;
 import gw.lang.cli.SystemExitIgnoredException;
 import gw.lang.gosuc.GosucModule;
 import gw.lang.gosuc.GosucProject;
@@ -163,7 +164,18 @@ public class ExecutionEnvironment implements IExecutionEnvironment
       List<IDirectory> allRoots = new ArrayList<IDirectory>();
       for( GosuPathEntry pathEntry : pathEntries )
       {
-        allRoots.add(pathEntry.getRoot());
+        IDirectory root = pathEntry.getRoot();
+        allRoots.add(root);
+        for( IDirectory dir: pathEntry.getSources() ) {
+          IDirectory srcDir;
+          if( root.isAdditional() ) {
+            srcDir = new AdditionalDirectory( dir );
+          }
+          else {
+            srcDir = dir;
+          }
+          allSources.add( srcDir );
+        }
         allSources.addAll(pathEntry.getSources());
       }
       singleModule.configurePaths(createDefaultClassPath(), allSources);
