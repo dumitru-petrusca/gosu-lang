@@ -9,7 +9,7 @@
 
   <groupId>com.guidewire.studio</groupId>
   <artifactId>idea-gosu-plugin</artifactId>
-  <version>3.8</version>
+  <version>1-studio-SNAPSHOT</version>
 
   <name>Gosu :: IntelliJ IDEA Plugin </name>
 
