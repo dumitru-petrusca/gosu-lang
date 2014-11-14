@@ -8,6 +8,7 @@ import gw.config.CommonServices;
 import gw.config.ExecutionMode;
 import gw.fs.IDirectory;
 import gw.fs.IResource;
+import gw.fs.IncludeModuleDirectory;
 import gw.internal.gosu.module.DefaultSingleModule;
 import gw.internal.gosu.module.GlobalModule;
 import gw.internal.gosu.module.JreModule;
@@ -168,7 +169,10 @@ public class ExecutionEnvironment implements IExecutionEnvironment
         allRoots.add(root);
         for( IDirectory dir: pathEntry.getSources() ) {
           IDirectory srcDir;
-          if( root.isAdditional() ) {
+          if( root instanceof IncludeModuleDirectory ) {
+            srcDir = new IncludeModuleDirectory( dir );
+          }
+          else if( root.isAdditional() ) {
             srcDir = new AdditionalDirectory( dir );
           }
           else {
