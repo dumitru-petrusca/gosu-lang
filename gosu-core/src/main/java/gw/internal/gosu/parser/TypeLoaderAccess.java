@@ -781,14 +781,14 @@ public class TypeLoaderAccess extends BaseService implements ITypeSystem
     typeMap.put( "void",    new TypeGetter() { public IType get() { return JavaType.get(Void.TYPE, _getDefaultLoader()); }} );
 
     // build-in types
-    typeMap.put( "Number",  new TypeGetter() { public IType get() { return JavaType.get(Double.class, _getDefaultLoader()); }} );
-    typeMap.put( "String",  new TypeGetter() { public IType get() { return JavaType.get(String.class, _getDefaultLoader()); }} );
-    typeMap.put( "Boolean", new TypeGetter() { public IType get() { return JavaType.get(Boolean.class, _getDefaultLoader()); }} );
-    typeMap.put( "DateTime",new TypeGetter() { public IType get() { return JavaType.get(Date.class, _getDefaultLoader()); }} );
-    typeMap.put( "List",    new TypeGetter() { public IType get() { return JavaType.get(List.class, _getDefaultLoader()); }} );
-    typeMap.put( "Object",  new TypeGetter() { public IType get() { return JavaType.get(Object.class, _getDefaultLoader()); }} );
-    typeMap.put( "Array",   new TypeGetter() { public IType get() { return JavaType.get(Object.class, _getDefaultLoader()).getArrayType(); }} );
-    typeMap.put( "Bean",    new TypeGetter() { public IType get() { return JavaType.get(Object.class, _getDefaultLoader()); }} );
+    typeMap.put( "Number",  new TypeGetter() { public IType get() { return JavaTypes.DOUBLE(); }} );
+    typeMap.put( "String",  new TypeGetter() { public IType get() { return JavaTypes.STRING(); }} );
+    typeMap.put( "Boolean", new TypeGetter() { public IType get() { return JavaTypes.BOOLEAN(); }} );
+    typeMap.put( "DateTime",new TypeGetter() { public IType get() { return JavaTypes.DATE(); }} );
+    typeMap.put( "List",    new TypeGetter() { public IType get() { return JavaTypes.LIST(); }} );
+    typeMap.put( "Object",  new TypeGetter() { public IType get() { return JavaTypes.OBJECT(); }} );
+    typeMap.put( "Array",   new TypeGetter() { public IType get() { return JavaTypes.OBJECT().getArrayType(); }} );
+    typeMap.put( "Bean",    new TypeGetter() { public IType get() { return JavaTypes.OBJECT(); }} );
     typeMap.put( "Type",    new TypeGetter() { public IType get() { return MetaType.ROOT_TYPE_TYPE.get(); }} );
     typeMap.put( "Key",     new TypeGetter() { public IType get() { return TypeSystem.getKeyType(); }} );
   }
