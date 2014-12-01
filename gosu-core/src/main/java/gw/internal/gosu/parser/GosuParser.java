@@ -2607,15 +2607,16 @@ public final class GosuParser extends ParserBase implements IGosuParser
 
         UnaryExpression ue = new UnaryExpression();
         Expression e = popExpression();
-        verify( e, ue.isSupportedType( e.getType() ), Res.MSG_NUMERIC_TYPE_EXPECTED );
+        IType type = e.getType();
+        verify( e, ue.isSupportedType( type ), Res.MSG_NUMERIC_TYPE_EXPECTED );
         ue.setNegated( negation );
         if( negation )
         {
-          if( e.getType() == JavaTypes.pCHAR() )
+          if( type == JavaTypes.pCHAR() || type == JavaTypes.pBYTE() || type == JavaTypes.pSHORT()  )
           {
             e = possiblyWrapWithCoercion( e, JavaTypes.pINT(), true );
           }
-          else if( e.getType() == JavaTypes.CHARACTER() )
+          else if( type == JavaTypes.CHARACTER() || type == JavaTypes.BYTE() || type == JavaTypes.SHORT() )
           {
             e = possiblyWrapWithCoercion( e, JavaTypes.INTEGER(), true );
           }
@@ -2761,7 +2762,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
     EvalExpression evalExpr = new EvalExpression( getTypeUsesMap().copy() );
     List<ICapturedSymbol> captured = new ArrayList<ICapturedSymbol>();
     captureAllSymbols( null, getCurrentEnclosingGosuClass(), captured );
-    evalExpr.setCapturedSymbolsForBytecode(captured);
+    evalExpr.setCapturedSymbolsForBytecode( captured );
     evalExpr.setCapturedTypeVars( new HashMap<String, ITypeVariableDefinition>( getTypeVariables() ) );
 
     verify( evalExpr, match( null, '(' ), Res.MSG_EXPECTING_LEFTPAREN_EVAL );
@@ -5680,7 +5681,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
     else
     {
       TypeLiteral tl = resolveTypeLiteral( T, true, bInterface );
-      resolveArrayOrParameterizationPartOfTypeLiteral(T, true, tl);
+      resolveArrayOrParameterizationPartOfTypeLiteral( T, true, tl );
     }
   }
 
@@ -5934,7 +5935,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   private void parseMethodMember( Expression rootExpression, MemberAccessKind kind, int iTokenStart, String strMemberName, LightweightParserState state, boolean bParseTypeLiteralOnly, BeanMethodCallExpression e, IType rootType, boolean bExpansion, IType[] typeParameters, int iParenStart )
   {
     e.setArgPosition( iParenStart + 1 );
-    e.setRootExpression(rootExpression);
+    e.setRootExpression( rootExpression );
     IMethodInfo md = null;
 
     List<IFunctionType> listFunctionTypes = getPreliminaryFunctionTypes( strMemberName, e, rootType, bExpansion, typeParameters );
@@ -8202,7 +8203,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       return;
     }
 
-    IRelativeTypeInfo.Accessibility acc = FeatureManager.getAccessibilityForClass(type, gsClass);
+    IRelativeTypeInfo.Accessibility acc = FeatureManager.getAccessibilityForClass( type, gsClass );
     if( Modifier.isPrivate(type.getModifiers()) )
     {
       verify(expr,
@@ -10169,7 +10170,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
                     type.getTypeInfo().getMethod( "close" ) != null ||
                     (type.getTypeInfo().getMethod( "lock" ) != null && type.getTypeInfo().getMethod( "unlock" ) != null);
 
-    verify(pe, bAssignableFromUsingType, Res.MSG_BAD_TYPE_FOR_USING_STMT);
+    verify( pe, bAssignableFromUsingType, Res.MSG_BAD_TYPE_FOR_USING_STMT );
   }
 
   private boolean isAssignableFrom(IType type1, IType type2) {
@@ -10199,7 +10200,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
 
   private void parseStatementBlock()
   {
-    parseStatementBlock(true);
+    parseStatementBlock( true );
   }
   private void parseStatementBlock( boolean bMatchClosingBrace )
   {
@@ -12753,7 +12754,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   //------------------------------------------------------------------------------
   public ArrayList<ISymbol> parseParameterDeclarationList( IParsedElement element, boolean bStatic, List<IType> inferredArgumentTypes )
   {
-    return parseParameterDeclarationList(element, bStatic, inferredArgumentTypes, false, false, false);
+    return parseParameterDeclarationList( element, bStatic, inferredArgumentTypes, false, false, false );
   }
 
   public ArrayList<ISymbol> parseParameterDeclarationList( IParsedElement element, boolean bStatic, List<IType> inferredArgumentTypes, boolean bProperty, boolean bGetter, boolean bEmpty )
