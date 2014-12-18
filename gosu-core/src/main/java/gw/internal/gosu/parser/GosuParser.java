@@ -4916,6 +4916,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
             if( allTypeLiterals )
             {
               List<IType> types = new ArrayList<IType>();
+              fle.removeParseException( Res.MSG_AMBIGUOUS_METHOD_INVOCATION );
               for( IExpression expression : score.getArguments() )
               {
                 expression.clearParseExceptions();
