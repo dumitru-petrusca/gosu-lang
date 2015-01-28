@@ -7,6 +7,8 @@ package gw.internal.gosu.parser;
 import gw.config.CommonServices;
 import gw.config.ExecutionMode;
 import gw.fs.IFile;
+import gw.internal.gosu.dynamic.DynamicConstructorInfo;
+import gw.internal.gosu.dynamic.DynamicMethodInfo;
 import gw.internal.gosu.ir.transform.util.IRTypeResolver;
 import gw.internal.gosu.parser.expressions.*;
 import gw.internal.gosu.parser.statements.ArrayAssignmentStatement;
@@ -4341,7 +4343,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       return;
     }
 
-    if( constructorType != null )
+    if( constructorType != null && !(constructorType.getConstructor() instanceof DynamicConstructorInfo) )
     {
       ITypeInfo typeInfo = instanceClass.getTypeInfo();
       List<? extends IConstructorInfo> accessibleCtors = getGosuClass() != null && typeInfo instanceof IRelativeTypeInfo
@@ -5843,6 +5845,11 @@ public final class GosuParser extends ParserBase implements IGosuParser
 
   private void verifyArgCount( ParsedElement element, int iArgs, IConstructorType ctorType )
   {
+    if( ctorType.getConstructor() instanceof DynamicConstructorInfo )
+    {
+      return;
+    }
+
     int expectedArgs = ctorType.getParameterTypes().length;
     if( iArgs != expectedArgs )
     {
@@ -7219,7 +7226,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
     if( invoType instanceof FunctionType  )
     {
       IMethodInfo mi = ((FunctionType)invoType).getMethodInfo();
-      if( mi != null && mi.getOwnersType() instanceof IPlaceholder )
+      if( mi != null && (mi.getOwnersType() instanceof IPlaceholder || mi instanceof DynamicMethodInfo) )
       {
         return true;
       }
@@ -13986,6 +13993,23 @@ public final class GosuParser extends ParserBase implements IGosuParser
     if( ErrorType.shouldHandleAsErrorType( classBean ) )
     {
       return ErrorType.getInstance().getErrorTypeConstructorType( eArgs, listAllMatchingMethods );
+    }
+
+    if( classBean instanceof TypeVariableType )
+    {
+      // Using dynamic ctor so any params are legal in call e.g., new T( a, b, c ) // this call is not verified until runtime
+
+      IType[] paramTypes = new IType[eArgs == null ? 0 : eArgs.length];
+      for( int i = 0; i < paramTypes.length; i++ )
+      {
+        paramTypes[i] = eArgs[i].getType();
+      }
+      ConstructorType ctorType = new ConstructorType( new DynamicConstructorInfo( classBean.getTypeInfo(), paramTypes ) );
+      if( listAllMatchingMethods != null )
+      {
+        listAllMatchingMethods.add( ctorType );
+      }
+      return ctorType;
     }
 
     ITypeInfo typeInfo = classBean.getTypeInfo();
