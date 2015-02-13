@@ -4792,7 +4792,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   {
     if( expr instanceof Identifier && expr.getType() instanceof NamespaceType )
     {
-      MemberAccess enumConstExpr = parseEnumeratedConstant( ((Identifier)expr).getSymbol().getName() );
+      MemberAccess enumConstExpr = parseUnqualifiedEnumConstant( ((Identifier)expr).getSymbol().getName() );
       if( enumConstExpr != null )
       {
         // Set the errant expression's location so that its subordinate expressions are not
@@ -5713,7 +5713,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       Expression errantExpression = popExpression();
 
       // See if it can be parsed as an inferred enum expression
-      MemberAccess enumConstExpr = parseEnumeratedConstant( T._strValue );
+      MemberAccess enumConstExpr = parseUnqualifiedEnumConstant( T._strValue );
       if( enumConstExpr != null )
       {
         pushExpression( enumConstExpr );
@@ -5730,7 +5730,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
   private void tryToMakeTypeLiteral( Token T, int iOffset, int iLineNum, int iColumn, String name, Expression errantExpression )
   {
     TypeLiteral tl = resolveTypeLiteral(T);
-    boolean bArrayOrParameterzied = resolveArrayOrParameterizationPartOfTypeLiteral(T, false, tl);
+    boolean bArrayOrParameterzied = resolveArrayOrParameterizationPartOfTypeLiteral( T, false, tl );
 
     if( !bArrayOrParameterzied && ((TypeLiteral)peekExpression()).getType().getType() instanceof ErrorType )
     {
@@ -5773,19 +5773,19 @@ public final class GosuParser extends ParserBase implements IGosuParser
     }
   }
 
-  private MemberAccess parseEnumeratedConstant( String strConstValue )
+  private MemberAccess parseUnqualifiedEnumConstant( String strConstValue )
   {
     IType contextType = getContextType().getType();
     if( contextType != null )
     {
-      if( contextType.isEnum() || TypeSystem.get(IEnumValue.class).isAssignableFrom(contextType) )
+      if( contextType.isEnum() || TypeSystem.get( IEnumValue.class ).isAssignableFrom( contextType ) )
       {
         try
         {
           IPropertyInfo property = contextType.getTypeInfo().getProperty( strConstValue );
           if( property != null && property.isStatic() )
           {
-            MemberAccess ma = new MemberAccess();
+            MemberAccess ma = new UnqualifiedEnumMemberAccess();
             TypeLiteral e = new TypeLiteral( MetaType.getLiteral( property.getOwnersType() ) );
 
             ma.setRootExpression( e );
@@ -5976,7 +5976,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
     {
       // Property access
 
-      parsePropertyMember(rootExpression, kind, iTokenStart, strMemberName, state, bParseTypeLiteralOnly, createSynthesizedProperty, rootType, bExpansion);
+      parsePropertyMember( rootExpression, kind, iTokenStart, strMemberName, state, bParseTypeLiteralOnly, createSynthesizedProperty, rootType, bExpansion );
     }
   }
 
@@ -6201,10 +6201,10 @@ public final class GosuParser extends ParserBase implements IGosuParser
     IPropertyInfo pi = null;
 
     MemberAccess ma = bExpansion
-            ? new MemberExpansionAccess()
-            : createSynthesizedProperty
-            ? new SynthesizedMemberAccess()
-            : new MemberAccess();
+                      ? new MemberExpansionAccess()
+                      : createSynthesizedProperty
+                        ? new SynthesizedMemberAccess()
+                        : new MemberAccess();
     ma.setRootExpression( rootExpression );
     ma.setMemberAccessKind(kind);
     IType memberType = null;
@@ -6710,7 +6710,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
           return makeDynamicMethodScore( listFunctionTypes, argExpressions );
         }
 
-        score = scoreMethod( funcType, listFunctionTypes, argExpressions, !bShouldScoreMethods, !hasInitializerExpression( argExpressions ) );
+        score = scoreMethod( funcType, listFunctionTypes, argExpressions, !bShouldScoreMethods, !hasContextSensitiveExpression( argExpressions ) );
       }
       finally
       {
@@ -6724,7 +6724,7 @@ public final class GosuParser extends ParserBase implements IGosuParser
       score.setParserStates( parserStates );
       scoredMethods.add( score );
 
-      if( score.getScore() == 0 && !hasInitializerExpression( argExpressions ) )
+      if( score.getScore() == 0 && !hasContextSensitiveExpression( argExpressions ) )
       {
         // perfect score, no need to continue
         break;
@@ -6861,9 +6861,13 @@ public final class GosuParser extends ParserBase implements IGosuParser
     return factored;
   }
 
-  private boolean hasInitializerExpression(List<Expression> argExpressions) {
-    for( Expression e : argExpressions ) {
-      if( e instanceof IInferredNewExpression) {
+  private boolean hasContextSensitiveExpression( List<Expression> argExpressions )
+  {
+    for( Expression e : argExpressions )
+    {
+      if( e instanceof IInferredNewExpression ||
+          e instanceof UnqualifiedEnumMemberAccess )
+      {
         return true;
       }
     }
