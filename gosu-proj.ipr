@@ -1,124 +1,799 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-<project version="4" relativePaths="false"> 
-  <component name="ProjectRootManager" version="2" assert-keyword="true" project-jdk-name="1.7" jdk-15="true"/>  
-  <component name="CodeStyleManager"> 
-    <option name="USE_DEFAULT_CODE_STYLE_SCHEME" value="true"/>  
-    <option name="CODE_STYLE_SCHEME" value=""/> 
-  </component>  
-  <component name="libraryTable"/>  
-  <component name="CompilerConfiguration"> 
-    <option name="DEFAULT_COMPILER" value="Javac"/>  
-    <option name="CLEAR_OUTPUT_DIRECTORY" value="false"/>  
-    <!--
+<project version="4">
+  <component name="AntConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="CodeStyleManager">
+    <option name="USE_DEFAULT_CODE_STYLE_SCHEME" value="true" />
+    <option name="CODE_STYLE_SCHEME" value="" />
+  </component>
+  <component name="CompilerConfiguration">
+    <option name="DEFAULT_COMPILER" value="Javac" />
+    <resourceExtensions />
     <wildcardResourcePatterns>
-      <entry name="${wildcardResourcePattern}"/>
+      <entry name="!?*.java" />
     </wildcardResourcePatterns>
-    -->  
-    <wildcardResourcePatterns>
-      <entry name="!?*.java"/>
-    </wildcardResourcePatterns>
-  </component>  
-  <component name="JavacSettings"> 
-    <option name="DEBUGGING_INFO" value="true"/>  
-    <option name="GENERATE_NO_WARNINGS" value="false"/>  
-    <option name="DEPRECATION" value="true"/>  
-    <option name="ADDITIONAL_OPTIONS_STRING" value=""/>  
-    <option name="MAXIMUM_HEAP_SIZE" value="128"/>  
-    <option name="USE_GENERICS_COMPILER" value="false"/> 
-  </component>  
-  <component name="JikesSettings"> 
-    <option name="DEBUGGING_INFO" value="true"/>  
-    <option name="DEPRECATION" value="true"/>  
-    <option name="GENERATE_NO_WARNINGS" value="false"/>  
-    <option name="GENERATE_MAKE_FILE_DEPENDENCIES" value="false"/>  
-    <option name="DO_FULL_DEPENDENCE_CHECK" value="false"/>  
-    <option name="IS_INCREMENTAL_MODE" value="false"/>  
-    <option name="IS_EMACS_ERRORS_MODE" value="true"/>  
-    <option name="ADDITIONAL_OPTIONS_STRING" value=""/>  
-    <option name="MAXIMUM_HEAP_SIZE" value="128"/> 
-  </component>  
-  <component name="AntConfiguration"> 
-    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false"/>  
-    <option name="FILTER_TARGETS" value="false"/> 
-  </component>  
-  <component name="JavadocGenerationManager"> 
-    <option name="OUTPUT_DIRECTORY"/>  
-    <option name="OPTION_SCOPE" value="protected"/>  
-    <option name="OPTION_HIERARCHY" value="false"/>  
-    <option name="OPTION_NAVIGATOR" value="false"/>  
-    <option name="OPTION_INDEX" value="false"/>  
-    <option name="OPTION_SEPARATE_INDEX" value="false"/>  
-    <option name="OPTION_USE_1_1" value="false"/>  
-    <option name="OPTION_DOCUMENT_TAG_USE" value="false"/>  
-    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false"/>  
-    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false"/>  
-    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="false"/>  
-    <option name="OPTION_DEPRECATED_LIST" value="false"/>  
-    <option name="OTHER_OPTIONS"/>  
-    <option name="HEAP_SIZE"/>  
-    <option name="OPEN_IN_BROWSER" value="false"/> 
-  </component>  
-  <component name="JUnitProjectSettings"> 
-    <option name="TEST_RUNNER" value="UI"/> 
-  </component>  
-  <component name="EntryPointsManager"> 
-    <entry_points/> 
-  </component>  
-  <component name="DataSourceManager"/>  
-  <component name="ExportToHTMLSettings"> 
-    <option name="PRINT_LINE_NUMBERS" value="false"/>  
-    <option name="OPEN_IN_BROWSER" value="false"/>  
-    <option name="OUTPUT_DIRECTORY"/> 
-  </component>  
-  <component name="ImportConfiguration"> 
-    <option name="VENDOR"/>  
-    <option name="RELEASE_TAG"/>  
-    <option name="LOG_MESSAGE"/>  
-    <option name="CHECKOUT_AFTER_IMPORT" value="true"/> 
-  </component>  
-  <component name="ProjectModuleManager"> 
-    <modules> 
-      <!-- module filepath="$$PROJECT_DIR$$/${pom.artifactId}.iml"/ -->  
-      <module filepath="$PROJECT_DIR$/gosu-proj.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu/gosu.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-core/gosu-core.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-core-api/gosu-core-api.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-core-api-precompiled/gosu-core-api-precompiled.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-interactive/gosu-interactive.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-itcase-utils/gosu-itcase-utils.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-maven-plugin/gosu-maven-plugin.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-parent/gosu-parent.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-process/gosu-process.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-servlet/gosu-servlet.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-test/gosu-test.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-test-api/gosu-test-api.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-webservices/gosu-webservices.iml"/>
-      <module filepath="$PROJECT_DIR$/gosu-xml/gosu-xml.iml"/>
-      <module filepath="$PROJECT_DIR$/idea-gosu-plugin/idea-gosu-plugin.iml"/>
-      <module filepath="$PROJECT_DIR$/ij-compiler-api/ij-compiler-api.iml"/>
-      <module filepath="$PROJECT_DIR$/ij-editor-devtools/ij-editor-devtools.iml"/>
-    </modules> 
-  </component>  
-  <UsedPathMacros> 
-    <!--<macro name="cargo"></macro>--> 
-  </UsedPathMacros> 
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="false">
+        <processorPath useClasspath="true" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="DependencyValidationManager">
+    <option name="SKIP_IMPORT_STATEMENTS" value="false" />
+  </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
+  <component name="EntryPointsManager">
+    <entry_points />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="PRINT_LINE_NUMBERS" value="false" />
+    <option name="OPEN_IN_BROWSER" value="false" />
+    <option name="OUTPUT_DIRECTORY" />
+  </component>
+  <component name="IdProvider" IDEtalkID="C83D73B5AC205A2FBB963C3CD1303749" />
+  <component name="ImportConfiguration">
+    <option name="VENDOR" />
+    <option name="RELEASE_TAG" />
+    <option name="LOG_MESSAGE" />
+    <option name="CHECKOUT_AFTER_IMPORT" value="true" />
+  </component>
+  <component name="InspectionProjectProfileManager">
+    <profiles>
+      <profile version="1.0" is_locked="false">
+        <option name="myName" value="Project Default" />
+        <option name="myLocal" value="false" />
+        <inspection_tool class="AndroidDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidElementNotAllowed" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintAdapterViewChildren" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintAllowBackup" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintAlwaysShowAction" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintButtonCase" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintButtonOrder" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintButtonStyle" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintCommitPrefEdits" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintContentDescription" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintCutPasteId" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDeviceAdmin" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDisableBaselineAlignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDrawAllocation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDuplicateActivity" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDuplicateDefinition" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDuplicateIds" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDuplicateIncludedIds" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintDuplicateUsesFeature" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintEnforceUTF8" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintExportedContentProvider" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintExportedReceiver" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintExportedService" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintExtraText" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintExtraTranslation" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintGifUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintGrantAllUris" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintGridLayout" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintHardcodedDebugMode" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintHardcodedText" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconColors" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconDensities" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconDipSize" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconDuplicates" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconDuplicatesConfig" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconExtension" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconLauncherShape" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconLocation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconMissingDensityFolder" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconMixedNinePatch" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconNoDpi" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIconXmlAndPng" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintIllegalResourceRef" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInOrMmUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInconsistentArrays" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInconsistentLayout" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInefficientWeight" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInlinedApi" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInnerclassSeparator" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintInvalidId" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintLabelFor" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintLibraryCustomView" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintLocalSuppress" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMangledCRLF" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintManifestOrder" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMenuTitle" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMergeRootFrame" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingApplicationIcon" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingId" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingPrefix" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingQuantity" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingSuperCall" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingTranslation" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMissingVersion" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintMultipleUsesSdk" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintNestedScrolling" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintNestedWeights" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintNewApi" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintNotSibling" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintObsoleteLayoutParam" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintOldTargetApi" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintOrientation" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintOverdraw" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintOverride" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintPackagedPrivateKey" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintPrivateResource" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintProguard" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintProguardSplit" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintProtectedPermissions" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintPxUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintRegistered" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintRequiredSize" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintResAuto" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintResourceAsColor" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintScrollViewCount" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintScrollViewSize" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSdCardPath" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintServiceCast" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSetJavaScriptEnabled" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintShowToast" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSmallSp" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSpUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintStateListReachable" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintStringFormatCount" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintStringFormatInvalid" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintStringFormatMatches" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintStyleCycle" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSuspicious0dp" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintSuspiciousImport" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTextFields" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTextViewEdits" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTooDeepLayout" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTooManyViews" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTypographyDashes" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTypographyEllipsis" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTypographyFractions" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTypographyOther" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintTypos" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUniquePermission" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUnknownId" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUnknownIdInLayout" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUnlocalizedSms" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUnusedQuantity" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUnusedResources" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUseCompoundDrawables" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUseSparseArrays" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUseValueOf" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUselessLeaf" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUselessParent" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintUsesMinSdkAttributes" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintWorldReadableFiles" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintWorldWriteableFiles" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintWrongCase" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintWrongFolder" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidLintWrongViewCast" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidMissingOnClickHandler" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="AndroidNonConstantResIdsInSwitch" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AndroidUnknownAttribute" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="Annotator" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AntDuplicateTargetsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AntMissingPropertiesFileInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AntResolveInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="AppEngineForbiddenCode" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="BadExpressionStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="BatchJobDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="BatchXmlDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="BindingAnnotationWithoutInject" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="BooleanMethodIsAlwaysInverted" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="BpmnConfigDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="BvConfigDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="BvConstraintMappingsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CallerJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CanBeFinal" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="REPORT_CLASSES" value="false" />
+          <option name="REPORT_METHODS" value="false" />
+          <option name="REPORT_FIELDS" value="true" />
+        </inspection_tool>
+        <inspection_tool class="CaughtExceptionImmediatelyRethrown" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CdiAlternativeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiDecoratorInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiDisposerMethodInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiDomBeans" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CdiInjectInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiInjectionPointsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CdiInterceptorInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiManagedBeanInconsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiNormalScopeInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CdiObservesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiSpecializesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiStereotypeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiStereotypeRestrictionsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiTypedAnnotationInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CdiUnproxyableBeanTypesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CfmlFileReference" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CfmlReferenceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CheckEmptyScriptTag" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CheckImageSize" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CheckNodeTest" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CheckValidXmlInScriptTagBody" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ClassInDefaultPackage" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CoffeeScriptInfiniteLoop" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CoffeeScriptSillyAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CoffeeScriptSwitchStatementWithNoDefaultBranch" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CoffeeScriptUnusedLocalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CommaExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ConflictingAnnotations" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ConstantConditionalExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ConstantIfStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ConstraintValidatorCreator" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ContinueOrBreakFromFinallyBlockJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidAtRule" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidCharsetRule" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidElement" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidHtmlTagReference" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidImport" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssInvalidPseudoSelector" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssNegativeValue" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssNoGenericFontName" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssOptimizeSimilarProperties" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssOverwrittenProperties" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssRgbFunction" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssShorthandPropertyValue" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssUnitlessNumber" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CssUnknownProperty" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myCustomPropertiesEnabled" value="false" />
+          <option name="myIgnoreVendorSpecificProperties" value="false" />
+          <option name="myCustomPropertiesList">
+            <value>
+              <list size="0" />
+            </value>
+          </option>
+        </inspection_tool>
+        <inspection_tool class="CssUnknownTarget" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CssUnusedSymbol" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CucumberExamplesColon" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CucumberJavaStepDefClassInDefaultPackage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CucumberJavaStepDefClassIsPublic" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CucumberMissedExamples" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="CucumberTableInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="CucumberUndefinedStep" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="DefaultNotLastCaseInSwitch" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="DelegatesTo" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="Deprecation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="DuplicateCaseLabelJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="DuplicateThrows" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ELDeferredExpressionsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ELMethodSignatureInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ELSpecValidationInJSP" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ELValidationInJSP" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EjbClassBasicInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbClassWarningsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EjbDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbEntityClassInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbEntityHomeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbEntityInterfaceInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbEnvironmentInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbInterceptorInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbInterceptorWarningsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EjbInterfaceMethodInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbInterfaceSignatureInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbProhibitedPackageUsageInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EjbQlInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbRemoteRequirementsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbSessionHomeInterfaceInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="EjbStaticAccessInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EjbThisExpressionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EmptyMethod" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="EmptyStatementBodyJS" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="m_reportEmptyBlocks" value="false" />
+        </inspection_tool>
+        <inspection_tool class="EmptyWebServiceClass" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ExceptionCaughtLocallyJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FacesModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="FallThroughInSwitchStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitClassInProductSourceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitClassVisibilityInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitClassWithNoTestsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitEmptySuiteInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodHasParametersInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodInSuiteInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodIsPropertyInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodIsStaticInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodReturnTypeInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMethodVisibilityInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitMixedAPIInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FlexUnitSuiteWithNoRunnerInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FtlCallsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="FtlDeprecatedBuiltInsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FtlFileReferencesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="FtlImportCallInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="FtlReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FtlTypesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="FtlWellformednessInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="FunctionWithInconsistentReturnsJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GWTRemoteServiceAsyncCheck" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GWTStyleCheck" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GherkinBrokenTableInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GlassFish" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GrDeprecatedAPIUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GrFinalVariableAccess" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GrMethodMayBeStatic" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GrPackage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GrReassignedInClosureLocalVar" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GrUnresolvedAccess" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyAccessToStaticFieldLockedOnInstance" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyAccessibility" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyAssignabilityCheck" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyConditionalWithIdenticalBranches" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyConstantConditional" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyConstantIfStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyConstructorNamedArguments" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyDivideByZero" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyDocCheck" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GroovyDoubleNegation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyDuplicateSwitchBranch" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyEmptyStatementBody" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyFallthrough" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyIfStatementWithIdenticalBranches" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyInArgumentCheck" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyInfiniteLoopStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyInfiniteRecursion" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyLabeledStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyMissingReturnStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyPointlessBoolean" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyResultOfObjectAllocationIgnored" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovySillyAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovySingletonAnnotation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovySynchronizationOnNonFinalField" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovySynchronizationOnVariableInitializedWithLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyTrivialConditional" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyTrivialIf" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUncheckedAssignmentOfMemberOfRawType" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnnecessaryContinue" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnnecessaryReturn" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnreachableStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnsynchronizedMethodOverridesSynchronizedMethod" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnusedAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnusedCatchParameter" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnusedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyUnusedIncOrDec" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GroovyVariableNotAssigned" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtClientClassFromNonInheritedModule" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtCssResourceErrors" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtDefaultPackageNotRegistered" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtDeprecatedEventListeners" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtDeprecatedPropertyKeyJavadocTag" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtInconsistentI18nInterface" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtInconsistentSerializableClass" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtIncorrectArgumentOfGwtCreateMethod" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtJavaFromJSMethodCalls" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtJavaScriptReferences" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtMethodWithParametersInConstantsInterface" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtObsoleteTypeArgsJavadocTag" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtOverlayTypeRestrictionsViolated" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtServiceNotRegistered" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtSetServiceEntryPointCalls" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtToHtmlReferences" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtUiFieldAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="GwtUiFieldErrors" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtUiHandlerErrors" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="GwtUiXmlReferences" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="HardcodedActionUrl" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HardwiredNamespacePrefix" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HtmlDeprecatedTag" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HtmlExtraClosingTag" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="HtmlFormInputWithoutLabel" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HtmlPresentationalElement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HtmlUnknownAnchorTarget" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="HtmlUnknownAttribute" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myValues">
+            <value>
+              <list size="0" />
+            </value>
+          </option>
+          <option name="myCustomValuesEnabled" value="true" />
+        </inspection_tool>
+        <inspection_tool class="HtmlUnknownTag" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myValues">
+            <value>
+              <list size="6">
+                <item index="0" class="java.lang.String" itemvalue="nobr" />
+                <item index="1" class="java.lang.String" itemvalue="noembed" />
+                <item index="2" class="java.lang.String" itemvalue="comment" />
+                <item index="3" class="java.lang.String" itemvalue="noscript" />
+                <item index="4" class="java.lang.String" itemvalue="embed" />
+                <item index="5" class="java.lang.String" itemvalue="script" />
+              </list>
+            </value>
+          </option>
+          <option name="myCustomValuesEnabled" value="true" />
+        </inspection_tool>
+        <inspection_tool class="HtmlUnknownTarget" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ImplicitTypeConversion" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="BITS" value="1720" />
+          <option name="FLAG_EXPLICIT_CONVERSION" value="true" />
+          <option name="IGNORE_NODESET_TO_BOOLEAN_VIA_STRING" value="true" />
+        </inspection_tool>
+        <inspection_tool class="ImplicitlyExposedWebServiceMethods" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="IncompatibleMaskJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InconsistentResourceBundle" enabled="false" level="ERROR" enabled_by_default="false">
+          <option name="REPORT_MISSING_TRANSLATIONS" value="true" />
+          <option name="REPORT_INCONSISTENT_PROPERTIES" value="true" />
+          <option name="REPORT_DUPLICATED_PROPERTIES" value="true" />
+        </inspection_tool>
+        <inspection_tool class="IncorrectOnMessageMethodsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="IndexZeroUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InfiniteLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InfiniteRecursionJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InterceptionAnnotationWithoutRuntimeRetention" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InvalidImplementedBy" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InvalidProvidedBy" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="InvalidRequestParameters" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSAccessibilityCheck" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSBitwiseOperatorUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSCheckFunctionSignatures" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSClosureCompilerSyntax" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSCommentMatchesSignature" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSComparisonWithNaN" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSConsecutiveCommasInArrayLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSConstructorReturnsPrimitive" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSDeprecatedSymbols" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSDuplicatedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSFieldCanBeLocal" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSImplicitlyInternalDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSJQueryEfficiency" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSLastCommaInArrayLiteral" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSLastCommaInObjectLiteral" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JSMethodCanBeStatic" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSMismatchedCollectionQueryUpdate" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="queries" value="trace,write" />
+          <option name="updates" value="pop,push,shift,splice,unshift" />
+        </inspection_tool>
+        <inspection_tool class="JSPotentiallyInvalidConstructorUsage" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myConsiderUppercaseFunctionsToBeConstructors" value="true" />
+        </inspection_tool>
+        <inspection_tool class="JSPotentiallyInvalidTargetOfIndexedPropertyAccess" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSPotentiallyInvalidUsageOfThis" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSPrimitiveTypeWrapperUsage" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSReferencingMutableVariableFromClosure" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSSuspiciousNameCombination" enabled="false" level="WARNING" enabled_by_default="false">
+          <group names="x,width,left,right" />
+          <group names="y,height,top,bottom" />
+          <exclude classes="Math" />
+        </inspection_tool>
+        <inspection_tool class="JSUndeclaredVariable" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUndefinedPropertyAssignment" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnfilteredForInLoop" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnnecessarySemicolon" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnresolvedFunction" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnresolvedLibraryURL" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnresolvedVariable" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUntypedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnusedAssignment" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnusedGlobalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSUnusedLocalSymbols" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSValidateJSDoc" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JSValidateJSON" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JSValidateTypes" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="JavaFxDefaultTag" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JavaFxUnresolvedFxIdReference" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JavaFxUnresolvedStyleClassReference" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JavaFxUnusedImports" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JavaeeApplicationDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaAttributeMemberSignatureInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaAttributeTypeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaConfigDomFacetInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JpaDataSourceORMDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaDataSourceORMInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaEntityListenerInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaEntityListenerWarningsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JpaMissingIdInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaModelReferenceInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaORMDomInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaObjectClassSignatureInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaQlInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpaQueryApiInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JpdlModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JsfJamExtendsClassInconsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JsfManagedBeansInconsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JspAbsolutePathInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="JspDirectiveInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="JspPropertiesInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="LessResolvedByNameOnly" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="LessUnresolvedMixin" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="LessUnresolvedVariable" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="LoopStatementThatDoesntLoopJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ManagedBeanClassInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="MavenRedundantGroupId" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MimeType" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="MinMaxValuesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MissingFinalNewline" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="MisspelledHeader" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MultipleBindingAnnotations" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MultipleInjectedConstructorsForClass" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MultipleMethodDesignatorsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="MultipleRepositoryUrls" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="NewInstanceOfSingleton" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="NonJREEmulationClassesInClientCode" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="NonJaxWsWebServices" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="NonSerializableServiceParameters" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="OctalIntegerJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="OneWayWebMethod" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PackageAccessibility" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PageflowModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PagesFileModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PagesModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PathAnnotation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PatternNotApplicable" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="PatternOverriddenByNonAnnotatedMethod" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PatternValidation" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="CHECK_NON_CONSTANT_VALUES" value="true" />
+        </inspection_tool>
+        <inspection_tool class="PlayCustomTagNameInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PlayPropertyInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PointlessArithmeticExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PointlessBinding" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PointlessBitwiseExpressionJS" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="m_ignoreExpressionsContainingConstants" value="false" />
+        </inspection_tool>
+        <inspection_tool class="PointlessBooleanExpressionJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="PointlessNullCheck" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="RSReferenceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantArrayCreation" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantCast" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantImplements" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreSerializable" value="false" />
+          <option name="ignoreCloneable" value="false" />
+        </inspection_tool>
+        <inspection_tool class="RedundantScopeBinding" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantThrows" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantToBinding" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantToProviderBinding" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RedundantTypeConversion" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="CHECK_ANY" value="false" />
+        </inspection_tool>
+        <inspection_tool class="ReferencesToClassesFromDefaultPackagesInJSPFile" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="RequiredArtifactTypeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="RequiredAttributes" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myAdditionalRequiredHtmlAttributes" value="" />
+        </inspection_tool>
+        <inspection_tool class="ReservedWordUsedAsNameJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="RestWrongDefaultValueInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ReturnFromFinallyBlockJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SameParameterValue" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SameReturnValue" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SassScssResolvedByNameOnly" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
+        <inspection_tool class="SassScssUnresolvedFunction" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SassScssUnresolvedMixin" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SassScssUnresolvedPlaceholderSelector" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SassScssUnresolvedVariable" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SeamAnnotationIncorrectSignatureInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamAnnotationsInconsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamBijectionIllegalScopeParameterInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamBijectionTypeMismatchInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamBijectionUndefinedContextVariableInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SeamDomModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamDuplicateComponentsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamIllegalComponentScopeInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SeamJamComponentInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SecondUnsafeCall" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SelfIncludingJspFiles" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ServerEndpointInconsistencyInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ServletWithoutMappingInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="SessionScopedInjectsRequestScoped" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ShiftOutOfRangeJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SillyAssignmentJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SimplifiableEqualsExpression" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="SimplifiableIfStatement" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SingletonInjectsScoped" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
+          <option name="processCode" value="true" />
+          <option name="processLiterals" value="true" />
+          <option name="processComments" value="true" />
+        </inspection_tool>
+        <inspection_tool class="SqlAddNotNullColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlAmbiguousColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlAutoIncrementDuplicateInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlCheckUsingColumnsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlConstantConditionInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlDeprecateTypeInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlDerivedTableAliasInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlDialectInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlDropIndexedColumnInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlIdentifierInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlInsertValuesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlNoDataSourceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlPostgresqlSelectFromProcedureInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlResolveInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlShouldBeInGroupByInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="SqlTypeInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="Struts2ModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="TaglibDomModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="TelReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ThisExpressionReferencesGlobalObjectJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ThrowFromFinallyBlockJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="TrivialConditionalJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="TrivialIfJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="TypeCustomizer" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UNCHECKED_WARNING" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UNUSED_SYMBOL" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="LOCAL_VARIABLE" value="false" />
+          <option name="FIELD" value="false" />
+          <option name="METHOD" value="false" />
+          <option name="CLASS" value="true" />
+          <option name="PARAMETER" value="false" />
+          <option name="REPORT_PARAMETER_FOR_PUBLIC_METHODS" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UninstantiableBinding" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UninstantiableImplementedByClass" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UninstantiableProvidedByClass" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnknownManifestPackage" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="UnnecessarilyQualifiedInnerClassAccess" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreReferencesNeedingImport" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessarilyQualifiedStaticUsage" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="m_ignoreStaticFieldAccesses" value="false" />
+          <option name="m_ignoreStaticMethodCalls" value="false" />
+          <option name="m_ignoreStaticAccessFromStaticContext" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessarilyQualifiedStaticallyImportedElement" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryBlockStatement" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreSwitchBranches" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryBoxing" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryCallToStringValueOf" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryContinueJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryDefault" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryEnumModifier" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryFullyQualifiedName" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="m_ignoreJavadoc" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryInterfaceModifier" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryLabelJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryLabelOnBreakStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryLabelOnContinueStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryLocalVariable" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="m_ignoreImmediatelyReturnedVariables" value="false" />
+          <option name="m_ignoreAnnotatedVariables" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryLocalVariableJS" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="m_ignoreImmediatelyReturnedVariables" value="false" />
+          <option name="m_ignoreAnnotatedVariables" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryModuleDependencyInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryParentheses" enabled="true" level="WARNING" enabled_by_default="true">
+          <option name="ignoreClarifyingParentheses" value="false" />
+          <option name="ignoreParenthesesOnConditionals" value="false" />
+          <option name="ignoreParenthesesOnLambdaParameter" value="false" />
+        </inspection_tool>
+        <inspection_tool class="UnnecessaryQualifiedReference" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryQualifierForThis" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryReturnJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryStaticInjection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessarySuperConstructor" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessarySuperQualifier" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryTemporaryOnConversionFromString" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryTemporaryOnConversionToString" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnnecessaryThis" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryToStringCall" enabled="true" level="WARNING" enabled_by_default="true" />
+        <inspection_tool class="UnnecessaryUnboxing" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnreachableCodeJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnregisteredActivator" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="UnresolvedReference" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="UnterminatedStatementJS" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="ignoreSemicolonAtEndOfBlock" value="true" />
+        </inspection_tool>
+        <inspection_tool class="UnusedDeclaration" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="ADD_MAINS_TO_ENTRIES" value="true" />
+          <option name="ADD_APPLET_TO_ENTRIES" value="true" />
+          <option name="ADD_SERVLET_TO_ENTRIES" value="true" />
+          <option name="ADD_NONJAVA_TO_ENTRIES" value="true" />
+        </inspection_tool>
+        <inspection_tool class="UnusedLabel" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnusedParameters" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="UnusedReturnValue" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="ValidExternallyBoundObject" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ValidatorConfigModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="ValidatorModelInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="VoidMethodAnnotatedWithGET" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="VtlDirectiveArgsInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="VtlFileReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="VtlInterpolationsInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="VtlReferencesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="VtlTypesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="W3CssValidation" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="myCssVersion" value="css3" />
+          <option name="myIgnoreVendorSpecificProperties" value="false" />
+        </inspection_tool>
+        <inspection_tool class="WSReferenceInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="WeakerAccess" enabled="false" level="WARNING" enabled_by_default="false">
+          <option name="SUGGEST_PACKAGE_LOCAL_FOR_MEMBERS" value="true" />
+          <option name="SUGGEST_PACKAGE_LOCAL_FOR_TOP_CLASSES" value="true" />
+          <option name="SUGGEST_PRIVATE_FOR_INNERS" value="false" />
+        </inspection_tool>
+        <inspection_tool class="WebProperties" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="WebWarnings" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="WithStatementJS" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="WrongImportPackage" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="WsdlHighlightingInspection" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="XsltDeclarations" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="XsltTemplateInvocation" enabled="false" level="ERROR" enabled_by_default="false" />
+        <inspection_tool class="XsltUnusedDeclaration" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="XsltVariableShadowing" enabled="false" level="WARNING" enabled_by_default="false" />
+        <inspection_tool class="gwtRawAsyncCallback" enabled="false" level="WARNING" enabled_by_default="false" />
+      </profile>
+    </profiles>
+    <option name="PROJECT_PROFILE" value="Project Default" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
+  </component>
+  <component name="JUnitProjectSettings">
+    <option name="TEST_RUNNER" value="UI" />
+  </component>
+  <component name="JavacSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="DEPRECATION" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+    <option name="USE_GENERICS_COMPILER" value="false" />
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" />
+    <option name="OPTION_SCOPE" value="protected" />
+    <option name="OPTION_HIERARCHY" value="false" />
+    <option name="OPTION_NAVIGATOR" value="false" />
+    <option name="OPTION_INDEX" value="false" />
+    <option name="OPTION_SEPARATE_INDEX" value="false" />
+    <option name="OPTION_USE_1_1" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_USE" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_AUTHOR" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_VERSION" value="false" />
+    <option name="OPTION_DOCUMENT_TAG_DEPRECATED" value="false" />
+    <option name="OPTION_DEPRECATED_LIST" value="false" />
+    <option name="OTHER_OPTIONS" />
+    <option name="HEAP_SIZE" />
+    <option name="OPEN_IN_BROWSER" value="false" />
+  </component>
+  <component name="Jenkins.Application.Settings">
+    <option name="rssSettings">
+      <RssSettings />
+    </option>
+  </component>
+  <component name="JikesSettings">
+    <option name="DEBUGGING_INFO" value="true" />
+    <option name="DEPRECATION" value="true" />
+    <option name="GENERATE_NO_WARNINGS" value="false" />
+    <option name="GENERATE_MAKE_FILE_DEPENDENCIES" value="false" />
+    <option name="DO_FULL_DEPENDENCE_CHECK" value="false" />
+    <option name="IS_INCREMENTAL_MODE" value="false" />
+    <option name="IS_EMACS_ERRORS_MODE" value="true" />
+    <option name="ADDITIONAL_OPTIONS_STRING" value="" />
+    <option name="MAXIMUM_HEAP_SIZE" value="128" />
+  </component>
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gosu/gosu.iml" filepath="$PROJECT_DIR$/gosu/gosu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-core/gosu-core.iml" filepath="$PROJECT_DIR$/gosu-core/gosu-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-core-api/gosu-core-api.iml" filepath="$PROJECT_DIR$/gosu-core-api/gosu-core-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-core-api-precompiled/gosu-core-api-precompiled.iml" filepath="$PROJECT_DIR$/gosu-core-api-precompiled/gosu-core-api-precompiled.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-interactive/gosu-interactive.iml" filepath="$PROJECT_DIR$/gosu-interactive/gosu-interactive.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-itcase-utils/gosu-itcase-utils.iml" filepath="$PROJECT_DIR$/gosu-itcase-utils/gosu-itcase-utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-maven-plugin/gosu-maven-plugin.iml" filepath="$PROJECT_DIR$/gosu-maven-plugin/gosu-maven-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-parent/gosu-parent.iml" filepath="$PROJECT_DIR$/gosu-parent/gosu-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-process/gosu-process.iml" filepath="$PROJECT_DIR$/gosu-process/gosu-process.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-proj.iml" filepath="$PROJECT_DIR$/gosu-proj.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-servlet/gosu-servlet.iml" filepath="$PROJECT_DIR$/gosu-servlet/gosu-servlet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-test/gosu-test.iml" filepath="$PROJECT_DIR$/gosu-test/gosu-test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-test-api/gosu-test-api.iml" filepath="$PROJECT_DIR$/gosu-test-api/gosu-test-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-webservices/gosu-webservices.iml" filepath="$PROJECT_DIR$/gosu-webservices/gosu-webservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gosu-xml/gosu-xml.iml" filepath="$PROJECT_DIR$/gosu-xml/gosu-xml.iml" />
+      <module fileurl="file://$PROJECT_DIR$/idea-gosu-plugin/idea-gosu-plugin.iml" filepath="$PROJECT_DIR$/idea-gosu-plugin/idea-gosu-plugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ij-compiler-api/ij-compiler-api.iml" filepath="$PROJECT_DIR$/ij-compiler-api/ij-compiler-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ij-editor-devtools/ij-editor-devtools.iml" filepath="$PROJECT_DIR$/ij-editor-devtools/ij-editor-devtools.iml" />
+    </modules>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" />
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+  </component>
 </project>
