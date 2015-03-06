@@ -234,13 +234,20 @@ public class MetaType extends AbstractType implements IMetaType
     }
 
     return !(isArray() || type.isArray()) && type.getAllTypesInHierarchy().contains(JavaTypes.ITYPE()) &&
-           ((!(type instanceof IMetaType) && (isDefaultOrRootType() || type.isAssignableFrom( getType() ) || CommonServices.getEntityAccess().isTypekey( getType() ) || CommonServices.getEntityAccess().isEntityClass( getType() ))) ||
+           ((!(type instanceof IMetaType) && (isDefaultOrRootType() || type.isAssignableFrom(getType()) || isMetadata())) ||
             ((type instanceof IMetaType) &&
              (isDefaultOrRootType() ||
               ((IMetaType) type).getType().equals(DEFAULT_TYPE.get()) ||
               ((IMetaType) type).getType().equals(ROOT_TYPE.get()) ||
               getType().isAssignableFrom(((IMetaType) type).getType()) ||
               StandardCoercionManager.isStructurallyAssignable(getType(), ((IMetaType) type).getType()))));
+  }
+
+  private boolean isMetadata() {
+    //TODO-dp I don't know if and why this is needed.
+    return
+//            CommonServices.getEntityAccess().isTypekey(getType()) ||
+            CommonServices.getEntityAccess().isEntityClass(getType());
   }
 
   private boolean isDefaultOrRootType() {
