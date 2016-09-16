@@ -64,11 +64,19 @@ class Errant_ReturnStatement {
     if (true) {
       if (true)
         return // BAD: Missing return value
-      doSomething()
+            doSomething()
       return
           doSomething()
     }
     return
         doSomething()
+  }
+
+  function returnFollowingAnonymousTypelessClass(): int {
+    var r = new Runnable() {
+      override function run() {
+      }
+    }
+    return 0
   }
 }
